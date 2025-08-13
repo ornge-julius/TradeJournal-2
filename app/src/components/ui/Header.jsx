@@ -1,5 +1,6 @@
 import React from 'react';
 import { Settings, Plus } from 'lucide-react';
+import ConnectionStatus from './ConnectionStatus';
 
 const Header = ({ onToggleSettings, onToggleTradeForm, showTradeForm }) => {
   return (
@@ -27,6 +28,9 @@ const Header = ({ onToggleSettings, onToggleTradeForm, showTradeForm }) => {
             Settings
           </button>
         </div>
+      </div>
+      <div className="mt-4">
+        <ConnectionStatus />
       </div>
     </div>
   );
