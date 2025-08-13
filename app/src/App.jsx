@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useTradeManagement } from './hooks/useTradeManagement';
 import { useSettings } from './hooks/useSettings';
 import { calculateMetrics, generateCumulativePnLData, generateAccountBalanceData, generateWinLossData } from './utils/calculations';
+import { SupabaseProvider } from './contexts/SupabaseContext';
 import Header from './components/ui/Header';
 import MetricsCards from './components/ui/MetricsCards';
 import TradeForm from './components/forms/TradeForm';
@@ -82,65 +83,67 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Trade Detail View */}
-        {viewingTrade ? (
-          <TradeDetailView
-            trade={viewingTrade}
-            onBack={handleBackToList}
-            onEdit={handleTradeEdit}
-          />
-        ) : (
-          // Main Dashboard View
-          <>
-            <Header
-              onToggleSettings={toggleBalanceForm}
-              onToggleTradeForm={toggleTradeForm}
-              showTradeForm={showTradeForm}
+    <SupabaseProvider>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Trade Detail View */}
+          {viewingTrade ? (
+            <TradeDetailView
+              trade={viewingTrade}
+              onBack={handleBackToList}
+              onEdit={handleTradeEdit}
             />
-
-            {/* Settings Form */}
-            <SettingsForm
-              isOpen={showBalanceForm}
-              onClose={toggleBalanceForm}
-              onSubmit={handleUpdateBalance}
-              currentBalance={startingBalance}
-            />
-
-            {/* Trade Form */}
-            <TradeForm
-              isOpen={showTradeForm}
-              onClose={toggleTradeForm}
-              onSubmit={handleTradeSubmit}
-              editingTrade={editingTrade}
-              onCancel={handleCancelEdit}
-            />
-
-            {/* Key Metrics Cards */}
-            <MetricsCards metrics={metrics} startingBalance={startingBalance} />
-
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <AccountBalanceChart data={chartData.accountBalance} />
-              <WinLossChart 
-                data={chartData.winLoss} 
-                winningTrades={metrics.winningTrades} 
-                losingTrades={metrics.losingTrades} 
+          ) : (
+            // Main Dashboard View
+            <>
+              <Header
+                onToggleSettings={toggleBalanceForm}
+                onToggleTradeForm={toggleTradeForm}
+                showTradeForm={showTradeForm}
               />
-              <CumulativePnLChart data={chartData.cumulativePnL} />
-            </div>
 
-            {/* Trade History */}
-            <TradeHistoryTable
-              trades={trades}
-              onViewTrade={handleTradeView}
-              onEditTrade={handleTradeEdit}
-            />
-          </>
-        )}
+              {/* Settings Form */}
+              <SettingsForm
+                isOpen={showBalanceForm}
+                onClose={toggleBalanceForm}
+                onSubmit={handleUpdateBalance}
+                currentBalance={startingBalance}
+              />
+
+              {/* Trade Form */}
+              <TradeForm
+                isOpen={showTradeForm}
+                onClose={toggleTradeForm}
+                onSubmit={handleTradeSubmit}
+                editingTrade={editingTrade}
+                onCancel={handleCancelEdit}
+              />
+
+              {/* Key Metrics Cards */}
+              <MetricsCards metrics={metrics} startingBalance={startingBalance} />
+
+              {/* Charts Section */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <AccountBalanceChart data={chartData.accountBalance} />
+                <WinLossChart 
+                  data={chartData.winLoss} 
+                  winningTrades={metrics.winningTrades} 
+                  losingTrades={metrics.losingTrades} 
+                />
+                <CumulativePnLChart data={chartData.cumulativePnL} />
+              </div>
+
+              {/* Trade History */}
+              <TradeHistoryTable
+                trades={trades}
+                onViewTrade={handleTradeView}
+                onEditTrade={handleTradeEdit}
+              />
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </SupabaseProvider>
   );
 }
 
