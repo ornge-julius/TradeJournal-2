@@ -108,6 +108,15 @@ function App() {
               currentBalance={startingBalance}
             />
 
+            {/* Trade Form */}
+            <TradeForm
+              isOpen={showTradeForm}
+              onClose={toggleTradeForm}
+              onSubmit={handleTradeSubmit}
+              editingTrade={editingTrade}
+              onCancel={handleCancelEdit}
+            />
+
             {/* Key Metrics Cards */}
             <MetricsCards metrics={metrics} startingBalance={startingBalance} />
 
@@ -121,15 +130,6 @@ function App() {
               />
               <CumulativePnLChart data={chartData.cumulativePnL} />
             </div>
-
-            {/* Trade Form */}
-            <TradeForm
-              isOpen={showTradeForm}
-              onClose={toggleTradeForm}
-              onSubmit={handleTradeSubmit}
-              editingTrade={editingTrade}
-              onCancel={handleCancelEdit}
-            />
 
             {/* Trade History */}
             <TradeHistoryTable
