@@ -1,6 +1,6 @@
 // Calculate P&L for a trade
 export const calculatePnL = (entryPrice, exitPrice, quantity, type) => {
-  const pnl = (exitPrice - entryPrice) * quantity;
+  const pnl = (exitPrice * 100 - entryPrice * 100) * quantity;
   return type === 2 ? -pnl : pnl; // 2 = PUT, 1 = CALL
 };
 
