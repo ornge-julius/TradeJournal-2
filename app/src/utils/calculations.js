@@ -1,46 +1,46 @@
-// Calculate P&L for a trade
-export const calculatePnL = (entryPrice, exitPrice, quantity, type) => {
-  const pnl = (exitPrice * 100 - entryPrice * 100) * quantity;
-  return type === 2 ? -pnl : pnl; // 2 = PUT, 1 = CALL
+// Calculate profit for a trade
+export const calculateProfit = (entryPrice, exitPrice, quantity, type) => {
+  const profit = (exitPrice * 100 - entryPrice * 100) * quantity;
+  return profit
 };
 
 // Calculate trade metrics
 export const calculateMetrics = (trades, startingBalance) => {
   const totalTrades = trades.length;
-  const winningTrades = trades.filter(t => t.pnl > 0).length;
-  const losingTrades = trades.filter(t => t.pnl < 0).length;
-  const totalPnL = trades.reduce((sum, trade) => sum + trade.pnl, 0);
+  const winningTrades = trades.filter(t => t.profit > 0).length;
+  const losingTrades = trades.filter(t => t.profit < 0).length;
+  const totalProfit = trades.reduce((sum, trade) => sum + trade.profit, 0);
   const winRate = totalTrades > 0 ? (winningTrades / totalTrades) * 100 : 0;
   
   const avgWin = winningTrades > 0 
-    ? trades.filter(t => t.pnl > 0).reduce((sum, t) => sum + t.pnl, 0) / winningTrades 
+    ? trades.filter(t => t.profit > 0).reduce((sum, t) => sum + t.profit, 0) / winningTrades 
     : 0;
   
   const avgLoss = losingTrades > 0 
-    ? Math.abs(trades.filter(t => t.pnl < 0).reduce((sum, t) => sum + t.pnl, 0) / losingTrades) 
+    ? Math.abs(trades.filter(t => t.profit < 0).reduce((sum, t) => sum + t.profit, 0) / losingTrades) 
     : 0;
   
   return {
     totalTrades,
     winningTrades,
     losingTrades,
-    totalPnL,
+    totalProfit,
     winRate,
     avgWin,
     avgLoss,
-    currentBalance: startingBalance + totalPnL
+    currentBalance: startingBalance + totalProfit
   };
 };
 
-// Generate chart data for cumulative P&L
-export const generateCumulativePnLData = (trades) => {
+// Generate chart data for cumulative profit
+export const generateCumulativeProfitData = (trades) => {
   let cumulative = 0;
   return trades.map((trade, index) => {
-    cumulative += trade.pnl;
+    cumulative += trade.profit;
     return {
       date: trade.exitDate,
       cumulative,
-      trade: trade.pnl,
+      trade: trade.profit,
       tradeNum: index + 1
     };
   });
@@ -52,7 +52,7 @@ export const generateAccountBalanceData = (trades, startingBalance) => {
   const data = [{ date: 'Start', balance: startingBalance, tradeNum: 0 }];
   
   trades.forEach((trade, index) => {
-    balance += trade.pnl;
+    balance += trade.profit;
     data.push({
       date: trade.exitDate,
       balance,

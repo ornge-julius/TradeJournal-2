@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTradeManagement } from './hooks/useTradeManagement';
 import { useSettings } from './hooks/useSettings';
-import { calculateMetrics, generateCumulativePnLData, generateAccountBalanceData, generateWinLossData } from './utils/calculations';
+import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateWinLossData } from './utils/calculations';
 import Header from './components/ui/Header';
 import MetricsCards from './components/ui/MetricsCards';
 import TradeForm from './components/forms/TradeForm';
@@ -10,7 +10,7 @@ import TradeHistoryTable from './components/tables/TradeHistoryTable';
 import TradeDetailView from './components/ui/TradeDetailView';
 import AccountBalanceChart from './components/charts/AccountBalanceChart';
 import WinLossChart from './components/charts/WinLossChart';
-import CumulativePnLChart from './components/charts/CumulativePnLChart';
+import CumulativeProfitChart from './components/charts/CumulativeProfitChart';
 
 function App() {
   const {
@@ -42,7 +42,7 @@ function App() {
   // Generate chart data using useMemo for performance
   const chartData = useMemo(() => {
     return {
-      cumulativePnL: generateCumulativePnLData(trades),
+      cumulativeProfit: generateCumulativeProfitData(trades),
       accountBalance: generateAccountBalanceData(trades, startingBalance),
       winLoss: generateWinLossData(metrics.winningTrades, metrics.losingTrades)
     };
@@ -128,7 +128,7 @@ function App() {
                 winningTrades={metrics.winningTrades} 
                 losingTrades={metrics.losingTrades} 
               />
-              <CumulativePnLChart data={chartData.cumulativePnL} />
+              <CumulativeProfitChart data={chartData.cumulativeProfit} />
             </div>
 
             {/* Trade History */}

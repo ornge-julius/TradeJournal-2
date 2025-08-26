@@ -17,14 +17,14 @@ const MetricsCards = ({ metrics, startingBalance }) => {
 
       <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-gray-400 text-sm font-medium">Total P&L</h3>
-          {metrics.totalPnL >= 0 ? 
+          <h3 className="text-gray-400 text-sm font-medium">Total Profit</h3>
+          {metrics.totalProfit >= 0 ? 
             <TrendingUp className="h-5 w-5 text-emerald-400" /> : 
             <TrendingDown className="h-5 w-5 text-red-400" />
           }
         </div>
-        <p className={`text-2xl font-bold ${metrics.totalPnL >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-          ${metrics.totalPnL.toLocaleString()}
+        <p className={`text-2xl font-bold ${metrics.totalProfit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+          ${metrics.totalProfit.toLocaleString()}
         </p>
         <p className="text-xs text-gray-500">{metrics.totalTrades} total trades</p>
       </div>

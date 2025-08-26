@@ -1,12 +1,12 @@
 import { useReducer, useCallback } from 'react';
 import { tradeReducer, TRADE_ACTIONS, initialTradeState } from '../reducers/tradeReducer';
-import { calculatePnL } from '../utils/calculations';
+import { calculateProfit } from '../utils/calculations';
 
 export const useTradeManagement = () => {
   const [state, dispatch] = useReducer(tradeReducer, initialTradeState);
 
   const addTrade = useCallback((tradeData) => {
-    const pnl = calculatePnL(
+    const profit = calculateProfit(
       parseFloat(tradeData.entryPrice),
       parseFloat(tradeData.exitPrice),
       parseInt(tradeData.quantity),
@@ -19,14 +19,14 @@ export const useTradeManagement = () => {
       entryPrice: parseFloat(tradeData.entryPrice),
       exitPrice: parseFloat(tradeData.exitPrice),
       quantity: parseInt(tradeData.quantity),
-      pnl
+      profit
     };
 
     dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: newTrade });
   }, []);
 
   const updateTrade = useCallback((tradeData) => {
-    const pnl = calculatePnL(
+    const profit = calculateProfit(
       parseFloat(tradeData.entryPrice),
       parseFloat(tradeData.exitPrice),
       parseInt(tradeData.quantity),
@@ -38,7 +38,7 @@ export const useTradeManagement = () => {
       entryPrice: parseFloat(tradeData.entryPrice),
       exitPrice: parseFloat(tradeData.exitPrice),
       quantity: parseInt(tradeData.quantity),
-      pnl
+      profit
     };
 
     dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: updatedTrade });

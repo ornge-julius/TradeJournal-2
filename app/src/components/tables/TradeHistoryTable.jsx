@@ -18,7 +18,7 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
               <th className="text-left py-4 px-6 font-medium text-gray-300">Entry</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Exit</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Qty</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">P&L</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-300">Profit</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Reason</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Source</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Actions</th>
@@ -52,8 +52,8 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                 <td className="py-4 px-6 text-gray-300">{trade.quantity}</td>
                 <td className="py-4 px-6">
                   <div>
-                    <span className={`font-bold ${trade.pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      ${trade.pnl.toLocaleString()}
+                    <span className={`font-bold ${trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      ${trade.profit.toLocaleString()}
                     </span>
                     {trade.result !== undefined && (
                       <div className={`text-xs mt-1 flex items-center gap-1 ${

@@ -51,14 +51,14 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
 
         <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-gray-400 text-sm font-medium">P&L</h3>
-            {trade.pnl >= 0 ? 
+            <h3 className="text-gray-400 text-sm font-medium">Profit</h3>
+            {trade.profit >= 0 ? 
               <span className="text-emerald-400">📈</span> : 
               <span className="text-red-400">📉</span>
             }
           </div>
-          <p className={`text-2xl font-bold ${trade.pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-            ${trade.pnl.toLocaleString()}
+          <p className={`text-2xl font-bold ${trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            ${trade.profit.toLocaleString()}
           </p>
           <p className="text-xs text-gray-500">
             {trade.result !== undefined && (
@@ -166,8 +166,8 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-300">Total Return:</span>
-                  <span className={`font-medium ${trade.pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                    ${trade.pnl.toLocaleString()}
+                  <span className={`font-medium ${trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    ${trade.profit.toLocaleString()}
                   </span>
                 </div>
               </div>

@@ -86,7 +86,7 @@ npm run build
   quantity: number,     // Number of contracts
   entryDate: string,    // Entry date (YYYY-MM-DD)
   exitDate: string,     // Exit date (YYYY-MM-DD)
-  pnl: number,          // Calculated profit/loss
+  profit: number,       // Calculated profit/loss
   notes: string,        // Extended notes/observations
   reason: string,       // Reason for entering trade
   result: 1 | 0, // Fixed trade outcome (1=WIN, 0=LOSS)
