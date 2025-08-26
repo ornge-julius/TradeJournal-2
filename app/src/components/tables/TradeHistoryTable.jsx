@@ -1,6 +1,6 @@
 import React from 'react';
 import { Edit } from 'lucide-react';
-import { getResultText, isWin } from '../../utils/calculations';
+import { getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 
 const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
   return (
@@ -42,9 +42,9 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                 </td>
                 <td className="py-4 px-6">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    trade.type === 'CALL' ? 'bg-green-900/50 text-green-300' : 'bg-red-900/50 text-red-300'
+                    trade.type === 1 ? 'bg-green-900/50 text-green-300' : 'bg-red-900/50 text-red-300'
                   }`}>
-                    {trade.type}
+                    {getTradeTypeText(trade.type)}
                   </span>
                 </td>
                 <td className="py-4 px-6 text-gray-300">${trade.entryPrice.toFixed(2)}</td>

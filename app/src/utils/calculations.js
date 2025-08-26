@@ -1,7 +1,7 @@
 // Calculate P&L for a trade
 export const calculatePnL = (entryPrice, exitPrice, quantity, type) => {
   const pnl = (exitPrice - entryPrice) * quantity;
-  return type === 'PUT' ? -pnl : pnl;
+  return type === 2 ? -pnl : pnl; // 2 = PUT, 1 = CALL
 };
 
 // Calculate trade metrics
@@ -98,3 +98,23 @@ export const isWin = (result) => result === 1;
 
 // Check if trade is a loss based on numeric result
 export const isLoss = (result) => result === 0;
+
+// Convert numeric trade type to text
+export const getTradeTypeText = (type) => {
+  if (type === 1) return 'CALL';
+  if (type === 2) return 'PUT';
+  return '';
+};
+
+// Convert text trade type to numeric
+export const getTradeTypeNumber = (typeText) => {
+  if (typeText === 'CALL') return 1;
+  if (typeText === 'PUT') return 2;
+  return undefined;
+};
+
+// Check if trade type is CALL
+export const isCall = (type) => type === 1;
+
+// Check if trade type is PUT
+export const isPut = (type) => type === 2;

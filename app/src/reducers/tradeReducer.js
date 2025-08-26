@@ -16,7 +16,7 @@ export const initialTradeState = {
     {
       id: 1,
       symbol: 'AAPL',
-      type: 'CALL',
+      type: 1,
       entryPrice: 150.00,
       exitPrice: 155.50,
       quantity: 100,
@@ -32,7 +32,7 @@ export const initialTradeState = {
     {
       id: 2,
       symbol: 'TSLA',
-      type: 'PUT',
+      type: 2,
       entryPrice: 250.00,
       exitPrice: 240.00,
       quantity: 50,
@@ -48,7 +48,7 @@ export const initialTradeState = {
     {
       id: 3,
       symbol: 'MSFT',
-      type: 'CALL',
+      type: 1,
       entryPrice: 300.00,
       exitPrice: 295.00,
       quantity: 75,

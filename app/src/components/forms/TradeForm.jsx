@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { getResultNumber } from '../../utils/calculations';
+import { getResultNumber, getTradeTypeNumber } from '../../utils/calculations';
 
 const TradeForm = ({ 
   isOpen, 
@@ -11,7 +11,7 @@ const TradeForm = ({
 }) => {
   const [formData, setFormData] = useState({
     symbol: '',
-    type: 'CALL',
+    type: getTradeTypeNumber('CALL'),
     entryPrice: '',
     exitPrice: '',
     quantity: '',
@@ -35,7 +35,7 @@ const TradeForm = ({
     } else {
       setFormData({
         symbol: '',
-        type: 'CALL',
+        type: getTradeTypeNumber('CALL'),
         entryPrice: '',
         exitPrice: '',
         quantity: '',
@@ -101,11 +101,11 @@ const TradeForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">Position Type</label>
             <select
               value={formData.type}
-              onChange={(e) => setFormData({...formData, type: e.target.value})}
+              onChange={(e) => setFormData({...formData, type: parseInt(e.target.value)})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="CALL">CALL</option>
-              <option value="PUT">PUT</option>
+              <option value={getTradeTypeNumber('CALL')}>CALL</option>
+              <option value={getTradeTypeNumber('PUT')}>PUT</option>
             </select>
           </div>
           

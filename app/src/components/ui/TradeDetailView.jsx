@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Edit, ExternalLink, Target, Calendar } from 'lucide-react';
-import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin } from '../../utils/calculations';
+import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 
 const TradeDetailView = ({ trade, onBack, onEdit }) => {
   if (!trade) return null;
@@ -74,7 +74,7 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
             <h3 className="text-gray-400 text-sm font-medium">Position</h3>
             <Target className="h-5 w-5 text-purple-400" />
           </div>
-          <p className="text-2xl font-bold text-purple-400">{trade.type}</p>
+          <p className="text-2xl font-bold text-purple-400">{getTradeTypeText(trade.type)}</p>
           <p className="text-xs text-gray-500">{trade.quantity} contracts</p>
         </div>
 
