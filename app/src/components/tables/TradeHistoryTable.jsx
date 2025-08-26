@@ -1,5 +1,6 @@
 import React from 'react';
 import { Edit } from 'lucide-react';
+import { getResultText, isWin } from '../../utils/calculations';
 
 const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
   return (
@@ -54,11 +55,11 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                     <span className={`font-bold ${trade.pnl >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                       ${trade.pnl.toLocaleString()}
                     </span>
-                    {trade.result && (
+                    {trade.result !== undefined && (
                       <div className={`text-xs mt-1 flex items-center gap-1 ${
-                        trade.result === 'WIN' ? 'text-emerald-400' : 'text-red-400'
+                        isWin(trade.result) ? 'text-emerald-400' : 'text-red-400'
                       }`}>
-                        📊 {trade.result}
+                        📊 {getResultText(trade.result)}
                       </div>
                     )}
                   </div>

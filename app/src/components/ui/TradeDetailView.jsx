@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Edit, ExternalLink, Target, Calendar } from 'lucide-react';
-import { calculateTradeDuration, calculateReturnPercentage } from '../../utils/calculations';
+import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin } from '../../utils/calculations';
 
 const TradeDetailView = ({ trade, onBack, onEdit }) => {
   if (!trade) return null;
@@ -61,9 +61,9 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
             ${trade.pnl.toLocaleString()}
           </p>
           <p className="text-xs text-gray-500">
-            {trade.result && (
-              <span className={trade.result === 'WIN' ? 'text-emerald-400' : 'text-red-400'}>
-                {trade.result}
+            {trade.result !== undefined && (
+              <span className={isWin(trade.result) ? 'text-emerald-400' : 'text-red-400'}>
+                {getResultText(trade.result)}
               </span>
             )}
           </p>
@@ -138,17 +138,17 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
               </div>
             )}
             
-            {trade.result && (
+            {trade.result !== undefined && (
               <div>
                 <h4 className="text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                   📊 Trade Outcome
                 </h4>
                 <div className={`inline-flex px-3 py-2 rounded-lg font-medium ${
-                  trade.result === 'WIN' 
+                  isWin(trade.result)
                     ? 'bg-emerald-900/50 text-emerald-300 border border-emerald-700' 
                     : 'bg-red-900/50 text-red-300 border border-red-700'
                 }`}>
-                  {trade.result}
+                  {getResultText(trade.result)}
                 </div>
               </div>
             )}

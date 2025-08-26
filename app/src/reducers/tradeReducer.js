@@ -25,7 +25,7 @@ export const initialTradeState = {
       pnl: 550,
       notes: 'Strong earnings report',
       reason: 'Bullish earnings expectations',
-      result: 'WIN',
+      result: 1,
       option: 'AAPL 08/04 $152.50 Call',
       source: 'TradingView analysis'
     },
@@ -41,7 +41,7 @@ export const initialTradeState = {
       pnl: 500,
       notes: 'Overvalued, correction expected',
       reason: 'Technical reversal pattern',
-      result: 'WIN',
+      result: 1,
       option: 'TSLA 08/11 $245 Put',
       source: 'Market sentiment analysis'
     },
@@ -57,7 +57,7 @@ export const initialTradeState = {
       pnl: -375,
       notes: 'Stop loss triggered',
       reason: 'Cloud growth momentum',
-      result: 'LOSS',
+      result: 0,
       option: 'MSFT 08/18 $305 Call',
       source: 'Analyst upgrade'
     }

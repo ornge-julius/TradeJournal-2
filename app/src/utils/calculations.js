@@ -78,3 +78,23 @@ export const calculateTradeDuration = (entryDate, exitDate) => {
 export const calculateReturnPercentage = (entryPrice, exitPrice) => {
   return ((exitPrice - entryPrice) / entryPrice) * 100;
 };
+
+// Convert numeric result to text
+export const getResultText = (result) => {
+  if (result === 1) return 'WIN';
+  if (result === 0) return 'LOSS';
+  return '';
+};
+
+// Convert text result to numeric
+export const getResultNumber = (resultText) => {
+  if (resultText === 'WIN') return 1;
+  if (resultText === 'LOSS') return 0;
+  return undefined;
+};
+
+// Check if trade is a win based on numeric result
+export const isWin = (result) => result === 1;
+
+// Check if trade is a loss based on numeric result
+export const isLoss = (result) => result === 0;

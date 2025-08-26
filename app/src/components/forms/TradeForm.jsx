@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
+import { getResultNumber } from '../../utils/calculations';
 
 const TradeForm = ({ 
   isOpen, 
@@ -18,7 +19,7 @@ const TradeForm = ({
     exitDate: '',
     notes: '',
     reason: '',
-    result: 'WIN',
+            result: getResultNumber('WIN'),
     option: '',
     source: ''
   });
@@ -42,7 +43,7 @@ const TradeForm = ({
         exitDate: '',
         notes: '',
         reason: '',
-        result: 'WIN',
+        result: getResultNumber('WIN'),
         option: '',
         source: ''
       });
@@ -205,12 +206,12 @@ const TradeForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">Trade Result</label>
             <select
               value={formData.result}
-              onChange={(e) => setFormData({...formData, result: e.target.value})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setFormData({...formData, result: parseInt(e.target.value)})}
+              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select result</option>
-              <option value="WIN">WIN</option>
-              <option value="LOSS">LOSS</option>
+              <option value={1}>WIN</option>
+              <option value={0}>LOSS</option>
             </select>
           </div>
           
