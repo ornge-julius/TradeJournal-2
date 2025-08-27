@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTradeManagement } from './hooks/useTradeManagement';
-import { useSettings } from './hooks/useSettings';
+import { useAppState } from './hooks/useAppState';
 import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateWinLossData } from './utils/calculations';
 import Header from './components/ui/Header';
 import MetricsCards from './components/ui/MetricsCards';
@@ -32,7 +32,7 @@ function App() {
     updateStartingBalance,
     toggleBalanceForm,
     toggleTradeForm
-  } = useSettings();
+  } = useAppState();
 
   // Calculate metrics using useMemo for performance
   const metrics = useMemo(() => {
