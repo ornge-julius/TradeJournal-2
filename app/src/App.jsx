@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTradeManagement } from './hooks/useTradeManagement';
 import { useAppState } from './hooks/useAppState';
 import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateWinLossData } from './utils/calculations';
@@ -6,6 +6,7 @@ import Header from './components/ui/Header';
 import MetricsCards from './components/ui/MetricsCards';
 import TradeForm from './components/forms/TradeForm';
 import SettingsForm from './components/forms/SettingsForm';
+import AccountEditForm from './components/forms/AccountEditForm';
 import TradeHistoryTable from './components/tables/TradeHistoryTable';
 import TradeDetailView from './components/ui/TradeDetailView';
 import AccountBalanceChart from './components/charts/AccountBalanceChart';
@@ -13,6 +14,25 @@ import WinLossChart from './components/charts/WinLossChart';
 import CumulativeProfitChart from './components/charts/CumulativeProfitChart';
 
 function App() {
+  const [showAccountEditForm, setShowAccountEditForm] = useState(false);
+  const [editingAccount, setEditingAccount] = useState(null);
+
+  const {
+    startingBalance,
+    showBalanceForm,
+    showTradeForm,
+    updateStartingBalance,
+    toggleBalanceForm,
+    toggleTradeForm,
+    accounts,
+    selectedAccountId,
+    selectedAccount,
+    addAccount,
+    updateAccount,
+    deleteAccount,
+    selectAccount
+  } = useAppState();
+
   const {
     trades,
     editingTrade,
@@ -23,16 +43,7 @@ function App() {
     setViewingTrade,
     clearEditingTrade,
     clearViewingTrade
-  } = useTradeManagement();
-
-  const {
-    startingBalance,
-    showBalanceForm,
-    showTradeForm,
-    updateStartingBalance,
-    toggleBalanceForm,
-    toggleTradeForm
-  } = useAppState();
+  } = useTradeManagement(selectedAccountId);
 
   // Calculate metrics using useMemo for performance
   const metrics = useMemo(() => {
@@ -81,6 +92,31 @@ function App() {
     toggleBalanceForm();
   };
 
+  const handleAddAccount = (accountData) => {
+    addAccount(accountData);
+  };
+
+  const handleEditAccount = (account) => {
+    setEditingAccount(account);
+    setShowAccountEditForm(true);
+  };
+
+  const handleAccountEditSubmit = (updatedAccount) => {
+    updateAccount(updatedAccount);
+    setShowAccountEditForm(false);
+    setEditingAccount(null);
+  };
+
+  const handleDeleteAccount = (accountId) => {
+    if (accounts.length > 1) {
+      deleteAccount(accountId);
+    }
+  };
+
+  const handleSelectAccount = (accountId) => {
+    selectAccount(accountId);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -98,6 +134,12 @@ function App() {
               onToggleSettings={toggleBalanceForm}
               onToggleTradeForm={toggleTradeForm}
               showTradeForm={showTradeForm}
+              accounts={accounts}
+              selectedAccountId={selectedAccountId}
+              onSelectAccount={handleSelectAccount}
+              onAddAccount={handleAddAccount}
+              onEditAccount={handleEditAccount}
+              onDeleteAccount={handleDeleteAccount}
             />
 
             {/* Settings Form */}
@@ -115,6 +157,17 @@ function App() {
               onSubmit={handleTradeSubmit}
               editingTrade={editingTrade}
               onCancel={handleCancelEdit}
+            />
+
+            {/* Account Edit Form */}
+            <AccountEditForm
+              isOpen={showAccountEditForm}
+              onClose={() => {
+                setShowAccountEditForm(false);
+                setEditingAccount(null);
+              }}
+              onSubmit={handleAccountEditSubmit}
+              account={editingAccount}
             />
 
             {/* Key Metrics Cards */}

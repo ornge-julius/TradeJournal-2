@@ -1,9 +1,14 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useMemo } from 'react';
 import { tradeReducer, TRADE_ACTIONS, initialTradeState } from '../reducers/tradeReducer';
 import { calculateProfit } from '../utils/calculations';
 
-export const useTradeManagement = () => {
+export const useTradeManagement = (selectedAccountId) => {
   const [state, dispatch] = useReducer(tradeReducer, initialTradeState);
+
+  // Filter trades by selected account
+  const accountTrades = useMemo(() => {
+    return state.trades.filter(trade => trade.account_id === selectedAccountId);
+  }, [state.trades, selectedAccountId]);
 
   const addTrade = useCallback((tradeData) => {
     const profit = calculateProfit(
@@ -15,6 +20,7 @@ export const useTradeManagement = () => {
 
     const newTrade = {
       id: Date.now(),
+      account_id: selectedAccountId, // Associate trade with current account
       ...tradeData,
       entryPrice: parseFloat(tradeData.entryPrice),
       exitPrice: parseFloat(tradeData.exitPrice),
@@ -23,7 +29,7 @@ export const useTradeManagement = () => {
     };
 
     dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: newTrade });
-  }, []);
+  }, [selectedAccountId]);
 
   const updateTrade = useCallback((tradeData) => {
     const profit = calculateProfit(
@@ -64,8 +70,14 @@ export const useTradeManagement = () => {
     dispatch({ type: TRADE_ACTIONS.CLEAR_VIEWING_TRADE });
   }, []);
 
+  // Function to set trades for a specific account
+  const setAccountTrades = useCallback((trades) => {
+    dispatch({ type: TRADE_ACTIONS.SET_ACCOUNT_TRADES, payload: trades });
+  }, []);
+
   return {
-    trades: state.trades,
+    trades: accountTrades, // Return filtered trades for current account
+    allTrades: state.trades, // Return all trades for cross-account operations
     editingTrade: state.editingTrade,
     viewingTrade: state.viewingTrade,
     addTrade,
@@ -74,6 +86,7 @@ export const useTradeManagement = () => {
     setEditingTrade,
     setViewingTrade,
     clearEditingTrade,
-    clearViewingTrade
+    clearViewingTrade,
+    setAccountTrades
   };
 };

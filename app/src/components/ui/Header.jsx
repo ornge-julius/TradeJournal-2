@@ -1,7 +1,18 @@
 import React from 'react';
 import { Settings, Plus } from 'lucide-react';
+import AccountSelector from './AccountSelector';
 
-const Header = ({ onToggleSettings, onToggleTradeForm, showTradeForm }) => {
+const Header = ({ 
+  onToggleSettings, 
+  onToggleTradeForm, 
+  showTradeForm,
+  accounts,
+  selectedAccountId,
+  onSelectAccount,
+  onAddAccount,
+  onEditAccount,
+  onDeleteAccount
+}) => {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between">
@@ -11,6 +22,19 @@ const Header = ({ onToggleSettings, onToggleTradeForm, showTradeForm }) => {
           </h1>
           <p className="text-gray-400">Track your trades and analyze your performance</p>
         </div>
+        
+        {/* Account Selector - positioned between title and action buttons */}
+        <div className="flex-1 flex justify-center">
+          <AccountSelector
+            accounts={accounts}
+            selectedAccountId={selectedAccountId}
+            onSelectAccount={onSelectAccount}
+            onAddAccount={onAddAccount}
+            onEditAccount={onEditAccount}
+            onDeleteAccount={onDeleteAccount}
+          />
+        </div>
+        
         <div className="flex gap-4">
           <button
             onClick={onToggleTradeForm}

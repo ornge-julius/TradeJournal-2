@@ -7,7 +7,8 @@ export const TRADE_ACTIONS = {
   SET_EDITING_TRADE: 'SET_EDITING_TRADE',
   SET_VIEWING_TRADE: 'SET_VIEWING_TRADE',
   CLEAR_EDITING_TRADE: 'CLEAR_EDITING_TRADE',
-  CLEAR_VIEWING_TRADE: 'CLEAR_VIEWING_TRADE'
+  CLEAR_VIEWING_TRADE: 'CLEAR_VIEWING_TRADE',
+  SET_ACCOUNT_TRADES: 'SET_ACCOUNT_TRADES'
 };
 
 // Initial state
@@ -15,6 +16,7 @@ export const initialTradeState = {
   trades: [
     {
       id: 1,
+      account_id: 1,
       symbol: 'AAPL',
       type: 1,
       entryPrice: 1.50,
@@ -31,6 +33,7 @@ export const initialTradeState = {
     },
     {
       id: 2,
+      account_id: 1,
       symbol: 'TSLA',
       type: 2,
       entryPrice: 2.50,
@@ -47,6 +50,7 @@ export const initialTradeState = {
     },
     {
       id: 3,
+      account_id: 1,
       symbol: 'MSFT',
       type: 1,
       entryPrice: 3.00,
@@ -90,6 +94,12 @@ export const tradeReducer = (state, action) => {
       };
     
     case TRADE_ACTIONS.SET_TRADES:
+      return {
+        ...state,
+        trades: action.payload
+      };
+    
+    case TRADE_ACTIONS.SET_ACCOUNT_TRADES:
       return {
         ...state,
         trades: action.payload

@@ -6,7 +6,7 @@ export const useAppState = () => {
   const [accountsState, accountsDispatch] = useReducer(accountsReducer, initialAccountsState);
   const [usersState, usersDispatch] = useReducer(usersReducer, initialUsersState);
 
-  // Account-related functions (maintaining the same API as useSettings)
+  // Account-related functions
   const updateStartingBalance = useCallback((newBalance) => {
     accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: parseFloat(newBalance) });
   }, []);
@@ -17,6 +17,27 @@ export const useAppState = () => {
 
   const toggleTradeForm = useCallback(() => {
     accountsDispatch({ type: ACCOUNTS_ACTIONS.TOGGLE_TRADE_FORM });
+  }, []);
+
+  // New account management functions
+  const addAccount = useCallback((accountData) => {
+    accountsDispatch({ type: ACCOUNTS_ACTIONS.ADD_ACCOUNT, payload: accountData });
+  }, []);
+
+  const updateAccount = useCallback((accountData) => {
+    accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_ACCOUNT, payload: accountData });
+  }, []);
+
+  const deleteAccount = useCallback((accountId) => {
+    accountsDispatch({ type: ACCOUNTS_ACTIONS.DELETE_ACCOUNT, payload: accountId });
+  }, []);
+
+  const selectAccount = useCallback((accountId) => {
+    accountsDispatch({ type: ACCOUNTS_ACTIONS.SET_SELECTED_ACCOUNT, payload: accountId });
+  }, []);
+
+  const setAccounts = useCallback((accounts) => {
+    accountsDispatch({ type: ACCOUNTS_ACTIONS.SET_ACCOUNTS, payload: accounts });
   }, []);
 
   // User-related functions
@@ -40,10 +61,13 @@ export const useAppState = () => {
     usersDispatch({ type: USERS_ACTIONS.CLEAR_USER_INFO });
   }, []);
 
+  // Get selected account data
+  const selectedAccount = accountsState.accounts.find(acc => acc.id === accountsState.selectedAccountId);
+
   // Return the same API as useSettings for backward compatibility
   return {
     // Account state (maintaining exact same API)
-    startingBalance: accountsState.startingBalance,
+    startingBalance: selectedAccount?.startingBalance || 0,
     showBalanceForm: accountsState.showBalanceForm,
     showTradeForm: accountsState.showTradeForm,
     updateStartingBalance,
@@ -51,8 +75,18 @@ export const useAppState = () => {
     toggleTradeForm,
     
     // Additional account state
-    currentBalance: accountsState.currentBalance,
-    user_id: accountsState.user_id,
+    currentBalance: selectedAccount?.currentBalance || 0,
+    user_id: selectedAccount?.user_id || null,
+    
+    // New account management state and functions
+    accounts: accountsState.accounts,
+    selectedAccountId: accountsState.selectedAccountId,
+    selectedAccount,
+    addAccount,
+    updateAccount,
+    deleteAccount,
+    selectAccount,
+    setAccounts,
     
     // User state
     email: usersState.email,
