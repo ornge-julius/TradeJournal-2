@@ -1,14 +1,39 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useEffect } from 'react';
 import { accountsReducer, ACCOUNTS_ACTIONS, initialAccountsState } from '../reducers/accountsReducer';
 import { usersReducer, USERS_ACTIONS, initialUsersState } from '../reducers/usersReducer';
+import { supabase } from '../supabaseClient';
 
 export const useAppState = () => {
   const [accountsState, accountsDispatch] = useReducer(accountsReducer, initialAccountsState);
   const [usersState, usersDispatch] = useReducer(usersReducer, initialUsersState);
 
-  // Account-related functions
-  const updateStartingBalance = useCallback((newBalance) => {
-    accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: parseFloat(newBalance) });
+  useEffect(() => {
+    const fetchAccount = async () => {
+      const { data, error } = await supabase
+        .from('accounts')
+        .select('starting_balance')
+        .single();
+
+      if (error) {
+        console.error('Error fetching account:', error);
+        return;
+      }
+
+      accountsDispatch({
+        type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE,
+        payload: data.starting_balance,
+      });
+    };
+
+    fetchAccount();
+  }, []);
+
+  // Account-related functions (maintaining the same API as useSettings)
+  const updateStartingBalance = useCallback(async (newBalance) => {
+    const balance = parseFloat(newBalance);
+    accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: balance });
+
+    await supabase.from('accounts').upsert({ id: 1, starting_balance: balance });
   }, []);
 
   const toggleBalanceForm = useCallback(() => {

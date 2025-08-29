@@ -19,6 +19,7 @@ A professional React application for tracking and analyzing options trading perf
 - **Lucide React** - Modern icon library
 - **Custom Hooks** - For state management and business logic
 - **Reducer Pattern** - For complex state management
+- **Supabase** - Hosted Postgres database and auth
 
 ## 📁 Project Structure
 
@@ -72,6 +73,19 @@ src/
 ```bash
 npm run build
 ```
+
+### Supabase Configuration
+
+1. Create a project at [Supabase](https://supabase.com/) and note the Project URL and anon key.
+2. Copy `app/.env.example` to `app/.env` and fill in your credentials:
+
+   ```env
+   REACT_APP_SUPABASE_URL=your-supabase-url
+   REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+   ```
+3. Ensure the following tables exist in your database:
+   - `trades` for trade history
+   - `accounts` with a `starting_balance` column
 
 ## 📊 Data Structure
 

@@ -18,8 +18,8 @@ export const initialAccountsState = {
     {
       id: 1,
       name: 'Main Account',
-      startingBalance: 4000,
-      currentBalance: 4000,
+      startingBalance: 0,
+      currentBalance: 0,
       user_id: null,
       created_at: new Date().toISOString(),
       isActive: true
