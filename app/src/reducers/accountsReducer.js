@@ -9,8 +9,8 @@ export const ACCOUNTS_ACTIONS = {
 
 // Initial state
 export const initialAccountsState = {
-  startingBalance: 4000,
-  currentBalance: 4000,
+  startingBalance: 0,
+  currentBalance: 0,
   user_id: null,
   showBalanceForm: false,
   showTradeForm: false

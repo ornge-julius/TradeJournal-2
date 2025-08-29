@@ -1,11 +1,30 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useEffect } from 'react';
 import { tradeReducer, TRADE_ACTIONS, initialTradeState } from '../reducers/tradeReducer';
 import { calculateProfit } from '../utils/calculations';
+import { supabase } from '../supabaseClient';
 
 export const useTradeManagement = () => {
   const [state, dispatch] = useReducer(tradeReducer, initialTradeState);
 
-  const addTrade = useCallback((tradeData) => {
+  const fetchTrades = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('trades')
+      .select('*')
+      .order('entryDate');
+
+    if (error) {
+      console.error('Error fetching trades:', error);
+      return;
+    }
+
+    dispatch({ type: TRADE_ACTIONS.SET_TRADES, payload: data });
+  }, []);
+
+  useEffect(() => {
+    fetchTrades();
+  }, [fetchTrades]);
+
+  const addTrade = useCallback(async (tradeData) => {
     const profit = calculateProfit(
       parseFloat(tradeData.entryPrice),
       parseFloat(tradeData.exitPrice),
@@ -14,7 +33,6 @@ export const useTradeManagement = () => {
     );
 
     const newTrade = {
-      id: Date.now(),
       ...tradeData,
       entryPrice: parseFloat(tradeData.entryPrice),
       exitPrice: parseFloat(tradeData.exitPrice),
@@ -22,10 +40,21 @@ export const useTradeManagement = () => {
       profit
     };
 
-    dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: newTrade });
+    const { data, error } = await supabase
+      .from('trades')
+      .insert([newTrade])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding trade:', error);
+      return;
+    }
+
+    dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
   }, []);
 
-  const updateTrade = useCallback((tradeData) => {
+  const updateTrade = useCallback(async (tradeData) => {
     const profit = calculateProfit(
       parseFloat(tradeData.entryPrice),
       parseFloat(tradeData.exitPrice),
@@ -41,10 +70,32 @@ export const useTradeManagement = () => {
       profit
     };
 
-    dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: updatedTrade });
+    const { data, error } = await supabase
+      .from('trades')
+      .update(updatedTrade)
+      .eq('id', tradeData.id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating trade:', error);
+      return;
+    }
+
+    dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
   }, []);
 
-  const deleteTrade = useCallback((tradeId) => {
+  const deleteTrade = useCallback(async (tradeId) => {
+    const { error } = await supabase
+      .from('trades')
+      .delete()
+      .eq('id', tradeId);
+
+    if (error) {
+      console.error('Error deleting trade:', error);
+      return;
+    }
+
     dispatch({ type: TRADE_ACTIONS.DELETE_TRADE, payload: tradeId });
   }, []);
 
