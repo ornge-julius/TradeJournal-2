@@ -1,0 +1,17 @@
+# Prevent copying node_modules and build artifacts
+node_modules
+app/node_modules
+app/build
+
+# Ignore git metadata
+.git
+.gitignore
+
+# Optional local files
+trades_for_database.csv
+*.csv
+
+# Exclude container config itself
+Dockerfile
+docker-compose.yaml
+k8s/
