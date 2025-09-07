@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradejournal-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tradejournal-app
+  template:
+    metadata:
+      labels:
+        app: tradejournal-app
+    spec:
+      containers:
+        - name: tradejournal-app
+          image: tradejournal-app:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tradejournal-service
+spec:
+  selector:
+    app: tradejournal-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
