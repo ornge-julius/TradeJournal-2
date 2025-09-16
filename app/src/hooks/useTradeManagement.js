@@ -12,24 +12,53 @@ export const useTradeManagement = (selectedAccountId) => {
   }, [state.trades, selectedAccountId]);
 
   const fetchTrades = useCallback(async () => {
-    const { data, error } = await supabase
-      .from('trades')
-      .select('*')
-      .order('entryDate');
-
-    if (error) {
-      console.error('Error fetching trades:', error);
+    // Don't fetch if no account is selected
+    if (!selectedAccountId) {
+      console.log('No account selected, skipping trade fetch');
       return;
     }
 
-    dispatch({ type: TRADE_ACTIONS.SET_TRADES, payload: data });
-  }, []);
+    console.log('Fetching trades for account:', selectedAccountId);
+    
+    try {
+      const { data, error, status, statusText } = await supabase
+        .from('trades')
+        .select('*')
+        .eq('account_id', selectedAccountId)
+        .order('entry_date');
+
+      console.log('Supabase response:', { data, error, status, statusText });
+
+      if (error) {
+        console.error('Error fetching trades:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        return;
+      }
+
+      console.log('Successfully fetched trades:', data);
+      dispatch({ type: TRADE_ACTIONS.SET_TRADES, payload: data || [] });
+    } catch (err) {
+      console.error('Unexpected error in fetchTrades:', err);
+    }
+  }, [selectedAccountId]);
 
   useEffect(() => {
-    fetchTrades();
-  }, [fetchTrades]);
+    if (selectedAccountId) {
+      fetchTrades();
+    }
+  }, [fetchTrades, selectedAccountId]);
 
   const addTrade = useCallback(async (tradeData) => {
+    if (!selectedAccountId) {
+      console.error('No account selected, cannot add trade');
+      return;
+    }
+
     const profit = calculateProfit(
       parseFloat(tradeData.entryPrice),
       parseFloat(tradeData.exitPrice),
@@ -46,21 +75,40 @@ export const useTradeManagement = (selectedAccountId) => {
       profit
     };
 
-    const { data, error } = await supabase
-      .from('trades')
-      .insert([newTrade])
-      .select()
-      .single();
+    console.log('Adding new trade:', newTrade);
 
-    if (error) {
-      console.error('Error adding trade:', error);
-      return;
+    try {
+      const { data, error, status, statusText } = await supabase
+        .from('trades')
+        .insert([newTrade])
+        .select()
+        .single();
+
+      console.log('Add trade response:', { data, error, status, statusText });
+
+      if (error) {
+        console.error('Error adding trade:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        return;
+      }
+
+      dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
+    } catch (err) {
+      console.error('Unexpected error in addTrade:', err);
     }
-
-    dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
   }, [selectedAccountId]);
 
   const updateTrade = useCallback(async (tradeData) => {
+    if (!selectedAccountId) {
+      console.error('No account selected, cannot update trade');
+      return;
+    }
+
     const profit = calculateProfit(
       parseFloat(tradeData.entryPrice),
       parseFloat(tradeData.exitPrice),
@@ -76,34 +124,67 @@ export const useTradeManagement = (selectedAccountId) => {
       profit
     };
 
-    const { data, error } = await supabase
-      .from('trades')
-      .update(updatedTrade)
-      .eq('id', tradeData.id)
-      .select()
-      .single();
+    console.log('Updating trade:', updatedTrade);
 
-    if (error) {
-      console.error('Error updating trade:', error);
-      return;
+    try {
+      const { data, error, status, statusText } = await supabase
+        .from('trades')
+        .update(updatedTrade)
+        .eq('id', tradeData.id)
+        .select()
+        .single();
+
+      console.log('Update trade response:', { data, error, status, statusText });
+
+      if (error) {
+        console.error('Error updating trade:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        return;
+      }
+
+      dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
+    } catch (err) {
+      console.error('Unexpected error in updateTrade:', err);
     }
-
-    dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
-  }, []);
+  }, [selectedAccountId]);
 
   const deleteTrade = useCallback(async (tradeId) => {
-    const { error } = await supabase
-      .from('trades')
-      .delete()
-      .eq('id', tradeId);
-
-    if (error) {
-      console.error('Error deleting trade:', error);
+    if (!selectedAccountId) {
+      console.error('No account selected, cannot delete trade');
       return;
     }
 
-    dispatch({ type: TRADE_ACTIONS.DELETE_TRADE, payload: tradeId });
-  }, []);
+    console.log('Deleting trade:', tradeId);
+
+    try {
+      const { error, status, statusText } = await supabase
+        .from('trades')
+        .delete()
+        .eq('id', tradeId);
+
+      console.log('Delete trade response:', { error, status, statusText });
+
+      if (error) {
+        console.error('Error deleting trade:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        return;
+      }
+
+      dispatch({ type: TRADE_ACTIONS.DELETE_TRADE, payload: tradeId });
+    } catch (err) {
+      console.error('Unexpected error in deleteTrade:', err);
+    }
+  }, [selectedAccountId]);
 
   const setEditingTrade = useCallback((trade) => {
     dispatch({ type: TRADE_ACTIONS.SET_EDITING_TRADE, payload: trade });

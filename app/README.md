@@ -98,8 +98,8 @@ npm run build
   entryPrice: number,   // Entry price per contract
   exitPrice: number,    // Exit price per contract
   quantity: number,     // Number of contracts
-  entryDate: string,    // Entry date (YYYY-MM-DD)
-  exitDate: string,     // Exit date (YYYY-MM-DD)
+  entry_date: string,    // Entry date (YYYY-MM-DD)
+  exit_date: string,     // Exit date (YYYY-MM-DD)
   profit: number,       // Calculated profit/loss
   notes: string,        // Extended notes/observations
   reason: string,       // Reason for entering trade

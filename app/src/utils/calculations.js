@@ -38,7 +38,7 @@ export const generateCumulativeProfitData = (trades) => {
   return trades.map((trade, index) => {
     cumulative += trade.profit;
     return {
-      date: trade.exitDate,
+      date: trade.exit_date,
       cumulative,
       trade: trade.profit,
       tradeNum: index + 1
@@ -54,7 +54,7 @@ export const generateAccountBalanceData = (trades, startingBalance) => {
   trades.forEach((trade, index) => {
     balance += trade.profit;
     data.push({
-      date: trade.exitDate,
+      date: trade.exit_date,
       balance,
       tradeNum: index + 1
     });
@@ -70,8 +70,8 @@ export const generateWinLossData = (winningTrades, losingTrades) => [
 ];
 
 // Calculate trade duration in days
-export const calculateTradeDuration = (entryDate, exitDate) => {
-  return Math.ceil((new Date(exitDate) - new Date(entryDate)) / (1000 * 60 * 60 * 24));
+export const calculateTradeDuration = (entry_date, exit_date) => {
+  return Math.ceil((new Date(exit_date) - new Date(entry_date)) / (1000 * 60 * 60 * 24));
 };
 
 // Calculate return percentage

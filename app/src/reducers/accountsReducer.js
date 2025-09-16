@@ -14,18 +14,8 @@ export const ACCOUNTS_ACTIONS = {
 
 // Initial state
 export const initialAccountsState = {
-  accounts: [
-    {
-      id: 1,
-      name: 'Main Account',
-      startingBalance: 0,
-      currentBalance: 0,
-      user_id: null,
-      created_at: new Date().toISOString(),
-      isActive: true
-    }
-  ],
-  selectedAccountId: 1,
+  accounts: [],
+  selectedAccountId: null,
   showBalanceForm: false,
   showTradeForm: false
 };

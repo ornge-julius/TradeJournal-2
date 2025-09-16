@@ -45,19 +45,41 @@ function App() {
     clearViewingTrade
   } = useTradeManagement(selectedAccountId);
 
+  // Check if account is still loading
+  const isAccountLoading = accounts.length === 0 && selectedAccountId === null;
+
   // Calculate metrics using useMemo for performance
   const metrics = useMemo(() => {
+    if (isAccountLoading || !selectedAccountId) {
+      return {
+        totalTrades: 0,
+        winningTrades: 0,
+        losingTrades: 0,
+        winRate: 0,
+        totalProfit: 0,
+        averageProfit: 0,
+        maxProfit: 0,
+        maxLoss: 0
+      };
+    }
     return calculateMetrics(trades, startingBalance);
-  }, [trades, startingBalance]);
+  }, [trades, startingBalance, isAccountLoading, selectedAccountId]);
 
   // Generate chart data using useMemo for performance
   const chartData = useMemo(() => {
+    if (isAccountLoading || !selectedAccountId) {
+      return {
+        cumulativeProfit: [],
+        accountBalance: [],
+        winLoss: []
+      };
+    }
     return {
       cumulativeProfit: generateCumulativeProfitData(trades),
       accountBalance: generateAccountBalanceData(trades, startingBalance),
       winLoss: generateWinLossData(metrics.winningTrades, metrics.losingTrades)
     };
-  }, [trades, startingBalance, metrics.winningTrades, metrics.losingTrades]);
+  }, [trades, startingBalance, metrics.winningTrades, metrics.losingTrades, isAccountLoading, selectedAccountId]);
 
   const handleTradeSubmit = (tradeData) => {
     if (editingTrade) {
@@ -170,26 +192,41 @@ function App() {
               account={editingAccount}
             />
 
-            {/* Key Metrics Cards */}
-            <MetricsCards metrics={metrics} startingBalance={startingBalance} />
+            {/* Loading State */}
+            {isAccountLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p className="text-gray-300">Loading account data...</p>
+              </div>
+            ) : !selectedAccountId ? (
+              <div className="text-center py-12">
+                <p className="text-gray-300 text-lg mb-4">No account selected</p>
+                <p className="text-gray-400">Please select an account to view trades and metrics.</p>
+              </div>
+            ) : (
+              <>
+                {/* Key Metrics Cards */}
+                <MetricsCards metrics={metrics} startingBalance={startingBalance} />
 
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <AccountBalanceChart data={chartData.accountBalance} />
-              <WinLossChart 
-                data={chartData.winLoss} 
-                winningTrades={metrics.winningTrades} 
-                losingTrades={metrics.losingTrades} 
-              />
-              <CumulativeProfitChart data={chartData.cumulativeProfit} />
-            </div>
+                {/* Charts Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                  <AccountBalanceChart data={chartData.accountBalance} />
+                  <WinLossChart 
+                    data={chartData.winLoss} 
+                    winningTrades={metrics.winningTrades} 
+                    losingTrades={metrics.losingTrades} 
+                  />
+                  <CumulativeProfitChart data={chartData.cumulativeProfit} />
+                </div>
 
-            {/* Trade History */}
-            <TradeHistoryTable
-              trades={trades}
-              onViewTrade={handleTradeView}
-              onEditTrade={handleTradeEdit}
-            />
+                {/* Trade History */}
+                <TradeHistoryTable
+                  trades={trades}
+                  onViewTrade={handleTradeView}
+                  onEditTrade={handleTradeEdit}
+                />
+              </>
+            )}
           </>
         )}
       </div>

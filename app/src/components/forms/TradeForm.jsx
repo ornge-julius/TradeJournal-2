@@ -15,8 +15,8 @@ const TradeForm = ({
     entryPrice: '',
     exitPrice: '',
     quantity: '',
-    entryDate: '',
-    exitDate: '',
+    entry_date: '',
+    exit_date: '',
     notes: '',
     reason: '',
             result: getResultNumber('WIN'),
@@ -39,8 +39,8 @@ const TradeForm = ({
         entryPrice: '',
         exitPrice: '',
         quantity: '',
-        entryDate: '',
-        exitDate: '',
+        entry_date: '',
+        exit_date: '',
         notes: '',
         reason: '',
         result: getResultNumber('WIN'),
@@ -52,7 +52,7 @@ const TradeForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.symbol || !formData.entryPrice || !formData.exitPrice || !formData.quantity || !formData.entryDate || !formData.exitDate) {
+    if (!formData.symbol || !formData.entryPrice || !formData.exitPrice || !formData.quantity || !formData.entry_date || !formData.exit_date) {
       return; // Basic validation
     }
     
@@ -162,8 +162,8 @@ const TradeForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">Entry Date</label>
             <input
               type="date"
-              value={formData.entryDate}
-              onChange={(e) => setFormData({...formData, entryDate: e.target.value})}
+              value={formData.entry_date}
+              onChange={(e) => setFormData({...formData, entry_date: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -173,8 +173,8 @@ const TradeForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">Exit Date</label>
             <input
               type="date"
-              value={formData.exitDate}
-              onChange={(e) => setFormData({...formData, exitDate: e.target.value})}
+              value={formData.exit_date}
+              onChange={(e) => setFormData({...formData, exit_date: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
