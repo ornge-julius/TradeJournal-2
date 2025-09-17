@@ -12,14 +12,14 @@ const TradeForm = ({
   const [formData, setFormData] = useState({
     symbol: '',
     type: getTradeTypeNumber('CALL'),
-    entryPrice: '',
-    exitPrice: '',
+    entry_price: '',
+    exit_price: '',
     quantity: '',
-    entryDate: '',
-    exitDate: '',
+    entry_date: '',
+    exit_date: '',
     notes: '',
     reason: '',
-            result: getResultNumber('WIN'),
+    result: getResultNumber('WIN'),
     option: '',
     source: ''
   });
@@ -28,19 +28,19 @@ const TradeForm = ({
     if (editingTrade) {
       setFormData({
         ...editingTrade,
-        entryPrice: editingTrade.entryPrice.toString(),
-        exitPrice: editingTrade.exitPrice.toString(),
+        entry_price: editingTrade.entry_price.toString(),
+        exit_price: editingTrade.exit_price.toString(),
         quantity: editingTrade.quantity.toString()
       });
     } else {
       setFormData({
         symbol: '',
         type: getTradeTypeNumber('CALL'),
-        entryPrice: '',
-        exitPrice: '',
+        entry_price: '',
+        exit_price: '',
         quantity: '',
-        entryDate: '',
-        exitDate: '',
+        entry_date: '',
+        exit_date: '',
         notes: '',
         reason: '',
         result: getResultNumber('WIN'),
@@ -52,7 +52,7 @@ const TradeForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.symbol || !formData.entryPrice || !formData.exitPrice || !formData.quantity || !formData.entryDate || !formData.exitDate) {
+    if (!formData.symbol || !formData.entry_price || !formData.exit_price || !formData.quantity || !formData.entry_date || !formData.exit_date) {
       return; // Basic validation
     }
     
@@ -126,8 +126,8 @@ const TradeForm = ({
               type="number"
               step="0.01"
               placeholder="0.00"
-              value={formData.entryPrice}
-              onChange={(e) => setFormData({...formData, entryPrice: e.target.value})}
+              value={formData.entry_price}
+              onChange={(e) => setFormData({...formData, entry_price: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -139,8 +139,8 @@ const TradeForm = ({
               type="number"
               step="0.01"
               placeholder="0.00"
-              value={formData.exitPrice}
-              onChange={(e) => setFormData({...formData, exitPrice: e.target.value})}
+              value={formData.exit_price}
+              onChange={(e) => setFormData({...formData, exit_price: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -162,8 +162,8 @@ const TradeForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">Entry Date</label>
             <input
               type="date"
-              value={formData.entryDate}
-              onChange={(e) => setFormData({...formData, entryDate: e.target.value})}
+              value={formData.entry_date}
+              onChange={(e) => setFormData({...formData, entry_date: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
@@ -173,8 +173,8 @@ const TradeForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">Exit Date</label>
             <input
               type="date"
-              value={formData.exitDate}
-              onChange={(e) => setFormData({...formData, exitDate: e.target.value})}
+              value={formData.exit_date}
+              onChange={(e) => setFormData({...formData, exit_date: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />

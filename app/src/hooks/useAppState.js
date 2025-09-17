@@ -1,15 +1,116 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useEffect } from 'react';
 import { accountsReducer, ACCOUNTS_ACTIONS, initialAccountsState } from '../reducers/accountsReducer';
 import { usersReducer, USERS_ACTIONS, initialUsersState } from '../reducers/usersReducer';
+import { supabase } from '../supabaseClient';
 
 export const useAppState = () => {
   const [accountsState, accountsDispatch] = useReducer(accountsReducer, initialAccountsState);
   const [usersState, usersDispatch] = useReducer(usersReducer, initialUsersState);
 
-  // Account-related functions
-  const updateStartingBalance = useCallback((newBalance) => {
-    accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: parseFloat(newBalance) });
+  useEffect(() => {
+    const fetchAccount = async () => {
+      
+      try {
+        // First, fetch the specific account with the hardcoded ID
+        //TODO: Need to change this to fetch all accounts
+        //TODO: Change to only fetch account for the user
+
+        const { data: accountData, error: accountError } = await supabase
+          .from('accounts')
+          .select('*')
+          .eq('id', 'f5bf8559-5779-47ce-ba65-75737aed3622').single();
+          
+        if (accountError) {
+          // If account not found, show a helpful message
+          if (accountError.code === 'PGRST116') {
+            console.error('Account not found. Please check if the account ID exists in the database.');
+          }
+          return;
+        }
+
+        if (!accountData) {
+          console.error('No account data returned');
+          return;
+        }
+
+        // Map database fields to expected format
+        //TODO: Instead of mapping the data, access the data using snake_case attributes
+        const mappedAccountData = {
+          id: accountData.id,
+          name: accountData.name || 'Trading Account',
+          startingBalance: accountData.starting_balance || 0,
+          currentBalance: accountData.current_balance || accountData.starting_balance || 0,
+          user_id: accountData.user_id || null,
+          created_at: accountData.created_at || new Date().toISOString(),
+          isActive: accountData.is_active !== false
+        };
+
+        // Set the account data in the state
+        accountsDispatch({
+          type: ACCOUNTS_ACTIONS.SET_ACCOUNTS,
+          payload: [mappedAccountData]
+        });
+
+        // Set this account as the selected account
+        accountsDispatch({
+          type: ACCOUNTS_ACTIONS.SET_SELECTED_ACCOUNT,
+          payload: mappedAccountData.id
+        });
+
+        // Update the starting balance from the account data
+        if (mappedAccountData.startingBalance !== undefined) {
+          accountsDispatch({
+            type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE,
+            payload: mappedAccountData.startingBalance,
+          });
+        }
+
+      } catch (err) {
+        console.error('Unexpected error in fetchAccount:', err);
+      }
+    };
+
+    fetchAccount();
   }, []);
+
+  // Account-related functions (maintaining the same API as useSettings)
+  const updateStartingBalance = useCallback(async (newBalance) => {
+    const balance = parseFloat(newBalance);
+    
+    if (!accountsState.selectedAccountId) {
+      console.error('No account selected, cannot update balance');
+      return;
+    }
+    
+    // Store the previous balance for potential rollback
+    const previousBalance = accountsState.accounts.find(acc => acc.id === accountsState.selectedAccountId)?.startingBalance || 0;
+    
+    // Optimistically update local state
+    accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: balance });
+
+    try {
+      const { data, error } = await supabase
+        .from('accounts')
+        .upsert({ 
+          id: accountsState.selectedAccountId, 
+          starting_balance: balance 
+        });
+
+      // Handle database errors
+      if (error) {
+        console.error('Database error in updateStartingBalance:', error);
+        // Rollback the optimistic update
+        accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: previousBalance });
+        return;
+      }
+
+      console.log('Starting balance updated successfully');
+    } catch (err) {
+      console.error('Unexpected error in updateStartingBalance:', err);
+      // Rollback the optimistic update
+      accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: previousBalance });
+    }
+  }, [accountsState.selectedAccountId, accountsState.accounts]);
 
   const toggleBalanceForm = useCallback(() => {
     accountsDispatch({ type: ACCOUNTS_ACTIONS.TOGGLE_BALANCE_FORM });

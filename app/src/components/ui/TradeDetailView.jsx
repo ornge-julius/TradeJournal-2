@@ -5,8 +5,8 @@ import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin
 const TradeDetailView = ({ trade, onBack, onEdit }) => {
   if (!trade) return null;
 
-  const duration = calculateTradeDuration(trade.entryDate, trade.exitDate);
-  const returnPercentage = calculateReturnPercentage(trade.entryPrice, trade.exitPrice);
+  const duration = calculateTradeDuration(trade.entry_date, trade.exit_date);
+  const returnPercentage = calculateReturnPercentage(trade.entry_price, trade.exit_price);
 
   return (
     <div>
@@ -85,7 +85,7 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
           </div>
           <p className="text-2xl font-bold text-yellow-400">{duration}d</p>
           <p className="text-xs text-gray-500">
-            {trade.entryDate} to {trade.exitDate}
+            {trade.entry_date} to {trade.exit_date}
           </p>
         </div>
       </div>
@@ -98,11 +98,11 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
           <div className="space-y-4">
             <div className="flex justify-between py-3 border-b border-gray-700">
               <span className="text-gray-400">Entry Price</span>
-              <span className="text-white font-medium">${trade.entryPrice.toFixed(2)}</span>
+              <span className="text-white font-medium">${trade.entry_price.toFixed(2)}</span>
             </div>
             <div className="flex justify-between py-3 border-b border-gray-700">
               <span className="text-gray-400">Exit Price</span>
-              <span className="text-white font-medium">${trade.exitPrice.toFixed(2)}</span>
+              <span className="text-white font-medium">${trade.exit_price.toFixed(2)}</span>
             </div>
             <div className="flex justify-between py-3 border-b border-gray-700">
               <span className="text-gray-400">Quantity</span>
@@ -110,11 +110,11 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
             </div>
             <div className="flex justify-between py-3 border-b border-gray-700">
               <span className="text-gray-400">Entry Date</span>
-              <span className="text-white font-medium">{trade.entryDate}</span>
+              <span className="text-white font-medium">{trade.entry_date}</span>
             </div>
             <div className="flex justify-between py-3 border-b border-gray-700">
               <span className="text-gray-400">Exit Date</span>
-              <span className="text-white font-medium">{trade.exitDate}</span>
+              <span className="text-white font-medium">{trade.exit_date}</span>
             </div>
             {trade.source && (
               <div className="flex justify-between py-3 border-b border-gray-700">

@@ -13,59 +13,7 @@ export const TRADE_ACTIONS = {
 
 // Initial state
 export const initialTradeState = {
-  trades: [
-    {
-      id: 1,
-      account_id: 1,
-      symbol: 'AAPL',
-      type: 1,
-      entryPrice: 1.50,
-      exitPrice: 1.55,
-      quantity: 100,
-      entryDate: '2024-08-01',
-      exitDate: '2024-08-03',
-      profit: 500,
-      notes: 'Strong earnings report',
-      reason: 'Bullish earnings expectations',
-      result: 1,
-      option: 'AAPL 08/04 $152.50 Call',
-      source: 'TradingView analysis'
-    },
-    {
-      id: 2,
-      account_id: 1,
-      symbol: 'TSLA',
-      type: 2,
-      entryPrice: 2.50,
-      exitPrice: 2.40,
-      quantity: 50,
-      entryDate: '2024-08-05',
-      exitDate: '2024-08-07',
-      profit: 500,
-      notes: 'Overvalued, correction expected',
-      reason: 'Technical reversal pattern',
-      result: 1,
-      option: 'TSLA 08/11 $245 Put',
-      source: 'Market sentiment analysis'
-    },
-    {
-      id: 3,
-      account_id: 1,
-      symbol: 'MSFT',
-      type: 1,
-      entryPrice: 3.00,
-      exitPrice: 2.95,
-      quantity: 75,
-      entryDate: '2024-08-08',
-      exitDate: '2024-08-10',
-      profit: -375,
-      notes: 'Stop loss triggered',
-      reason: 'Cloud growth momentum',
-      result: 0,
-      option: 'MSFT 08/18 $305 Call',
-      source: 'Analyst upgrade'
-    }
-  ],
+  trades: [],
   editingTrade: null,
   viewingTrade: null
 };
