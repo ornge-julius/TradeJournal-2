@@ -9,25 +9,18 @@ export const useAppState = () => {
 
   useEffect(() => {
     const fetchAccount = async () => {
-      console.log('Fetching account data...');
       
       try {
         // First, fetch the specific account with the hardcoded ID
+        //TODO: Need to change this to fetch all accounts
+        //TODO: Change to only fetch account for the user
+
         const { data: accountData, error: accountError } = await supabase
           .from('accounts')
           .select('*')
-          .eq('id', 'f5bf8559-5779-47ce-ba65-75737aed3622')
-          .single();
-
-        if (accountError) {
-          console.error('Error fetching account:', accountError);
-          console.error('Error details:', {
-            message: accountError.message,
-            details: accountError.details,
-            hint: accountError.hint,
-            code: accountError.code
-          });
+          .eq('id', 'f5bf8559-5779-47ce-ba65-75737aed3622').single();
           
+        if (accountError) {
           // If account not found, show a helpful message
           if (accountError.code === 'PGRST116') {
             console.error('Account not found. Please check if the account ID exists in the database.');
@@ -40,9 +33,8 @@ export const useAppState = () => {
           return;
         }
 
-        console.log('Successfully fetched account data:', accountData);
-
         // Map database fields to expected format
+        //TODO: Instead of mapping the data, access the data using snake_case attributes
         const mappedAccountData = {
           id: accountData.id,
           name: accountData.name || 'Trading Account',
@@ -52,8 +44,6 @@ export const useAppState = () => {
           created_at: accountData.created_at || new Date().toISOString(),
           isActive: accountData.is_active !== false
         };
-
-        console.log('Mapped account data:', mappedAccountData);
 
         // Set the account data in the state
         accountsDispatch({
@@ -86,7 +76,6 @@ export const useAppState = () => {
   // Account-related functions (maintaining the same API as useSettings)
   const updateStartingBalance = useCallback(async (newBalance) => {
     const balance = parseFloat(newBalance);
-    console.log('Updating starting balance to:', balance);
     
     if (!accountsState.selectedAccountId) {
       console.error('No account selected, cannot update balance');
@@ -102,20 +91,6 @@ export const useAppState = () => {
           id: accountsState.selectedAccountId, 
           starting_balance: balance 
         });
-
-      console.log('Update balance response:', { data, error, status, statusText });
-
-      if (error) {
-        console.error('Error updating balance:', error);
-        console.error('Error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
-      } else {
-        console.log('Successfully updated balance');
-      }
     } catch (err) {
       console.error('Unexpected error in updateStartingBalance:', err);
     }
