@@ -47,8 +47,8 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                     {getTradeTypeText(trade.type)}
                   </span>
                 </td>
-                <td className="py-4 px-6 text-gray-300">${trade.entryPrice.toFixed(2)}</td>
-                <td className="py-4 px-6 text-gray-300">${trade.exitPrice.toFixed(2)}</td>
+                <td className="py-4 px-6 text-gray-300">${trade.entry_price.toFixed(2)}</td>
+                <td className="py-4 px-6 text-gray-300">${trade.exit_price.toFixed(2)}</td>
                 <td className="py-4 px-6 text-gray-300">{trade.quantity}</td>
                 <td className="py-4 px-6">
                   <div>
