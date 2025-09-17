@@ -82,19 +82,35 @@ export const useAppState = () => {
       return;
     }
     
+    // Store the previous balance for potential rollback
+    const previousBalance = accountsState.accounts.find(acc => acc.id === accountsState.selectedAccountId)?.startingBalance || 0;
+    
+    // Optimistically update local state
     accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: balance });
 
     try {
-      const { data, error, status, statusText } = await supabase
+      const { data, error } = await supabase
         .from('accounts')
         .upsert({ 
           id: accountsState.selectedAccountId, 
           starting_balance: balance 
         });
+
+      // Handle database errors
+      if (error) {
+        console.error('Database error in updateStartingBalance:', error);
+        // Rollback the optimistic update
+        accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: previousBalance });
+        return;
+      }
+
+      console.log('Starting balance updated successfully');
     } catch (err) {
       console.error('Unexpected error in updateStartingBalance:', err);
+      // Rollback the optimistic update
+      accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: previousBalance });
     }
-  }, [accountsState.selectedAccountId]);
+  }, [accountsState.selectedAccountId, accountsState.accounts]);
 
   const toggleBalanceForm = useCallback(() => {
     accountsDispatch({ type: ACCOUNTS_ACTIONS.TOGGLE_BALANCE_FORM });
