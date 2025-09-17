@@ -60,8 +60,8 @@ export const useTradeManagement = (selectedAccountId) => {
     }
 
     const profit = calculateProfit(
-      parseFloat(tradeData.entryPrice),
-      parseFloat(tradeData.exitPrice),
+      parseFloat(tradeData.entry_price),
+      parseFloat(tradeData.exit_price),
       parseInt(tradeData.quantity),
       tradeData.type
     );
@@ -69,8 +69,8 @@ export const useTradeManagement = (selectedAccountId) => {
     const newTrade = {
       ...tradeData,
       account_id: selectedAccountId, // Associate trade with current account
-      entryPrice: parseFloat(tradeData.entryPrice),
-      exitPrice: parseFloat(tradeData.exitPrice),
+      entry_price: parseFloat(tradeData.entry_price),
+      exit_price: parseFloat(tradeData.exit_price),
       quantity: parseInt(tradeData.quantity),
       profit
     };
@@ -110,16 +110,16 @@ export const useTradeManagement = (selectedAccountId) => {
     }
 
     const profit = calculateProfit(
-      parseFloat(tradeData.entryPrice),
-      parseFloat(tradeData.exitPrice),
+      parseFloat(tradeData.entry_price),
+      parseFloat(tradeData.exit_price),
       parseInt(tradeData.quantity),
       tradeData.type
     );
 
     const updatedTrade = {
       ...tradeData,
-      entryPrice: parseFloat(tradeData.entryPrice),
-      exitPrice: parseFloat(tradeData.exitPrice),
+      entry_price: parseFloat(tradeData.entry_price),
+      exit_price: parseFloat(tradeData.exit_price),
       quantity: parseInt(tradeData.quantity),
       profit
     };
