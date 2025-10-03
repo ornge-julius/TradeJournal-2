@@ -101,7 +101,7 @@ const TradeForm = ({
             <label className="block text-sm font-medium text-gray-300 mb-2">Position Type</label>
             <select
               value={formData.position_type}
-              onChange={(e) => setFormData({...formData, type: parseInt(e.target.value)})}
+              onChange={(e) => setFormData({...formData, position_type: parseInt(e.target.value)})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={getTradeTypeNumber('CALL')}>CALL</option>
