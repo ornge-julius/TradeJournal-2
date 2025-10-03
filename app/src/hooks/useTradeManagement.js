@@ -25,7 +25,7 @@ export const useTradeManagement = (selectedAccountId) => {
         .from('trades')
         .select('*')
         .eq('account_id', selectedAccountId)
-        .order('entry_date');
+        .order('entry_date', { ascending: false });
 
       console.log('Supabase response:', { data, error, status, statusText });
 
@@ -63,7 +63,7 @@ export const useTradeManagement = (selectedAccountId) => {
       parseFloat(tradeData.entry_price),
       parseFloat(tradeData.exit_price),
       parseInt(tradeData.quantity),
-      tradeData.type
+      tradeData.position_type
     );
 
     const newTrade = {
@@ -113,7 +113,7 @@ export const useTradeManagement = (selectedAccountId) => {
       parseFloat(tradeData.entry_price),
       parseFloat(tradeData.exit_price),
       parseInt(tradeData.quantity),
-      tradeData.type
+      tradeData.position_type
     );
 
     const updatedTrade = {
