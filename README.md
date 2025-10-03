@@ -2,7 +2,7 @@
 
 A professional React application for tracking and analyzing options trading performance. Built with modern React patterns, reducers for state management, and a clean component architecture.
 
-## 🚀 Features
+## Features
 
 - **Trade Management**: Add, edit, and view detailed trade information
 - **Performance Analytics**: Real-time calculation of win rate, P&L, and account balance
@@ -10,7 +10,7 @@ A professional React application for tracking and analyzing options trading perf
 - **Professional UI**: Dark theme with modern design using Tailwind CSS
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **React 18+** - Modern React with hooks
 - **JavaScript (JSX)** - No TypeScript, pure JavaScript
@@ -21,7 +21,7 @@ A professional React application for tracking and analyzing options trading perf
 - **Reducer Pattern** - For complex state management
 - **Supabase** - Hosted Postgres database and auth
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -38,7 +38,7 @@ src/
 └── index.css            # Global styles with Tailwind
 ```
 
-## 🎯 Key Components
+## Key Components
 
 ### State Management
 - **Trade Reducer**: Manages trade data and operations
@@ -51,7 +51,7 @@ src/
 - **Charts**: Visualize trading performance
 - **Trade Table**: List all trades with actions
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v14 or higher)
@@ -87,7 +87,7 @@ npm run build
    - `trades` for trade history
    - `accounts` with a `starting_balance` column
 
-## 📊 Data Structure
+## Data Structure
 
 ### Trade Object
 ```javascript
@@ -109,7 +109,7 @@ npm run build
 }
 ```
 
-## 🔧 Architecture Patterns
+## Architecture Patterns
 
 ### Component Design
 - **Single Responsibility**: Each component has a clear, focused purpose
@@ -126,14 +126,14 @@ npm run build
 - **Dark Theme**: Professional trading interface aesthetic
 - **Responsive Design**: Mobile-first responsive approach
 
-## 📈 Performance Features
+## Performance Features
 
 - **Memoized Calculations**: useMemo for expensive operations
 - **Efficient Re-rendering**: Proper dependency arrays
 - **Responsive Charts**: Charts adapt to container size
 - **Optimized State Updates**: Minimal re-renders
 
-## 🎨 Customization
+## Customization
 
 ### Colors
 The app uses a custom color palette defined in `tailwind.config.js`:
@@ -148,7 +148,7 @@ The app uses a custom color palette defined in `tailwind.config.js`:
 - Custom color palette extends Tailwind's default colors
 - Consistent spacing and typography scales
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 - **Data Persistence**: localStorage/sessionStorage integration
 - **Import/Export**: CSV and JSON data handling
@@ -157,7 +157,7 @@ The app uses a custom color palette defined in `tailwind.config.js`:
 - **Trade Categories**: Grouping by strategy or sector
 - **Performance Benchmarking**: Compare against market indices
 
-## 📝 Development Notes
+## Development Notes
 
 ### Code Quality
 - Consistent naming conventions
@@ -170,7 +170,7 @@ The app uses a custom color palette defined in `tailwind.config.js`:
 - Reducer testing support
 - Utility function testing
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -178,11 +178,11 @@ The app uses a custom color palette defined in `tailwind.config.js`:
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 🆘 Support
+## Support
 
 For questions or issues, please open an issue in the repository or contact the development team.
 
