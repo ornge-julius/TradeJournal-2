@@ -88,12 +88,18 @@ function App() {
     } else {
       addTrade(tradeData);
     }
-    toggleTradeForm();
+    // Only toggle trade form if we're on the main page (not viewing a trade)
+    if (!viewingTrade) {
+      toggleTradeForm();
+    }
   };
 
   const handleTradeEdit = (trade) => {
     setEditingTrade(trade);
-    toggleTradeForm();
+    // Only toggle trade form if we're on the main page (not viewing a trade)
+    if (!viewingTrade) {
+      toggleTradeForm();
+    }
   };
 
   const handleTradeView = (trade) => {
@@ -102,6 +108,8 @@ function App() {
 
   const handleBackToList = () => {
     clearViewingTrade();
+    // Clear any editing trade when going back to main page
+    clearEditingTrade();
   };
 
   const handleCancelEdit = () => {
@@ -148,6 +156,11 @@ function App() {
             trade={viewingTrade}
             onBack={handleBackToList}
             onEdit={handleTradeEdit}
+            isEditing={editingTrade && editingTrade.id === viewingTrade.id}
+            onSubmit={handleTradeSubmit}
+            onCancelEdit={() => {
+              clearEditingTrade();
+            }}
           />
         ) : (
           // Main Dashboard View
