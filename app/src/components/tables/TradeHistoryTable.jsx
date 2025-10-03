@@ -8,7 +8,7 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
       <div className="p-6 border-b border-gray-700">
         <h3 className="text-xl font-semibold text-gray-200">Trade History</h3>
       </div>
-      <div className="overflow-x-auto overflow-y-auto max-h-96">
+      <div className="overflow-x-auto overflow-y-auto max-h-[600px]">
         <table className="w-full">
           <thead className="bg-gray-700 sticky top-0 z-10">
             <tr>
