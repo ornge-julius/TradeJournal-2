@@ -8,19 +8,23 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
       <div className="p-6 border-b border-gray-700">
         <h3 className="text-xl font-semibold text-gray-200">Trade History</h3>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-auto max-h-96">
         <table className="w-full">
-          <thead className="bg-gray-700/50">
+          <thead className="bg-gray-700 sticky top-0 z-10">
             <tr>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Symbol</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Option</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Type</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Entry</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Exit</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-300">Entry Price</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-300">Exit Price</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Qty</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-300">Entry Date</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-300">Exit Date</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Profit</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-300">Result</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Reason</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Source</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-300">Notes</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Actions</th>
             </tr>
           </thead>
@@ -50,19 +54,23 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                 <td className="py-4 px-6 text-gray-300">${trade.entry_price.toFixed(2)}</td>
                 <td className="py-4 px-6 text-gray-300">${trade.exit_price.toFixed(2)}</td>
                 <td className="py-4 px-6 text-gray-300">{trade.quantity}</td>
+                <td className="py-4 px-6 text-gray-300 text-sm">{trade.entry_date}</td>
+                <td className="py-4 px-6 text-gray-300 text-sm">{trade.exit_date}</td>
                 <td className="py-4 px-6">
-                  <div>
-                    <span className={`font-bold ${trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      ${trade.profit.toLocaleString()}
+                  <span className={`font-bold ${trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    ${trade.profit.toLocaleString()}
+                  </span>
+                </td>
+                <td className="py-4 px-6">
+                  {trade.result !== undefined ? (
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      isWin(trade.result) ? 'bg-emerald-900/50 text-emerald-300' : 'bg-red-900/50 text-red-300'
+                    }`}>
+                      {getResultText(trade.result)}
                     </span>
-                    {trade.result !== undefined && (
-                      <div className={`text-xs mt-1 flex items-center gap-1 ${
-                        isWin(trade.result) ? 'text-emerald-400' : 'text-red-400'
-                      }`}>
-                        📊 {getResultText(trade.result)}
-                      </div>
-                    )}
-                  </div>
+                  ) : (
+                    <span className="text-gray-500 text-sm">-</span>
+                  )}
                 </td>
                 <td className="py-4 px-6">
                   <div className="text-sm text-gray-300 max-w-40 truncate" title={trade.reasoning}>
@@ -70,8 +78,13 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                   </div>
                 </td>
                 <td className="py-4 px-6">
-                  <div className="text-sm text-purple-300">
+                  <div className="text-sm text-purple-300 max-w-32 truncate" title={trade.source}>
                     {trade.source || '-'}
+                  </div>
+                </td>
+                <td className="py-4 px-6">
+                  <div className="text-sm text-gray-300 max-w-40 truncate" title={trade.notes}>
+                    {trade.notes || '-'}
                   </div>
                 </td>
                 <td className="py-4 px-6">
