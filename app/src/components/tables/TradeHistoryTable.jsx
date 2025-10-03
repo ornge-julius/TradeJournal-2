@@ -42,9 +42,9 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                 </td>
                 <td className="py-4 px-6">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    trade.type === 1 ? 'bg-green-900/50 text-green-300' : 'bg-red-900/50 text-red-300'
+                    trade.position_type === 1 ? 'bg-green-900/50 text-green-300' : 'bg-red-900/50 text-red-300'
                   }`}>
-                    {getTradeTypeText(trade.type)}
+                    {getTradeTypeText(trade.position_type)}
                   </span>
                 </td>
                 <td className="py-4 px-6 text-gray-300">${trade.entry_price.toFixed(2)}</td>
@@ -65,8 +65,8 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                   </div>
                 </td>
                 <td className="py-4 px-6">
-                  <div className="text-sm text-gray-300 max-w-40 truncate" title={trade.reason}>
-                    {trade.reason || '-'}
+                  <div className="text-sm text-gray-300 max-w-40 truncate" title={trade.reasoning}>
+                    {trade.reasoning || '-'}
                   </div>
                 </td>
                 <td className="py-4 px-6">

@@ -11,14 +11,14 @@ const TradeForm = ({
 }) => {
   const [formData, setFormData] = useState({
     symbol: '',
-    type: getTradeTypeNumber('CALL'),
+    position_type: getTradeTypeNumber('CALL'),
     entry_price: '',
     exit_price: '',
     quantity: '',
     entry_date: '',
     exit_date: '',
     notes: '',
-    reason: '',
+    reasoning: '',  // changed from reason to reasoning
     result: getResultNumber('WIN'),
     option: '',
     source: ''
@@ -35,14 +35,14 @@ const TradeForm = ({
     } else {
       setFormData({
         symbol: '',
-        type: getTradeTypeNumber('CALL'),
+        position_type: getTradeTypeNumber('CALL'),
         entry_price: '',
         exit_price: '',
         quantity: '',
         entry_date: '',
         exit_date: '',
         notes: '',
-        reason: '',
+        reasoning: '',  // changed from reason to reasoning
         result: getResultNumber('WIN'),
         option: '',
         source: ''
@@ -52,7 +52,7 @@ const TradeForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.symbol || !formData.entry_price || !formData.exit_price || !formData.quantity || !formData.entry_date || !formData.exit_date) {
+    if (!formData.symbol || !formData.entry_price || !formData.exit_price || !formData.quantity || !formData.entry_date || !formData.exit_date || !formData.reasoning) {
       return; // Basic validation
     }
     
@@ -100,7 +100,7 @@ const TradeForm = ({
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Position Type</label>
             <select
-              value={formData.type}
+              value={formData.position_type}
               onChange={(e) => setFormData({...formData, type: parseInt(e.target.value)})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -196,8 +196,8 @@ const TradeForm = ({
             <input
               type="text"
               placeholder="Why did you enter this trade?"
-              value={formData.reason}
-              onChange={(e) => setFormData({...formData, reason: e.target.value})}
+              value={formData.reasoning}
+              onChange={(e) => setFormData({...formData, reasoning: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

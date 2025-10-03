@@ -94,7 +94,7 @@ npm run build
 {
   id: number,           // Unique identifier
   symbol: string,       // Stock symbol (e.g., "AAPL")
-  type: 1 | 2, // Option type (1=CALL, 2=PUT)
+  position_type: 1 | 2, // Option type (1=CALL, 2=PUT)
   entryPrice: number,   // Entry price per contract
   exitPrice: number,    // Exit price per contract
   quantity: number,     // Number of contracts
@@ -102,7 +102,7 @@ npm run build
   exit_date: string,     // Exit date (YYYY-MM-DD)
   profit: number,       // Calculated profit/loss
   notes: string,        // Extended notes/observations
-  reason: string,       // Reason for entering trade
+  reasoning: string,       // Reason for entering trade
   result: 1 | 0, // Fixed trade outcome (1=WIN, 0=LOSS)
   option: string,       // Option contract description
   source: string        // Trade idea source

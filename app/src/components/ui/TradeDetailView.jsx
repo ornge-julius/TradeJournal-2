@@ -74,7 +74,7 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
             <h3 className="text-gray-400 text-sm font-medium">Position</h3>
             <Target className="h-5 w-5 text-purple-400" />
           </div>
-          <p className="text-2xl font-bold text-purple-400">{getTradeTypeText(trade.type)}</p>
+          <p className="text-2xl font-bold text-purple-400">{getTradeTypeText(trade.position_type)}</p>
           <p className="text-xs text-gray-500">{trade.quantity} contracts</p>
         </div>
 
@@ -129,12 +129,12 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
         <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6">
           <h3 className="text-xl font-semibold mb-6 text-gray-200">Trade Analysis</h3>
           <div className="space-y-6">
-            {trade.reason && (
+            {trade.reasoning && (
               <div>
                 <h4 className="text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
                   💡 Reason for Entry
                 </h4>
-                <p className="text-white bg-gray-700/50 rounded-lg p-4">{trade.reason}</p>
+                <p className="text-white bg-gray-700/50 rounded-lg p-4">{trade.reasoning}</p>
               </div>
             )}
             
