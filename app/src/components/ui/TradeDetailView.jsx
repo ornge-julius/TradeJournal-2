@@ -1,8 +1,16 @@
 import React from 'react';
 import { ArrowLeft, Edit, ExternalLink, Target, Calendar } from 'lucide-react';
 import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
+import TradeForm from '../forms/TradeForm';
 
-const TradeDetailView = ({ trade, onBack, onEdit }) => {
+const TradeDetailView = ({ 
+  trade, 
+  onBack, 
+  onEdit, 
+  isEditing,
+  onSubmit,
+  onCancelEdit
+}) => {
   if (!trade) return null;
 
   const duration = calculateTradeDuration(trade.entry_date, trade.exit_date);
@@ -27,16 +35,29 @@ const TradeDetailView = ({ trade, onBack, onEdit }) => {
             <p className="text-gray-400">Complete information for {trade.symbol} trade</p>
           </div>
           <div className="flex gap-4">
-            <button
-              onClick={() => onEdit(trade)}
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-            >
-              <Edit className="h-4 w-4" />
-              Edit Trade
-            </button>
+            {!isEditing && (
+              <button
+                onClick={() => onEdit(trade)}
+                className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+              >
+                <Edit className="h-4 w-4" />
+                Edit Trade
+              </button>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Trade Form - Only show when editing */}
+      {isEditing && (
+        <TradeForm
+          isOpen={true}
+          onClose={onCancelEdit}
+          onSubmit={onSubmit}
+          editingTrade={trade}
+          onCancel={onCancelEdit}
+        />
+      )}
 
       {/* Trade Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
