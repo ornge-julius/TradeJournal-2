@@ -87,7 +87,18 @@ function App() {
     };
   }, [trades, startingBalance, metrics.winningTrades, metrics.losingTrades, isAccountLoading, selectedAccountId]);
 
+  const ensureAuthenticated = () => {
+    if (!isAuthenticated) {
+      setShowSignInForm(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleTradeSubmit = (tradeData) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     if (editingTrade) {
       updateTrade({ ...editingTrade, ...tradeData });
       clearEditingTrade();
@@ -101,11 +112,21 @@ function App() {
   };
 
   const handleTradeEdit = (trade) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     setEditingTrade(trade);
     // Only toggle trade form if we're on the main page (not viewing a trade)
     if (!viewingTrade) {
       toggleTradeForm();
     }
+  };
+
+  const handleToggleTradeForm = () => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
+    toggleTradeForm();
   };
 
   const handleTradeView = (trade) => {
@@ -185,13 +206,14 @@ function App() {
             onCancelEdit={() => {
               clearEditingTrade();
             }}
+            isAuthenticated={isAuthenticated}
           />
         ) : (
           // Main Dashboard View
           <>
             <Header
               onToggleSettings={toggleBalanceForm}
-              onToggleTradeForm={toggleTradeForm}
+              onToggleTradeForm={handleToggleTradeForm}
               showTradeForm={showTradeForm}
               accounts={accounts}
               selectedAccountId={selectedAccountId}
