@@ -56,24 +56,56 @@ export const useTradeManagement = (selectedAccountId) => {
   const addTrade = useCallback(async (tradeData) => {
     if (!selectedAccountId) {
       console.error('No account selected, cannot add trade');
-      return;
+      return null;
+    }
+
+    const entryPrice = parseFloat(tradeData.entry_price);
+    const exitPrice = parseFloat(tradeData.exit_price);
+    const quantity = parseInt(tradeData.quantity, 10);
+    const positionType = parseInt(tradeData.position_type, 10);
+
+    if ([entryPrice, exitPrice, positionType].some((value) => Number.isNaN(value)) || Number.isNaN(quantity)) {
+      console.error('Invalid numeric values provided when adding trade', {
+        entry_price: tradeData.entry_price,
+        exit_price: tradeData.exit_price,
+        quantity: tradeData.quantity,
+        position_type: tradeData.position_type
+      });
+      return null;
     }
 
     const profit = calculateProfit(
-      parseFloat(tradeData.entry_price),
-      parseFloat(tradeData.exit_price),
-      parseInt(tradeData.quantity),
-      tradeData.position_type
+      entryPrice,
+      exitPrice,
+      quantity,
+      positionType
     );
 
+    const parsedResult =
+      tradeData.result === null || tradeData.result === undefined || tradeData.result === ''
+        ? null
+        : parseInt(tradeData.result, 10);
+
     const newTrade = {
-      ...tradeData,
-      account_id: selectedAccountId, // Associate trade with current account
-      entry_price: parseFloat(tradeData.entry_price),
-      exit_price: parseFloat(tradeData.exit_price),
-      quantity: parseInt(tradeData.quantity),
-      profit
+      symbol: tradeData.symbol,
+      position_type: Number.isNaN(positionType) ? null : positionType,
+      entry_price: entryPrice,
+      exit_price: exitPrice,
+      quantity,
+      entry_date: tradeData.entry_date,
+      exit_date: tradeData.exit_date,
+      notes: tradeData.notes || '',
+      reasoning: tradeData.reasoning || '',
+      result: Number.isNaN(parsedResult) ? null : parsedResult,
+      option: tradeData.option || '',
+      source: tradeData.source || '',
+      profit,
+      account_id: selectedAccountId
     };
+
+    if (tradeData.user_id) {
+      newTrade.user_id = tradeData.user_id;
+    }
 
     console.log('Adding new trade:', newTrade);
 
@@ -94,35 +126,75 @@ export const useTradeManagement = (selectedAccountId) => {
           hint: error.hint,
           code: error.code
         });
-        return;
+        return null;
       }
 
       dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
+      return data;
     } catch (err) {
       console.error('Unexpected error in addTrade:', err);
+      return null;
     }
   }, [selectedAccountId]);
 
   const updateTrade = useCallback(async (tradeData) => {
     if (!selectedAccountId) {
       console.error('No account selected, cannot update trade');
-      return;
+      return null;
+    }
+
+    const entryPrice = parseFloat(tradeData.entry_price);
+    const exitPrice = parseFloat(tradeData.exit_price);
+    const quantity = parseInt(tradeData.quantity, 10);
+    const positionType = parseInt(tradeData.position_type, 10);
+
+    if (!tradeData.id) {
+      console.error('Cannot update trade without an id');
+      return null;
+    }
+
+    if ([entryPrice, exitPrice, positionType].some((value) => Number.isNaN(value)) || Number.isNaN(quantity)) {
+      console.error('Invalid numeric values provided when updating trade', {
+        entry_price: tradeData.entry_price,
+        exit_price: tradeData.exit_price,
+        quantity: tradeData.quantity,
+        position_type: tradeData.position_type
+      });
+      return null;
     }
 
     const profit = calculateProfit(
-      parseFloat(tradeData.entry_price),
-      parseFloat(tradeData.exit_price),
-      parseInt(tradeData.quantity),
-      tradeData.position_type
+      entryPrice,
+      exitPrice,
+      quantity,
+      positionType
     );
 
+    const parsedResult =
+      tradeData.result === null || tradeData.result === undefined || tradeData.result === ''
+        ? null
+        : parseInt(tradeData.result, 10);
+
     const updatedTrade = {
-      ...tradeData,
-      entry_price: parseFloat(tradeData.entry_price),
-      exit_price: parseFloat(tradeData.exit_price),
-      quantity: parseInt(tradeData.quantity),
-      profit
+      symbol: tradeData.symbol,
+      position_type: Number.isNaN(positionType) ? null : positionType,
+      entry_price: entryPrice,
+      exit_price: exitPrice,
+      quantity,
+      entry_date: tradeData.entry_date,
+      exit_date: tradeData.exit_date,
+      notes: tradeData.notes || '',
+      reasoning: tradeData.reasoning || '',
+      result: Number.isNaN(parsedResult) ? null : parsedResult,
+      option: tradeData.option || '',
+      source: tradeData.source || '',
+      profit,
+      account_id: tradeData.account_id || selectedAccountId
     };
+
+    if (tradeData.user_id) {
+      updatedTrade.user_id = tradeData.user_id;
+    }
 
     console.log('Updating trade:', updatedTrade);
 
@@ -144,12 +216,14 @@ export const useTradeManagement = (selectedAccountId) => {
           hint: error.hint,
           code: error.code
         });
-        return;
+        return null;
       }
 
       dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
+      return data;
     } catch (err) {
       console.error('Unexpected error in updateTrade:', err);
+      return null;
     }
   }, [selectedAccountId]);
 
