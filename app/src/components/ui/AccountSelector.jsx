@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { ChevronDown, Plus, Settings, Trash2 } from 'lucide-react';
+import { ChevronDown, Plus, Settings, Trash2, LogIn } from 'lucide-react';
 
-const AccountSelector = ({ 
-  accounts, 
-  selectedAccountId, 
-  onSelectAccount, 
-  onAddAccount, 
-  onEditAccount, 
-  onDeleteAccount 
+const AccountSelector = ({
+  accounts,
+  selectedAccountId,
+  onSelectAccount,
+  onAddAccount,
+  onEditAccount,
+  onDeleteAccount,
+  isAuthenticated,
+  onSignIn
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -16,8 +18,19 @@ const AccountSelector = ({
 
   const selectedAccount = accounts.find(acc => acc.id === selectedAccountId);
 
+  const handleRequireAuthentication = () => {
+    setIsOpen(false);
+    if (typeof onSignIn === 'function') {
+      onSignIn();
+    }
+  };
+
   const handleAddAccount = (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      handleRequireAuthentication();
+      return;
+    }
     if (newAccountName.trim() && newAccountBalance) {
       onAddAccount({
         name: newAccountName.trim(),
@@ -31,6 +44,10 @@ const AccountSelector = ({
   };
 
   const handleDeleteAccount = (accountId) => {
+    if (!isAuthenticated) {
+      handleRequireAuthentication();
+      return;
+    }
     if (accounts.length > 1) {
       onDeleteAccount(accountId);
       setIsOpen(false);
@@ -62,12 +79,14 @@ const AccountSelector = ({
                   Balance: ${selectedAccount?.currentBalance?.toLocaleString() || 0}
                 </p>
               </div>
-              <button
-                onClick={() => onEditAccount(selectedAccount)}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <Settings className="h-4 w-4" />
-              </button>
+              {isAuthenticated && (
+                <button
+                  onClick={() => onEditAccount(selectedAccount)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <Settings className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
 
@@ -91,7 +110,7 @@ const AccountSelector = ({
                       ${account.currentBalance?.toLocaleString() || 0}
                     </div>
                   </div>
-                  {accounts.length > 1 && (
+                  {isAuthenticated && accounts.length > 1 && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -110,54 +129,68 @@ const AccountSelector = ({
 
           {/* Add New Account */}
           <div className="p-4 border-t border-gray-700">
-            {!showAddForm ? (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                Add New Account
-              </button>
+            {isAuthenticated ? (
+              !showAddForm ? (
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add New Account
+                </button>
+              ) : (
+                <form onSubmit={handleAddAccount} className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="Account Name"
+                    value={newAccountName}
+                    onChange={(e) => setNewAccountName(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                    required
+                  />
+                  <input
+                    type="number"
+                    placeholder="Starting Balance"
+                    value={newAccountBalance}
+                    onChange={(e) => setNewAccountBalance(e.target.value)}
+                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    >
+                      Add
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAddForm(false);
+                        setNewAccountName('');
+                        setNewAccountBalance('');
+                      }}
+                      className="flex-1 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )
             ) : (
-              <form onSubmit={handleAddAccount} className="space-y-3">
-                <input
-                  type="text"
-                  placeholder="Account Name"
-                  value={newAccountName}
-                  onChange={(e) => setNewAccountName(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                  required
-                />
-                <input
-                  type="number"
-                  placeholder="Starting Balance"
-                  value={newAccountBalance}
-                  onChange={(e) => setNewAccountBalance(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                  step="0.01"
-                  min="0"
-                  required
-                />
-                <div className="flex gap-2">
-                  <button
-                    type="submit"
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Add
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowAddForm(false);
-                      setNewAccountName('');
-                      setNewAccountBalance('');
-                    }}
-                    className="flex-1 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
+              <div className="space-y-3 text-center">
+                <p className="text-sm text-gray-400">Sign in to add or manage accounts.</p>
+                <button
+                  type="button"
+                  onClick={handleRequireAuthentication}
+                  className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </button>
+              </div>
             )}
           </div>
         </div>

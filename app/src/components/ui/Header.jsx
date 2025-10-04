@@ -91,6 +91,8 @@ const Header = ({
                   onAddAccount={onAddAccount}
                   onEditAccount={onEditAccount}
                   onDeleteAccount={onDeleteAccount}
+                  isAuthenticated={isAuthenticated}
+                  onSignIn={handleSignInClick}
                 />
               </div>
 
@@ -125,23 +127,45 @@ const Header = ({
 
               <div className="space-y-3">
                 <p className="text-sm text-gray-400">Trading</p>
-                <button
-                  type="button"
-                  onClick={handleToggleTradeForm}
-                  aria-pressed={Boolean(showTradeForm)}
-                  className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                >
-                  <Plus className="h-5 w-5" />
-                  {showTradeForm ? 'Hide Trade Form' : 'Add New Trade'}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleToggleSettings}
-                  className="w-full bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-                >
-                  <Settings className="h-4 w-4" />
-                  Settings
-                </button>
+                {isAuthenticated ? (
+                  <button
+                    type="button"
+                    onClick={handleToggleTradeForm}
+                    aria-pressed={Boolean(showTradeForm)}
+                    className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 px-4 py-2 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                  >
+                    <Plus className="h-5 w-5" />
+                    {showTradeForm ? 'Hide Trade Form' : 'Add New Trade'}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSignInClick}
+                    className="w-full bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    Sign in to add trades
+                  </button>
+                )}
+                {isAuthenticated ? (
+                  <button
+                    type="button"
+                    onClick={handleToggleSettings}
+                    className="w-full bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Settings
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleSignInClick}
+                    className="w-full bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Sign in to manage settings
+                  </button>
+                )}
               </div>
             </div>
           )}

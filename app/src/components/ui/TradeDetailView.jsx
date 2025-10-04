@@ -3,13 +3,14 @@ import { ArrowLeft, Edit, ExternalLink, Target, Calendar } from 'lucide-react';
 import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 import TradeForm from '../forms/TradeForm';
 
-const TradeDetailView = ({ 
-  trade, 
-  onBack, 
-  onEdit, 
+const TradeDetailView = ({
+  trade,
+  onBack,
+  onEdit,
   isEditing,
   onSubmit,
-  onCancelEdit
+  onCancelEdit,
+  isAuthenticated
 }) => {
   if (!trade) return null;
 
@@ -35,7 +36,7 @@ const TradeDetailView = ({
             <p className="text-gray-400">Complete information for {trade.symbol} trade</p>
           </div>
           <div className="flex gap-4">
-            {!isEditing && (
+            {!isEditing && isAuthenticated && (
               <button
                 onClick={() => onEdit(trade)}
                 className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
