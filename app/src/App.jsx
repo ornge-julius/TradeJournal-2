@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { useTradeManagement } from './hooks/useTradeManagement';
 import { useAppState } from './hooks/useAppState';
+import { useAuth } from './hooks/useAuth';
 import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateWinLossData } from './utils/calculations';
 import Header from './components/ui/Header';
 import MetricsCards from './components/ui/MetricsCards';
 import TradeForm from './components/forms/TradeForm';
 import SettingsForm from './components/forms/SettingsForm';
 import AccountEditForm from './components/forms/AccountEditForm';
+import SignInForm from './components/forms/SignInForm';
 import TradeHistoryTable from './components/tables/TradeHistoryTable';
 import TradeDetailView from './components/ui/TradeDetailView';
 import AccountBalanceChart from './components/charts/AccountBalanceChart';
@@ -16,6 +18,10 @@ import CumulativeProfitChart from './components/charts/CumulativeProfitChart';
 function App() {
   const [showAccountEditForm, setShowAccountEditForm] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
+  const [showSignInForm, setShowSignInForm] = useState(false);
+
+  // Authentication state
+  const { user, isAuthenticated, isLoading: authLoading, signInWithEmail, signOut } = useAuth();
 
   const {
     startingBalance,
@@ -147,6 +153,24 @@ function App() {
     selectAccount(accountId);
   };
 
+  // Authentication handlers
+  const handleSignIn = () => {
+    setShowSignInForm(true);
+  };
+
+  const handleSignInSubmit = async (email, password) => {
+    await signInWithEmail(email, password);
+    setShowSignInForm(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const handleCloseSignInForm = () => {
+    setShowSignInForm(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -175,6 +199,10 @@ function App() {
               onAddAccount={handleAddAccount}
               onEditAccount={handleEditAccount}
               onDeleteAccount={handleDeleteAccount}
+              isAuthenticated={isAuthenticated}
+              user={user}
+              onSignIn={handleSignIn}
+              onSignOut={handleSignOut}
             />
 
             {/* Settings Form */}
@@ -205,8 +233,20 @@ function App() {
               account={editingAccount}
             />
 
+            {/* Sign In Form */}
+            <SignInForm
+              isOpen={showSignInForm}
+              onClose={handleCloseSignInForm}
+              onSignIn={handleSignInSubmit}
+            />
+
             {/* Loading State */}
-            {isAccountLoading ? (
+            {authLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p className="text-gray-300">Loading authentication...</p>
+              </div>
+            ) : isAccountLoading ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
                 <p className="text-gray-300">Loading account data...</p>
