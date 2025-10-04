@@ -95,20 +95,41 @@ function App() {
     return true;
   };
 
-  const handleTradeSubmit = (tradeData) => {
+  const handleTradeSubmit = async (tradeData) => {
     if (!ensureAuthenticated()) {
       return;
     }
     if (editingTrade) {
-      updateTrade({ ...editingTrade, ...tradeData });
-      clearEditingTrade();
-    } else {
-      addTrade(tradeData);
+      const updatedTrade = await updateTrade({ ...editingTrade, ...tradeData });
+
+      if (updatedTrade) {
+        if (viewingTrade && viewingTrade.id === updatedTrade.id) {
+          setViewingTrade(updatedTrade);
+        }
+
+        clearEditingTrade();
+
+        if (!viewingTrade) {
+          toggleTradeForm();
+        }
+
+        return true;
+      }
+
+      return false;
     }
-    // Only toggle trade form if we're on the main page (not viewing a trade)
-    if (!viewingTrade) {
-      toggleTradeForm();
+
+    const newTrade = await addTrade(tradeData);
+
+    if (newTrade) {
+      if (!viewingTrade) {
+        toggleTradeForm();
+      }
+
+      return true;
     }
+
+    return false;
   };
 
   const handleTradeEdit = (trade) => {
