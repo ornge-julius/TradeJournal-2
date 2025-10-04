@@ -273,11 +273,7 @@ function App() {
                 </div>
 
                 {/* Trade History */}
-                <TradeHistoryTable
-                  trades={trades}
-                  onViewTrade={handleTradeView}
-                  onEditTrade={handleTradeEdit}
-                />
+                <TradeHistoryTable trades={trades} onViewTrade={handleTradeView} />
               </>
             )}
           </>

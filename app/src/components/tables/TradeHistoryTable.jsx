@@ -1,8 +1,7 @@
 import React from 'react';
-import { Edit } from 'lucide-react';
 import { getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 
-const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
+const TradeHistoryTable = ({ trades, onViewTrade }) => {
   return (
     <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl overflow-hidden">
       <div className="p-6 border-b border-gray-700">
@@ -25,7 +24,6 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
               <th className="text-left py-4 px-6 font-medium text-gray-300 w-48">Reason</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Source</th>
               <th className="text-left py-4 px-6 font-medium text-gray-300">Notes</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300 sticky right-0 bg-gray-700 z-10">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -86,15 +84,6 @@ const TradeHistoryTable = ({ trades, onViewTrade, onEditTrade }) => {
                   <div className="text-sm text-gray-300 max-w-40 truncate" title={trade.notes}>
                     {trade.notes || '-'}
                   </div>
-                </td>
-                <td className="py-4 px-6 sticky right-0 bg-gray-800 z-10">
-                  <button
-                    onClick={() => onEditTrade(trade)}
-                    className="text-blue-400 hover:text-blue-300 transition-colors p-1 rounded hover:bg-gray-700"
-                    title="Edit trade"
-                  >
-                    <Edit className="h-4 w-4" />
-                  </button>
                 </td>
               </tr>
             ))}
