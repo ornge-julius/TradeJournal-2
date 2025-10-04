@@ -50,13 +50,17 @@ const TradeForm = ({
     }
   }, [editingTrade]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.symbol || !formData.entry_price || !formData.exit_price || !formData.quantity || !formData.entry_date || !formData.exit_date || !formData.reasoning) {
       return; // Basic validation
     }
-    
-    onSubmit(formData);
+
+    try {
+      await onSubmit(formData);
+    } catch (err) {
+      console.error('Error submitting trade form:', err);
+    }
   };
 
   const handleCancel = () => {
