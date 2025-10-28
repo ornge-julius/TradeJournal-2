@@ -87,7 +87,18 @@ function App() {
     };
   }, [trades, startingBalance, metrics.winningTrades, metrics.losingTrades, isAccountLoading, selectedAccountId]);
 
+  const ensureAuthenticated = () => {
+    if (!isAuthenticated) {
+      setShowSignInForm(true);
+      return false;
+    }
+    return true;
+  };
+
   const handleTradeSubmit = (tradeData) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     if (editingTrade) {
       updateTrade({ ...editingTrade, ...tradeData });
       clearEditingTrade();
@@ -101,11 +112,21 @@ function App() {
   };
 
   const handleTradeEdit = (trade) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     setEditingTrade(trade);
     // Only toggle trade form if we're on the main page (not viewing a trade)
     if (!viewingTrade) {
       toggleTradeForm();
     }
+  };
+
+  const handleToggleTradeForm = () => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
+    toggleTradeForm();
   };
 
   const handleTradeView = (trade) => {
@@ -123,27 +144,49 @@ function App() {
     toggleTradeForm();
   };
 
+  const handleToggleSettings = () => {
+    if (!showBalanceForm && !ensureAuthenticated()) {
+      return;
+    }
+    toggleBalanceForm();
+  };
+
   const handleUpdateBalance = (newBalance) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     updateStartingBalance(newBalance);
     toggleBalanceForm();
   };
 
   const handleAddAccount = (accountData) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     addAccount(accountData);
   };
 
   const handleEditAccount = (account) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     setEditingAccount(account);
     setShowAccountEditForm(true);
   };
 
   const handleAccountEditSubmit = (updatedAccount) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     updateAccount(updatedAccount);
     setShowAccountEditForm(false);
     setEditingAccount(null);
   };
 
   const handleDeleteAccount = (accountId) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
     if (accounts.length > 1) {
       deleteAccount(accountId);
     }
@@ -185,13 +228,14 @@ function App() {
             onCancelEdit={() => {
               clearEditingTrade();
             }}
+            isAuthenticated={isAuthenticated}
           />
         ) : (
           // Main Dashboard View
           <>
             <Header
-              onToggleSettings={toggleBalanceForm}
-              onToggleTradeForm={toggleTradeForm}
+              onToggleSettings={handleToggleSettings}
+              onToggleTradeForm={handleToggleTradeForm}
               showTradeForm={showTradeForm}
               accounts={accounts}
               selectedAccountId={selectedAccountId}
@@ -208,7 +252,7 @@ function App() {
             {/* Settings Form */}
             <SettingsForm
               isOpen={showBalanceForm}
-              onClose={toggleBalanceForm}
+              onClose={handleToggleSettings}
               onSubmit={handleUpdateBalance}
               currentBalance={startingBalance}
             />
