@@ -12,6 +12,7 @@ const TradeForm = ({
   onDelete 
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     symbol: '',
     position_type: getTradeTypeNumber('CALL'),
@@ -51,22 +52,42 @@ const TradeForm = ({
         source: ''
       });
     }
+    setErrors({}); // Clear errors when form changes
   }, [editingTrade]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.symbol.trim()) newErrors.symbol = true;
+    if (!formData.entry_price) newErrors.entry_price = true;
+    if (!formData.exit_price) newErrors.exit_price = true;
+    if (!formData.quantity) newErrors.quantity = true;
+    if (!formData.entry_date) newErrors.entry_date = true;
+    if (!formData.exit_date) newErrors.exit_date = true;
+    if (!formData.reasoning.trim()) newErrors.reasoning = true;
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.symbol || !formData.entry_price || !formData.exit_price || !formData.quantity || !formData.entry_date || !formData.exit_date || !formData.reasoning) {
-      return; // Basic validation
+    
+    // Validate form and return early if validation fails
+    if (!validateForm()) {
+      return;
     }
 
     try {
       await onSubmit(formData);
+      setErrors({}); // Clear errors on successful submission
     } catch (err) {
       console.error('Error submitting trade form:', err);
     }
   };
 
   const handleCancel = () => {
+    setErrors({}); // Clear errors on cancel
     if (editingTrade) {
       onCancel();
     } else {
@@ -98,8 +119,15 @@ const TradeForm = ({
               type="text"
               placeholder="e.g., AAPL"
               value={formData.symbol}
-              onChange={(e) => setFormData({...formData, symbol: e.target.value.toUpperCase()})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setFormData({...formData, symbol: e.target.value.toUpperCase()});
+                if (errors.symbol) setErrors({...errors, symbol: false});
+              }}
+              className={`w-full bg-gray-700 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none ${
+                errors.symbol 
+                  ? 'border-red-500 focus:ring-2 focus:ring-red-500' 
+                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+              }`}
               required
             />
           </div>
@@ -134,8 +162,15 @@ const TradeForm = ({
               step="0.01"
               placeholder="0.00"
               value={formData.entry_price}
-              onChange={(e) => setFormData({...formData, entry_price: e.target.value})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setFormData({...formData, entry_price: e.target.value});
+                if (errors.entry_price) setErrors({...errors, entry_price: false});
+              }}
+              className={`w-full bg-gray-700 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none ${
+                errors.entry_price 
+                  ? 'border-red-500 focus:ring-2 focus:ring-red-500' 
+                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+              }`}
               required
             />
           </div>
@@ -147,8 +182,15 @@ const TradeForm = ({
               step="0.01"
               placeholder="0.00"
               value={formData.exit_price}
-              onChange={(e) => setFormData({...formData, exit_price: e.target.value})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setFormData({...formData, exit_price: e.target.value});
+                if (errors.exit_price) setErrors({...errors, exit_price: false});
+              }}
+              className={`w-full bg-gray-700 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none ${
+                errors.exit_price 
+                  ? 'border-red-500 focus:ring-2 focus:ring-red-500' 
+                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+              }`}
               required
             />
           </div>
@@ -159,8 +201,15 @@ const TradeForm = ({
               type="number"
               placeholder="0"
               value={formData.quantity}
-              onChange={(e) => setFormData({...formData, quantity: e.target.value})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setFormData({...formData, quantity: e.target.value});
+                if (errors.quantity) setErrors({...errors, quantity: false});
+              }}
+              className={`w-full bg-gray-700 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none ${
+                errors.quantity 
+                  ? 'border-red-500 focus:ring-2 focus:ring-red-500' 
+                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+              }`}
               required
             />
           </div>
@@ -170,8 +219,15 @@ const TradeForm = ({
             <input
               type="date"
               value={formData.entry_date}
-              onChange={(e) => setFormData({...formData, entry_date: e.target.value})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setFormData({...formData, entry_date: e.target.value});
+                if (errors.entry_date) setErrors({...errors, entry_date: false});
+              }}
+              className={`w-full bg-gray-700 border rounded-lg px-4 py-3 text-white focus:outline-none ${
+                errors.entry_date 
+                  ? 'border-red-500 focus:ring-2 focus:ring-red-500' 
+                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+              }`}
               required
             />
           </div>
@@ -181,8 +237,15 @@ const TradeForm = ({
             <input
               type="date"
               value={formData.exit_date}
-              onChange={(e) => setFormData({...formData, exit_date: e.target.value})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setFormData({...formData, exit_date: e.target.value});
+                if (errors.exit_date) setErrors({...errors, exit_date: false});
+              }}
+              className={`w-full bg-gray-700 border rounded-lg px-4 py-3 text-white focus:outline-none ${
+                errors.exit_date 
+                  ? 'border-red-500 focus:ring-2 focus:ring-red-500' 
+                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+              }`}
               required
             />
           </div>
@@ -204,8 +267,15 @@ const TradeForm = ({
               type="text"
               placeholder="Why did you enter this trade?"
               value={formData.reasoning}
-              onChange={(e) => setFormData({...formData, reasoning: e.target.value})}
-              className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => {
+                setFormData({...formData, reasoning: e.target.value});
+                if (errors.reasoning) setErrors({...errors, reasoning: false});
+              }}
+              className={`w-full bg-gray-700 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none ${
+                errors.reasoning 
+                  ? 'border-red-500 focus:ring-2 focus:ring-red-500' 
+                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500'
+              }`}
             />
           </div>
           
