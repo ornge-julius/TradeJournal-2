@@ -10,6 +10,7 @@ const TradeDetailView = ({
   isEditing,
   onSubmit,
   onCancelEdit,
+  onDelete,
   isAuthenticated
 }) => {
   if (!trade) return null;
@@ -57,6 +58,7 @@ const TradeDetailView = ({
           onSubmit={onSubmit}
           editingTrade={trade}
           onCancel={onCancelEdit}
+          onDelete={onDelete}
         />
       )}
 

@@ -45,6 +45,7 @@ function App() {
     viewingTrade,
     addTrade,
     updateTrade,
+    deleteTrade,
     setEditingTrade,
     setViewingTrade,
     clearEditingTrade,
@@ -165,6 +166,32 @@ function App() {
     toggleTradeForm();
   };
 
+  const handleTradeDelete = async (tradeId) => {
+    if (!ensureAuthenticated()) {
+      return;
+    }
+    
+    try {
+      await deleteTrade(tradeId);
+      
+      // If we're viewing the trade that was deleted, go back to list
+      if (viewingTrade && viewingTrade.id === tradeId) {
+        clearViewingTrade();
+        clearEditingTrade();
+      } else if (editingTrade && editingTrade.id === tradeId) {
+        // If we're editing the trade that was deleted
+        clearEditingTrade();
+        toggleTradeForm();
+      } else if (editingTrade) {
+        // If we're editing a different trade, just clear editing
+        clearEditingTrade();
+      }
+    } catch (err) {
+      console.error('Error deleting trade:', err);
+      // You could add error handling/notification here
+    }
+  };
+
   const handleToggleSettings = () => {
     if (!showBalanceForm && !ensureAuthenticated()) {
       return;
@@ -249,6 +276,7 @@ function App() {
             onCancelEdit={() => {
               clearEditingTrade();
             }}
+            onDelete={handleTradeDelete}
             isAuthenticated={isAuthenticated}
           />
         ) : (
@@ -285,6 +313,7 @@ function App() {
               onSubmit={handleTradeSubmit}
               editingTrade={editingTrade}
               onCancel={handleCancelEdit}
+              onDelete={handleTradeDelete}
             />
 
             {/* Account Edit Form */}
