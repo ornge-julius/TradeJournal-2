@@ -129,16 +129,13 @@ export const useTradeManagement = (selectedAccountId) => {
         return null;
       }
 
-      // Refetch all trades instead of just dispatching ADD_TRADE
-      // This ensures proper sort order and updates all charts and metrics
-      await fetchTrades();
-      
+      dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
       return data;
     } catch (err) {
       console.error('Unexpected error in addTrade:', err);
       return null;
     }
-  }, [selectedAccountId, fetchTrades]);
+  }, [selectedAccountId]);
 
   const updateTrade = useCallback(async (tradeData) => {
     if (!selectedAccountId) {
@@ -222,16 +219,13 @@ export const useTradeManagement = (selectedAccountId) => {
         return null;
       }
 
-      // Refetch all trades instead of just dispatching UPDATE_TRADE
-      // This ensures proper sort order and updates all charts and metrics
-      await fetchTrades();
-      
+      dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
       return data;
     } catch (err) {
       console.error('Unexpected error in updateTrade:', err);
       return null;
     }
-  }, [selectedAccountId, fetchTrades]);
+  }, [selectedAccountId]);
 
   const deleteTrade = useCallback(async (tradeId) => {
     if (!selectedAccountId) {
@@ -260,13 +254,11 @@ export const useTradeManagement = (selectedAccountId) => {
         return;
       }
 
-      // Refetch all trades instead of just dispatching DELETE_TRADE
-      // This ensures data consistency and updates all charts and metrics
-      await fetchTrades();
+      dispatch({ type: TRADE_ACTIONS.DELETE_TRADE, payload: tradeId });
     } catch (err) {
       console.error('Unexpected error in deleteTrade:', err);
     }
-  }, [selectedAccountId, fetchTrades]);
+  }, [selectedAccountId]);
 
   const setEditingTrade = useCallback((trade) => {
     dispatch({ type: TRADE_ACTIONS.SET_EDITING_TRADE, payload: trade });
