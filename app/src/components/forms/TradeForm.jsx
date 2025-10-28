@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 import { getResultNumber, getTradeTypeNumber } from '../../utils/calculations';
+import ConfirmModal from '../ui/ConfirmModal';
 
 const TradeForm = ({ 
   isOpen, 
   onClose, 
   onSubmit, 
   editingTrade, 
-  onCancel 
+  onCancel,
+  onDelete 
 }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [formData, setFormData] = useState({
     symbol: '',
     position_type: getTradeTypeNumber('CALL'),
@@ -243,9 +246,36 @@ const TradeForm = ({
             >
               Cancel
             </button>
+            {editingTrade && onDelete && (
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(true)}
+                className="bg-red-600 hover:bg-red-700 px-4 py-3 rounded-lg font-medium transition-colors flex items-center gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete
+              </button>
+            )}
           </div>
         </div>
       </form>
+      
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={async () => {
+          if (onDelete && editingTrade) {
+            await onDelete(editingTrade.id);
+            setShowDeleteModal(false);
+          }
+        }}
+        title="Delete Trade"
+        message={`Are you sure you want to delete this trade? This action cannot be undone.`}
+        confirmText="Delete Trade"
+        cancelText="Cancel"
+        confirmButtonColor="bg-red-600 hover:bg-red-700"
+      />
     </div>
   );
 };
