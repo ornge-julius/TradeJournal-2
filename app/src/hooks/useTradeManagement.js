@@ -129,7 +129,16 @@ export const useTradeManagement = (selectedAccountId) => {
         return null;
       }
 
-      dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
+      // Refetch all trades instead of just dispatching ADD_TRADE
+      // This ensures proper sort order and updates all charts and metrics
+      // If refetch fails, fall back to adding the trade directly to state
+      try {
+        await fetchTrades();
+      } catch (refetchError) {
+        console.error('Error refetching trades after add, falling back to dispatch:', refetchError);
+        dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
+      }
+      
       return data;
     } catch (err) {
       console.error('Unexpected error in addTrade:', err);
@@ -219,7 +228,16 @@ export const useTradeManagement = (selectedAccountId) => {
         return null;
       }
 
-      dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
+      // Refetch all trades instead of just dispatching UPDATE_TRADE
+      // This ensures proper sort order and updates all charts and metrics
+      // If refetch fails, fall back to updating the trade directly in state
+      try {
+        await fetchTrades();
+      } catch (refetchError) {
+        console.error('Error refetching trades after update, falling back to dispatch:', refetchError);
+        dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
+      }
+      
       return data;
     } catch (err) {
       console.error('Unexpected error in updateTrade:', err);
@@ -254,7 +272,15 @@ export const useTradeManagement = (selectedAccountId) => {
         return;
       }
 
-      dispatch({ type: TRADE_ACTIONS.DELETE_TRADE, payload: tradeId });
+      // Refetch all trades instead of just dispatching DELETE_TRADE
+      // This ensures data consistency and updates all charts and metrics
+      // If refetch fails, fall back to removing the trade directly from state
+      try {
+        await fetchTrades();
+      } catch (refetchError) {
+        console.error('Error refetching trades after delete, falling back to dispatch:', refetchError);
+        dispatch({ type: TRADE_ACTIONS.DELETE_TRADE, payload: tradeId });
+      }
     } catch (err) {
       console.error('Unexpected error in deleteTrade:', err);
     }
