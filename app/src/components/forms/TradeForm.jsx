@@ -12,6 +12,7 @@ const TradeForm = ({
   onDelete 
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     symbol: '',
     position_type: getTradeTypeNumber('CALL'),
@@ -51,22 +52,44 @@ const TradeForm = ({
         source: ''
       });
     }
+    setErrors({}); // Clear errors when form changes
   }, [editingTrade]);
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.symbol.trim()) newErrors.symbol = true;
+    if (!formData.entry_price) newErrors.entry_price = true;
+    if (!formData.exit_price) newErrors.exit_price = true;
+    if (!formData.quantity) newErrors.quantity = true;
+    if (!formData.entry_date) newErrors.entry_date = true;
+    if (!formData.exit_date) newErrors.exit_date = true;
+    if (!formData.reasoning.trim()) newErrors.reasoning = true;
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.symbol || !formData.entry_price || !formData.exit_price || !formData.quantity || !formData.entry_date || !formData.exit_date || !formData.reasoning) {
-      return; // Basic validation
+    
+    // Use browser validation for required fields
+    const form = e.target;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
     }
 
     try {
       await onSubmit(formData);
+      setErrors({}); // Clear errors on successful submission
     } catch (err) {
       console.error('Error submitting trade form:', err);
     }
   };
 
   const handleCancel = () => {
+    setErrors({}); // Clear errors on cancel
     if (editingTrade) {
       onCancel();
     } else {
@@ -206,6 +229,7 @@ const TradeForm = ({
               value={formData.reasoning}
               onChange={(e) => setFormData({...formData, reasoning: e.target.value})}
               className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
           
