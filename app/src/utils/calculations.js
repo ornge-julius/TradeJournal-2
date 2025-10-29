@@ -86,7 +86,7 @@ export const generateCumulativeProfitData = (trades) => {
 export const generateAccountBalanceData = (trades, startingBalance) => {
   let balance = startingBalance;
   const data = [{ date: 'Start', balance: startingBalance, tradeNum: 0 }];
-  
+
   trades.forEach((trade, index) => {
     balance += trade.profit;
     data.push({
@@ -95,8 +95,21 @@ export const generateAccountBalanceData = (trades, startingBalance) => {
       tradeNum: index + 1
     });
   });
-  
+
   return data;
+};
+
+// Generate trimmed balance trend data for mini charts
+export const generateBalanceTrendData = (accountBalanceData, pointCount = 10) => {
+  if (!accountBalanceData || accountBalanceData.length === 0) {
+    return [];
+  }
+
+  const lastPoints = accountBalanceData.slice(-pointCount);
+
+  return lastPoints.map((point) => ({
+    balance: point.balance ?? point.value ?? 0
+  }));
 };
 
 // Generate win/loss data for pie chart

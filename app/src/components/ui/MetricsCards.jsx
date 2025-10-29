@@ -1,31 +1,17 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Target, Calendar } from 'lucide-react';
 import TotalTradesCard from './cards/TotalTradesCard';
+import CurrentBalanceCard from './cards/CurrentBalanceCard';
 
-const MetricsCards = ({ metrics, startingBalance }) => {
+const MetricsCards = ({ metrics, balanceTrendData = [] }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-      <TotalTradesCard
-        totalTrades={metrics.totalTrades}
-        winningTrades={metrics.winningTrades}
-        losingTrades={metrics.losingTrades}
-      />
-
-      <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-gray-400 text-sm font-medium">Account Balance</h3>
-          <DollarSign className="h-5 w-5 text-blue-400" />
-        </div>
-        <p className={`text-2xl font-bold ${metrics.currentBalance >= startingBalance ? 'text-emerald-400' : 'text-red-400'}`}>
-          ${metrics.currentBalance.toLocaleString()}
-        </p>
-        <p className="text-xs text-gray-500">Starting: ${startingBalance.toLocaleString()}</p>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <CurrentBalanceCard currentBalance={metrics.currentBalance} trendData={balanceTrendData} />
 
       <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-gray-400 text-sm font-medium">Total Profit</h3>
-          {metrics.totalProfit >= 0 ? 
+          {metrics.totalProfit >= 0 ?
             <TrendingUp className="h-5 w-5 text-emerald-400" /> : 
             <TrendingDown className="h-5 w-5 text-red-400" />
           }

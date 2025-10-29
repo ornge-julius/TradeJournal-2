@@ -15,11 +15,18 @@ const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
   const cumulativeProfitData = useMemo(() => {
     return generateCumulativeProfitData(trades);
   }, [trades]);
+  const accountBalanceData = useMemo(() => {
+    return generateAccountBalanceData(trades, startingBalance);
+  }, [trades, startingBalance]);
+
+  const balanceTrendData = useMemo(() => {
+    return generateBalanceTrendData(accountBalanceData);
+  }, [accountBalanceData]);
 
   return (
     <div className="space-y-8">
       {/* Enhanced Metrics Cards */}
-      <DashboardMetricsCards metrics={metrics} />
+      <DashboardMetricsCards metrics={metrics} balanceTrendData={balanceTrendData} />
 
       {/* Cumulative Net Profit Curve - Full Width Row */}
       <CumulativeNetProfitChart data={cumulativeProfitData} />
