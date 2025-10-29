@@ -10,7 +10,7 @@ This first piece of work focuses on creating the new `DashboardView` component s
 3. Proper data flow and memoization
 4. Responsive grid layout
 
-The charts themselves will be added in a separate piece of work.
+The charts themselves will be added in a separate piece of work (see `DASHBOARD_CHARTS_INTEGRATION.md`).
 
 ## Current Implementation
 
@@ -32,7 +32,7 @@ The current dashboard layout in `App.jsx`:
    - Component should receive props: `trades`, `startingBalance`, `onViewTrade`
 
 2. **Enhanced Metrics Cards**
-   - Integrate `DashboardMetricsCards` component (should be created separately)
+   - Integrate `DashboardMetricsCards` component (must be created separately - see `DASHBOARD_METRICS_CARDS_COMPONENT.md`)
    - Display 5 metric cards: Total Trades, Win Rate, Net P&L, Avg W/L $, Current Balance
    - Metrics cards should be in a responsive grid: 5 columns on large screens, fewer on smaller screens
 
@@ -40,7 +40,7 @@ The current dashboard layout in `App.jsx`:
    - Create layout structure ready for charts:
      - Left column placeholder (for Cumulative Net Profit Curve chart)
      - Right column placeholder with two stacked sections (for Monthly and Daily charts)
-   - Charts will be added in subsequent work, but layout should be ready
+   - Charts will be added in subsequent work (`DASHBOARD_CHARTS_INTEGRATION.md`), but layout should be ready
    - Include trade history table below charts area
 
 4. **Data Flow and Calculations**
@@ -199,37 +199,42 @@ The layout should match the target design:
 
 ## Implementation Steps
 
-1. **Create DashboardView component**
+1. **Create DashboardMetricsCards component first**
+   - This is a prerequisite - see `DASHBOARD_METRICS_CARDS_COMPONENT.md`
+   - Must be created before DashboardView can be completed
+   - Can use placeholder temporarily if needed
+
+2. **Create DashboardView component**
    - Create `app/src/components/views/DashboardView.jsx`
    - Import DashboardMetricsCards component
    - Import TradeHistoryTable component
    - Import calculation utilities
    - Set up component structure with placeholders
 
-2. **Implement metrics calculation**
+3. **Implement metrics calculation**
    - Add `useMemo` hook for metrics calculation
    - Use existing `calculateMetrics` function
    - Pass metrics to DashboardMetricsCards
 
-3. **Set up layout structure**
+4. **Set up layout structure**
    - Create responsive grid layout for metrics cards
    - Create 2-column grid layout for chart area
    - Add placeholder divs for charts
    - Include trade history table
 
-4. **Update App.jsx**
+5. **Update App.jsx**
    - Import DashboardView component
    - Replace current dashboard section with DashboardView
    - Pass required props (trades, startingBalance, onViewTrade)
    - Remove old metrics cards and charts from App.jsx
 
-5. **Test layout and responsive behavior**
+6. **Test layout and responsive behavior**
    - Test on different screen sizes
    - Verify layout breaks correctly
    - Ensure metrics cards display correctly
    - Verify placeholders show in chart areas
 
-6. **Styling refinements**
+7. **Styling refinements**
    - Ensure consistent spacing
    - Verify color scheme consistency
    - Check responsive breakpoints
@@ -242,14 +247,45 @@ The layout should match the target design:
 2. **Files to Modify**
    - `app/src/App.jsx` - Replace dashboard section with DashboardView
 
-3. **Files to Reference/Create**
-   - `app/src/components/ui/DashboardMetricsCards.jsx` - Must be created first (separate work)
+3. **Files to Reference/Create (Dependencies)**
+   - `app/src/components/ui/DashboardMetricsCards.jsx` - Must be created first (see `DASHBOARD_METRICS_CARDS_COMPONENT.md`)
    - `app/src/utils/calculations.js` - Should already have `calculateMetrics` function
+
+## Dependencies and Prerequisites
+
+**Important**: Before implementing DashboardView, the following must be created:
+
+1. **DashboardMetricsCards Component** (Required)
+   - See `DASHBOARD_METRICS_CARDS_COMPONENT.md` for implementation details
+   - This component orchestrates all 5 individual metric cards
+   - Must be created before DashboardView can be fully implemented
+   - Can temporarily use placeholder if individual cards aren't ready
+
+2. **Individual Metric Cards** (Recommended before DashboardMetricsCards)
+   - These are created separately based on their individual documentation:
+     - `TOTAL_TRADES_CARD.md`
+     - `WIN_RATE_CARD.md`
+     - `NET_PNL_CARD.md`
+     - `AVG_WL_CARD.md`
+     - `CURRENT_BALANCE_CARD.md`
+   - DashboardMetricsCards component depends on these
+
+3. **Chart Components** (Not needed yet)
+   - Charts will be added in `DASHBOARD_CHARTS_INTEGRATION.md`
+   - Placeholders are fine for now
+
+## Work Order Recommendation
+
+For best results, implement in this order:
+1. Create individual metric card components (5 separate cards)
+2. Create `DashboardMetricsCards` component to orchestrate the cards
+3. Create `DashboardView` component (this work)
+4. Add charts to dashboard (separate work - see `DASHBOARD_CHARTS_INTEGRATION.md`)
 
 ## Acceptance Criteria
 
 - ✅ DashboardView component is created and functional
-- ✅ Component displays 5 enhanced metrics cards in top row
+- ✅ Component displays 5 enhanced metrics cards via DashboardMetricsCards
 - ✅ Metrics cards are in responsive grid (5 cols large, fewer on smaller screens)
 - ✅ Chart area layout structure is in place with placeholders
 - ✅ Trade history table displays below chart area
@@ -266,13 +302,14 @@ The layout should match the target design:
 2. **Loading state**: Handled by parent App.jsx
 3. **No account selected**: Handled by parent App.jsx
 4. **Empty data**: Component should handle gracefully without errors
-5. **Missing DashboardMetricsCards**: Should show error or fallback
+5. **Missing DashboardMetricsCards**: Should show error or fallback message
 
 ## Notes
 
-- This work focuses on creating the structure and layout. Charts will be added in separate work.
-- The DashboardMetricsCards component should already be created (separate work on individual card components).
-- Chart placeholders are temporary - they will be replaced with actual chart components in the next piece of work.
+- This work focuses on creating the structure and layout. Charts will be added in `DASHBOARD_CHARTS_INTEGRATION.md`.
+- The `DashboardMetricsCards` component must be created first - see `DASHBOARD_METRICS_CARDS_COMPONENT.md`.
+- Individual metric card components should be created first (see individual card .md files).
+- Chart placeholders are temporary - they will be replaced with actual chart components in `DASHBOARD_CHARTS_INTEGRATION.md`.
 - The component should be completely self-contained and reusable.
 - Consider using React.memo for the component if needed to optimize re-renders.
 - The layout structure should exactly match where charts will go, so when charts are added, they can be dropped into the placeholder locations.
