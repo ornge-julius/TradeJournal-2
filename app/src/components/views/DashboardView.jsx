@@ -3,6 +3,7 @@ import MetricsCards from '../ui/MetricsCards';
 import TradeHistoryTable from '../tables/TradeHistoryTable';
 import CumulativeNetProfitChart from '../charts/CumulativeNetProfitChart';
 import { calculateMetrics, generateCumulativeProfitData } from '../../utils/calculations';
+import DashboardMetricsCards from '../ui/DashboardMetricsCards';
 
 const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
   // Calculate all metrics
@@ -18,10 +19,7 @@ const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
   return (
     <div className="space-y-8">
       {/* Enhanced Metrics Cards */}
-      <MetricsCards 
-        metrics={metrics}
-        startingBalance={startingBalance}
-      />
+      <DashboardMetricsCards metrics={metrics} />
 
       {/* Cumulative Net Profit Curve - Full Width Row */}
       <CumulativeNetProfitChart data={cumulativeProfitData} />

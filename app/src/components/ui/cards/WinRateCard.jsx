@@ -34,13 +34,13 @@ const WinRateCard = ({
   const chartData = useMemo(() => {
     const baseData = [
       { name: 'Wins', value: validWinRate, color: '#10B981' },
-      { name: 'Losses', value: lossRate, color: '#111827' },
+      { name: 'Losses', value: lossRate, color: '#EF4444' },
     ];
 
     if (validWinRate === 0 && lossRate === 0) {
       return [
         { name: 'Wins', value: 0, color: '#10B981' },
-        { name: 'Losses', value: 100, color: '#111827' },
+        { name: 'Losses', value: 100, color: '#EF4444' },
       ];
     }
 
@@ -50,7 +50,7 @@ const WinRateCard = ({
   const hasTrades = (Number.isFinite(total) ? total : 0) > 0;
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all">
+    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 hover:bg-gray-800/70 transition-all">
       <div className="flex items-center gap-2 mb-4">
         <h3 className="text-gray-400 text-sm font-medium">Win Rate</h3>
         <Info className="h-4 w-4 text-gray-400" />
@@ -67,12 +67,14 @@ const WinRateCard = ({
                 startAngle={-90}
                 endAngle={270}
                 innerRadius={0}
-                outerRadius={48}
+                outerRadius={31}
                 dataKey="value"
-                stroke="none"
-                isAnimationActive
+                stroke="#FFFFFF"
+                strokeWidth={2}
+                strokeOpacity={.25}
+                isAnimationActive={true}
                 animationBegin={0}
-                animationDuration={600}
+                animationDuration={1000}
               >
                 {chartData.map((entry, index) => (
                   <Cell key={`win-rate-segment-${entry.name}-${index}`} fill={entry.color} />
