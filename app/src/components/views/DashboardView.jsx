@@ -23,7 +23,6 @@ const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
     return generateBalanceTrendData(accountBalanceData);
   }, [accountBalanceData]);
 
-  console.log("balanceTrendData:", balanceTrendData);
 
   return (
     <div className="space-y-8">
