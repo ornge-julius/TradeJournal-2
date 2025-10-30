@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import MetricsCards from '../ui/MetricsCards';
 import TradeHistoryTable from '../tables/TradeHistoryTable';
 import CumulativeNetProfitChart from '../charts/CumulativeNetProfitChart';
-import { calculateMetrics, generateCumulativeProfitData } from '../../utils/calculations';
+import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateBalanceTrendData } from '../../utils/calculations';
 import DashboardMetricsCards from '../ui/DashboardMetricsCards';
 
 const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
@@ -23,10 +23,12 @@ const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
     return generateBalanceTrendData(accountBalanceData);
   }, [accountBalanceData]);
 
+  console.log("balanceTrendData:", balanceTrendData);
+
   return (
     <div className="space-y-8">
       {/* Enhanced Metrics Cards */}
-      <DashboardMetricsCards metrics={metrics} balanceTrendData={balanceTrendData} />
+      <DashboardMetricsCards metrics={metrics} currentBalance={metrics.currentBalance} balanceTrendData={balanceTrendData} />
 
       {/* Cumulative Net Profit Curve - Full Width Row */}
       <CumulativeNetProfitChart data={cumulativeProfitData} />

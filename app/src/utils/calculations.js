@@ -84,11 +84,19 @@ export const generateCumulativeProfitData = (trades) => {
 
 // Generate chart data for account balance
 export const generateAccountBalanceData = (trades, startingBalance) => {
+  // Ensure chronological order so running balance matches other charts
+  const sortedTrades = [...trades].sort((a, b) => {
+    const dateA = a.exit_date ? new Date(a.exit_date) : new Date(0);
+    const dateB = b.exit_date ? new Date(b.exit_date) : new Date(0);
+    return dateA - dateB;
+  });
+
   let balance = startingBalance;
   const data = [{ date: 'Start', balance: startingBalance, tradeNum: 0 }];
 
-  trades.forEach((trade, index) => {
-    balance += trade.profit;
+  sortedTrades.forEach((trade, index) => {
+    const profit = trade.profit || 0;
+    balance += profit;
     data.push({
       date: trade.exit_date,
       balance,
