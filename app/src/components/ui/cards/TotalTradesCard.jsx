@@ -96,11 +96,10 @@ const TotalTradesCard = ({ totalTrades = 0, winningTrades = 0, losingTrades = 0 
               innerRadius={0}
               outerRadius={56}
               dataKey="value"
-              label={renderLabel}
               labelLine={false}
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${entry.name}-${index}`} fill={entry.color} stroke="none" />
+                <Cell key={`cell-${entry.name}-${index}`} fill={entry.color} stroke="#FFFFFF" strokeWidth={1} strokeOpacity={0.25} />
               ))}
             </Pie>
           </PieChart>
