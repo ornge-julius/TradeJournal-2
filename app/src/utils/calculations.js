@@ -175,3 +175,53 @@ export const isCall = (type) => type === 1;
 
 // Check if trade type is PUT
 export const isPut = (type) => type === 2;
+
+// Generate monthly net P&L data
+export const generateMonthlyNetPNLData = (trades) => {
+  if (!trades || trades.length === 0) {
+    return [];
+  }
+
+  const monthlyData = {};
+
+  trades.forEach((trade) => {
+    const exitDate = trade.exit_date ? new Date(trade.exit_date) : null;
+    if (!exitDate || isNaN(exitDate.getTime())) {
+      return;
+    }
+
+    const year = exitDate.getFullYear();
+    const month = exitDate.getMonth();
+    const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
+
+    if (!monthlyData[monthKey]) {
+      monthlyData[monthKey] = {
+        monthKey,
+        year,
+        month,
+        netPNL: 0,
+        count: 0
+      };
+    }
+
+    monthlyData[monthKey].netPNL += trade.profit || 0;
+    monthlyData[monthKey].count += 1;
+  });
+
+  const dataArray = Object.values(monthlyData).sort((a, b) => {
+    if (a.year !== b.year) return a.year - b.year;
+    return a.month - b.month;
+  });
+
+  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  return dataArray.map((item) => ({
+    monthKey: item.monthKey,
+    monthLabel: monthLabels[item.month],
+    monthFull: `${monthLabels[item.month]} ${item.year}`,
+    netPNL: item.netPNL,
+    year: item.year,
+    monthIndex: item.month,
+    tradeCount: item.count
+  }));
+};
