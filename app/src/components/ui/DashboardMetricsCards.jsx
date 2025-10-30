@@ -1,5 +1,6 @@
 import React from 'react';
 import WinRateCard from './cards/WinRateCard';
+import TotalTradesCard from './cards/TotalTradesCard';
 
 const DashboardMetricsCards = ({ metrics }) => {
   if (!metrics) {
@@ -20,6 +21,12 @@ const DashboardMetricsCards = ({ metrics }) => {
         winningTrades={winningTrades}
         losingTrades={losingTrades}
         totalTrades={totalTrades}
+      />
+
+      <TotalTradesCard
+        totalTrades={totalTrades}
+        winningTrades={winningTrades}
+        losingTrades={losingTrades}
       />
     </div>
   );
