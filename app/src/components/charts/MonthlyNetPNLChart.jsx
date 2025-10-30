@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell, Rectangle } from 'recharts';
 import { Info } from 'lucide-react';
 
 const CustomTooltip = ({ active, payload }) => {
@@ -22,6 +22,25 @@ const CustomTooltip = ({ active, payload }) => {
       </div>
     </div>
   );
+};
+
+// Custom bar shape with rounded corners that adapts to positive/negative values
+const RoundedBar = (props) => {
+  const { height, y, ...rest } = props;
+
+  // Positive: rounded top corners. Negative: rounded bottom corners with flat top.
+  if (height < 0) {
+    return (
+      <Rectangle
+        {...rest}
+        y={y + height}
+        height={-height}
+        radius={[0, 0, 8, 8]}
+      />
+    );
+  }
+
+  return <Rectangle {...rest} y={y} height={height} radius={[8, 8, 0, 0]} />;
 };
 
 const MonthlyNetPNLChart = ({ data }) => {
@@ -60,7 +79,7 @@ const MonthlyNetPNLChart = ({ data }) => {
           />
           <ReferenceLine y={0} stroke="#4B5563" />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="netPNL" barSize={26}>
+          <Bar dataKey="netPNL" barSize={26} shape={<RoundedBar />}>
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.netPNL >= 0 ? '#10B981' : '#EF4444'} />
             ))}
