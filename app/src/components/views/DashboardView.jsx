@@ -3,8 +3,9 @@ import MetricsCards from '../ui/MetricsCards';
 import TradeHistoryTable from '../tables/TradeHistoryTable';
 import CumulativeNetProfitChart from '../charts/CumulativeNetProfitChart';
 import MonthlyNetPNLChart from '../charts/MonthlyNetPNLChart';
-import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateBalanceTrendData, generateMonthlyNetPNLData } from '../../utils/calculations';
+import Last30DaysNetPNLChart from '../charts/Last30DaysNetPNLChart';
 import DashboardMetricsCards from '../ui/DashboardMetricsCards';
+import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateBalanceTrendData, generateMonthlyNetPNLData, generateLast30DaysNetPNLData } from '../../utils/calculations';
 
 const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
   // Calculate all metrics
@@ -27,6 +28,10 @@ const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
   const monthlyNetPNLData = useMemo(() => {
     return generateMonthlyNetPNLData(trades);
   }, [trades]);
+  
+  const last30DaysNetPNLData = useMemo(() => {
+    return generateLast30DaysNetPNLData(trades);
+  }, [trades]);
 
 
   return (
@@ -40,13 +45,7 @@ const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
       {/* Other Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <MonthlyNetPNLChart data={monthlyNetPNLData} />
-
-        {/* Last 30 Days Net P&L Chart Placeholder */}
-        <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6">
-          <div className="flex items-center justify-center h-[300px] text-gray-400">
-            Chart placeholder - Last 30 Days Net P&L
-          </div>
-        </div>
+        <Last30DaysNetPNLChart data={last30DaysNetPNLData} />
       </div>
 
       {/* Trade History Table */}

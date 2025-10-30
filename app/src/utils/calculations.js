@@ -107,6 +107,62 @@ export const generateAccountBalanceData = (trades, startingBalance) => {
   return data;
 };
 
+// Generate last 30 days net P&L data
+export const generateLast30DaysNetPNLData = (trades) => {
+  if (!trades || trades.length === 0) {
+    return [];
+  }
+
+  const exitDates = trades
+    .map((trade) => (trade.exit_date ? new Date(trade.exit_date) : null))
+    .filter((date) => date && !isNaN(date.getTime()));
+
+  if (exitDates.length === 0) {
+    return [];
+  }
+
+  const mostRecentDate = new Date(Math.max(...exitDates.map((date) => date.getTime())));
+
+  const startDate = new Date(mostRecentDate);
+  startDate.setDate(startDate.getDate() - 30);
+
+  const dailyData = {};
+
+  for (let cursor = new Date(startDate); cursor <= mostRecentDate; cursor.setDate(cursor.getDate() + 1)) {
+    const dateKey = cursor.toISOString().split('T')[0];
+    dailyData[dateKey] = {
+      date: dateKey,
+      dateLabel: dateKey,
+      netPNL: 0,
+      isPositive: true
+    };
+  }
+
+  trades.forEach((trade) => {
+    if (!trade.exit_date) {
+      return;
+    }
+
+    const exitDate = new Date(trade.exit_date);
+    if (isNaN(exitDate.getTime())) {
+      return;
+    }
+
+    const dateKey = exitDate.toISOString().split('T')[0];
+
+    if (exitDate >= startDate && exitDate <= mostRecentDate && dailyData[dateKey]) {
+      dailyData[dateKey].netPNL += trade.profit || 0;
+    }
+  });
+
+  return Object.values(dailyData)
+    .map((item) => ({
+      ...item,
+      isPositive: item.netPNL >= 0
+    }))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+};
+
 // Generate trimmed balance trend data for mini charts
 export const generateBalanceTrendData = (accountBalanceData, pointCount = 10) => {
   if (!accountBalanceData || accountBalanceData.length === 0) {
