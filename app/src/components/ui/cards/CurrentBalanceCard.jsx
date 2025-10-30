@@ -20,7 +20,7 @@ const CurrentBalanceCard = ({ currentBalance = 0, trendData = [] }) => {
     value: point.balance ?? point.value ?? 0
   }));
   return (
-    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all">
+    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all h-full flex flex-col justify-center">
       <div className="flex items-center gap-2 mb-2">
         <h3 className="text-gray-400 text-sm font-medium">Current Balance</h3>
         <Info className="h-4 w-4 text-gray-400" />
