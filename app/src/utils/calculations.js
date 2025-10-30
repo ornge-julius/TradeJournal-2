@@ -32,35 +32,92 @@ export const calculateMetrics = (trades, startingBalance) => {
   };
 };
 
-// Generate chart data for cumulative profit
+// Format date for X-axis labels (DD/MM/YYYY)
+export const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // Return original if invalid date
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
+// Format date for tooltips
+export const formatDateForTooltip = (dateString) => {
+  if (!dateString) return 'Date: N/A';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return `Date: ${dateString}`;
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `Date: ${day}/${month}/${year}`;
+};
+
+// Generate chart data for cumulative profit (sorted by date)
 export const generateCumulativeProfitData = (trades) => {
-  let cumulative = 0;
-  return trades.map((trade, index) => {
-    cumulative += trade.profit;
-    return {
-      date: trade.exit_date,
-      cumulative,
-      trade: trade.profit,
-      tradeNum: index + 1
-    };
+  if (!trades || trades.length === 0) {
+    return [];
+  }
+
+  // Sort trades by exit_date chronologically
+  const sortedTrades = [...trades].sort((a, b) => {
+    const dateA = a.exit_date ? new Date(a.exit_date) : new Date(0);
+    const dateB = b.exit_date ? new Date(b.exit_date) : new Date(0);
+    return dateA - dateB;
   });
+
+  let cumulative = 0;
+  const data = [];
+
+  sortedTrades.forEach((trade) => {
+    cumulative += trade.profit || 0;
+    data.push({
+      date: trade.exit_date,
+      cumulative: cumulative,
+      profit: trade.profit
+    });
+  });
+
+  return data;
 };
 
 // Generate chart data for account balance
 export const generateAccountBalanceData = (trades, startingBalance) => {
+  // Ensure chronological order so running balance matches other charts
+  const sortedTrades = [...trades].sort((a, b) => {
+    const dateA = a.exit_date ? new Date(a.exit_date) : new Date(0);
+    const dateB = b.exit_date ? new Date(b.exit_date) : new Date(0);
+    return dateA - dateB;
+  });
+
   let balance = startingBalance;
   const data = [{ date: 'Start', balance: startingBalance, tradeNum: 0 }];
-  
-  trades.forEach((trade, index) => {
-    balance += trade.profit;
+
+  sortedTrades.forEach((trade, index) => {
+    const profit = trade.profit || 0;
+    balance += profit;
     data.push({
       date: trade.exit_date,
       balance,
       tradeNum: index + 1
     });
   });
-  
+
   return data;
+};
+
+// Generate trimmed balance trend data for mini charts
+export const generateBalanceTrendData = (accountBalanceData, pointCount = 10) => {
+  if (!accountBalanceData || accountBalanceData.length === 0) {
+    return [];
+  }
+
+  const lastPoints = accountBalanceData.slice(-pointCount);
+
+  return lastPoints.map((point) => ({
+    balance: point.balance ?? point.value ?? 0
+  }));
 };
 
 // Generate win/loss data for pie chart

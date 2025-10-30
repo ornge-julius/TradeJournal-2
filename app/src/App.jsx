@@ -1,19 +1,14 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useTradeManagement } from './hooks/useTradeManagement';
 import { useAppState } from './hooks/useAppState';
 import { useAuth } from './hooks/useAuth';
-import { calculateMetrics, generateCumulativeProfitData, generateAccountBalanceData, generateWinLossData } from './utils/calculations';
 import Header from './components/ui/Header';
-import MetricsCards from './components/ui/MetricsCards';
 import TradeForm from './components/forms/TradeForm';
 import SettingsForm from './components/forms/SettingsForm';
 import AccountEditForm from './components/forms/AccountEditForm';
 import SignInForm from './components/forms/SignInForm';
-import TradeHistoryTable from './components/tables/TradeHistoryTable';
 import TradeDetailView from './components/ui/TradeDetailView';
-import AccountBalanceChart from './components/charts/AccountBalanceChart';
-import WinLossChart from './components/charts/WinLossChart';
-import CumulativeProfitChart from './components/charts/CumulativeProfitChart';
+import DashboardView from './components/views/DashboardView';
 
 function App() {
   const [showAccountEditForm, setShowAccountEditForm] = useState(false);
@@ -32,7 +27,6 @@ function App() {
     toggleTradeForm,
     accounts,
     selectedAccountId,
-    selectedAccount,
     addAccount,
     updateAccount,
     deleteAccount,
@@ -54,39 +48,6 @@ function App() {
 
   // Check if account is still loading
   const isAccountLoading = accounts.length === 0 && selectedAccountId === null;
-
-  // Calculate metrics using useMemo for performance
-  const metrics = useMemo(() => {
-    if (isAccountLoading || !selectedAccountId) {
-      return {
-        totalTrades: 0,
-        winningTrades: 0,
-        losingTrades: 0,
-        winRate: 0,
-        totalProfit: 0,
-        averageProfit: 0,
-        maxProfit: 0,
-        maxLoss: 0
-      };
-    }
-    return calculateMetrics(trades, startingBalance);
-  }, [trades, startingBalance, isAccountLoading, selectedAccountId]);
-
-  // Generate chart data using useMemo for performance
-  const chartData = useMemo(() => {
-    if (isAccountLoading || !selectedAccountId) {
-      return {
-        cumulativeProfit: [],
-        accountBalance: [],
-        winLoss: []
-      };
-    }
-    return {
-      cumulativeProfit: generateCumulativeProfitData(trades),
-      accountBalance: generateAccountBalanceData(trades, startingBalance),
-      winLoss: generateWinLossData(metrics.winningTrades, metrics.losingTrades)
-    };
-  }, [trades, startingBalance, metrics.winningTrades, metrics.losingTrades, isAccountLoading, selectedAccountId]);
 
   const ensureAuthenticated = () => {
     if (!isAuthenticated) {
@@ -351,24 +312,11 @@ function App() {
                 <p className="text-gray-400">Please select an account to view trades and metrics.</p>
               </div>
             ) : (
-              <>
-                {/* Key Metrics Cards */}
-                <MetricsCards metrics={metrics} startingBalance={startingBalance} />
-
-                {/* Charts Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-                  <AccountBalanceChart data={chartData.accountBalance} />
-                  <WinLossChart 
-                    data={chartData.winLoss} 
-                    winningTrades={metrics.winningTrades} 
-                    losingTrades={metrics.losingTrades} 
-                  />
-                  <CumulativeProfitChart data={chartData.cumulativeProfit} />
-                </div>
-
-                {/* Trade History */}
-                <TradeHistoryTable trades={trades} onViewTrade={handleTradeView} />
-              </>
+              <DashboardView
+                trades={trades}
+                startingBalance={startingBalance}
+                onViewTrade={handleTradeView}
+              />
             )}
           </>
         )}
