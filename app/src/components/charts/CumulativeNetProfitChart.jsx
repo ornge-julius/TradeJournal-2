@@ -1,14 +1,13 @@
 import React from 'react';
 import { 
-  LineChart,
   Area, 
-  Line, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer,
-  ReferenceLine
+  ReferenceLine,
+  AreaChart
 } from 'recharts';
 import { Info } from 'lucide-react';
 import { formatDate, formatDateForTooltip } from '../../utils/calculations';
@@ -29,13 +28,8 @@ const CumulativeNetProfitChart = ({ data }) => {
   }
   console.log("cumulative net profit chart data", data);
 
-  // Prepare data with negative area values for shading below zero
-  const chartData = data.map(point => ({
-    ...point,
-    // Negative area: cumulative value when negative, otherwise 0
-    // This will create a filled area from the negative value to zero
-    negativeArea: point.cumulative < 0 ? point.cumulative : 0
-  }));
+  // Use provided data directly for charting
+  const chartData = data;
 
   // Calculate Y-axis domain to include both positive and negative values
   const cumulativeValues = chartData
@@ -68,6 +62,14 @@ const CumulativeNetProfitChart = ({ data }) => {
   
   const domain = [domainMin, domainMax];
 
+  // Calculate the gradient offset so the fill splits at y=0 like Recharts "fill by value"
+  const getGradientOffset = () => {
+    if (maxValue <= 0) return '0%';
+    if (minValue >= 0) return '100%';
+    return `${(maxValue / (maxValue - minValue)) * 100}%`;
+  };
+  const gradientOffset = getGradientOffset();
+
   console.log("Chart domain:", domain, "Min:", minValue, "Max:", maxValue, "Has positive:", hasPositiveValues);
   console.log("Sample data points:", chartData.slice(0, 5).map(p => ({ date: p.date, cumulative: p.cumulative })));
 
@@ -78,8 +80,13 @@ const CumulativeNetProfitChart = ({ data }) => {
         <Info className="w-4 h-4 text-gray-400" />
       </div>
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 80 }}>
-          
+        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 50 }}>
+          <defs>
+            <linearGradient id="cumulativeSplit" x1="0" y1="0" x2="0" y2="1">
+              <stop offset={gradientOffset} stopColor="#10B981" stopOpacity={0.25} />
+              <stop offset={gradientOffset} stopColor="#EF4444" stopOpacity={0.25} />
+            </linearGradient>
+          </defs>
           {/* Grid and axes */}
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           
@@ -91,7 +98,7 @@ const CumulativeNetProfitChart = ({ data }) => {
             tickFormatter={(value) => formatDate(value)}
             angle={-45}
             textAnchor="end"
-            height={80}
+            height={60}
             interval="preserveStartEnd"
           />
           
@@ -106,30 +113,20 @@ const CumulativeNetProfitChart = ({ data }) => {
           
           {/* Reference line at zero */}
           <ReferenceLine y={0} stroke="#9CA3AF" strokeDasharray="2 2" />
-          
-          {/* Shaded area below zero - fills from negative values to zero line */}
+
+          {/* Main area for cumulative curve with split-color fill by value */}
           <Area
-            type="monotone"
-            dataKey="negativeArea"
-            stroke="none"
-            fill="rgba(107, 114, 128, 0.2)"
-            fillOpacity={1}
-            baseLine={0}
-            isAnimationActive={true}
-          />
-          
-          {/* Light blue line for cumulative profit - MUST render after Area */}
-          <Line 
             type="monotone"
             dataKey="cumulative"
             stroke="#60A5FA"
             strokeWidth={1.5}
+            fill="url(#cumulativeSplit)"
             dot={false}
             activeDot={{ r: 4, fill: '#60A5FA', strokeWidth: 2 }}
             isAnimationActive={true}
             connectNulls={false}
           />
-          
+
           {/* Tooltip */}
           <Tooltip 
             contentStyle={{ 
@@ -145,7 +142,7 @@ const CumulativeNetProfitChart = ({ data }) => {
             labelFormatter={(label) => formatDateForTooltip(label)}
             cursor={{ stroke: '#6B7280', strokeWidth: 1 }}
           />
-        </LineChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
