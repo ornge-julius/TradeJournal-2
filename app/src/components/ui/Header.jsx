@@ -59,7 +59,7 @@ const Header = ({
           </h1>
           <p className="text-gray-400 ml-4">Track your trades and analyze your performance</p>
         </div>
-        <div className="flex items-center gap-2 ml-4 md:ml-0 md:justify-end">
+        <div className="flex items-center gap-2 ml-4 md:ml-0 md:justify-end relative">
           <GlobalDateFilter />
           <button
             type="button"
@@ -72,7 +72,7 @@ const Header = ({
           </button>
 
           {isMenuOpen && (
-            <div className="absolute right-0 mt-4 w-80 bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-5 space-y-5 z-50">
+            <div className="absolute right-0 md:right-12 mt-2 top-full w-[calc(100vw-2rem)] md:w-80 max-w-sm max-h-[calc(100vh-12rem)] overflow-y-auto bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-5 space-y-5 z-50">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">Quick Actions</h2>
                 <button
