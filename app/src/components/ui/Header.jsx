@@ -49,21 +49,22 @@ const Header = ({
   };
 
   return (
-    <div className="mb-8 relative">
+    <div className="sticky top-0 z-30 bg-gray-800/95 backdrop-blur-sm mb-8 py-4 border-b border-gray-700 shadow-lg rounded-b-2xl">
       {/* Top bar with date filter and hamburger menu */}
-      <div className="flex items-center justify-between gap-4 mb-6">
+      
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 ml-4 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
             Trading Journal
           </h1>
-          <p className="text-gray-400">Track your trades and analyze your performance</p>
+          <p className="text-gray-400 ml-4">Track your trades and analyze your performance</p>
         </div>
-        <div className="justify-end flex items-center gap-4">
+        <div className="flex items-center gap-2 ml-4 md:ml-0 md:justify-end">
           <GlobalDateFilter />
           <button
             type="button"
             onClick={toggleMenu}
-            className="bg-gray-800 hover:bg-gray-700 p-3 rounded-xl transition-colors shadow-lg hover:shadow-xl"
+            className="bg-gray-800 hover:bg-gray-700 p-3 rounded-xl transition-colors shadow-lg hover:shadow-xl md:mr-12"
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >

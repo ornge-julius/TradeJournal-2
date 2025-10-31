@@ -261,7 +261,7 @@ const GlobalDateFilter = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-4">
+        <div className="absolute left-0 md:left-auto md:right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-4">
           {/* Preset Dropdown */}
           <div className="relative mb-4" ref={presetDropdownRef}>
             <button
