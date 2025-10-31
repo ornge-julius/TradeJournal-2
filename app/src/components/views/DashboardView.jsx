@@ -12,8 +12,7 @@ import {
   generateMonthlyNetPNLData,
   generateLast30DaysNetPNLData
 } from '../../utils/calculations';
-import GlobalDateFilter from '../ui/GlobalDateFilter';
-import { DateFilterProvider, filterTradesByEntryDate, useDateFilter } from '../../context/DateFilterContext';
+import { filterTradesByEntryDate, useDateFilter } from '../../context/DateFilterContext';
 
 const DashboardContent = ({ trades, startingBalance, onViewTrade }) => {
   const { filter } = useDateFilter();
@@ -43,13 +42,11 @@ const DashboardContent = ({ trades, startingBalance, onViewTrade }) => {
   }, [filteredTrades]);
   
   const last30DaysNetPNLData = useMemo(() => {
-    return generateLast30DaysNetPNLData(filteredTrades);
-  }, [filteredTrades]);
+    return generateLast30DaysNetPNLData(trades);
+  }, [trades]);
 
   return (
     <div className="space-y-8">
-      <GlobalDateFilter />
-
       <DashboardMetricsCards metrics={metrics} currentBalance={metrics.currentBalance} balanceTrendData={balanceTrendData} />
 
       <CumulativeNetProfitChart data={cumulativeProfitData} />
@@ -69,13 +66,11 @@ const DashboardContent = ({ trades, startingBalance, onViewTrade }) => {
 
 const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
   return (
-    <DateFilterProvider>
-      <DashboardContent
-        trades={trades}
-        startingBalance={startingBalance}
-        onViewTrade={onViewTrade}
-      />
-    </DateFilterProvider>
+    <DashboardContent
+      trades={trades}
+      startingBalance={startingBalance}
+      onViewTrade={onViewTrade}
+    />
   );
 };
 

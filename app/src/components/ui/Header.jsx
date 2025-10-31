@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Settings, Plus, LogIn, LogOut, User, Menu, X } from 'lucide-react';
 import AccountSelector from './AccountSelector';
+import GlobalDateFilter from './GlobalDateFilter';
 
 const Header = ({ 
   onToggleSettings, 
@@ -49,15 +50,16 @@ const Header = ({
 
   return (
     <div className="mb-8 relative">
-      <div className="flex items-start justify-between gap-6">
+      {/* Top bar with date filter and hamburger menu */}
+      <div className="flex items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
             Trading Journal
           </h1>
           <p className="text-gray-400">Track your trades and analyze your performance</p>
         </div>
-
-        <div className="relative">
+        <div className="justify-end flex items-center gap-4">
+          <GlobalDateFilter />
           <button
             type="button"
             onClick={toggleMenu}
@@ -175,6 +177,7 @@ const Header = ({
       {isMenuOpen && (
         <div className="fixed inset-0 z-40" onClick={closeMenu} aria-hidden="true" />
       )}
+
     </div>
   );
 };

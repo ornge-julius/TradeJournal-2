@@ -3,6 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 const STORAGE_KEY = 'dashboardDateRange';
 
 const PRESET_OPTIONS = [
+  { value: 'custom', label: 'Custom Range' },
   { value: 'allTime', label: 'All Time' },
   { value: 'today', label: 'Today' },
   { value: 'yesterday', label: 'Yesterday' },
@@ -12,8 +13,7 @@ const PRESET_OPTIONS = [
   { value: 'thisMonth', label: 'This Month' },
   { value: 'lastMonth', label: 'Last Month' },
   { value: 'ytd', label: 'Year to Date' },
-  { value: 'qtd', label: 'Quarter to Date' },
-  { value: 'custom', label: 'Custom Range' }
+  { value: 'qtd', label: 'Quarter to Date' }
 ];
 
 const VALID_PRESETS = new Set(PRESET_OPTIONS.map((option) => option.value));

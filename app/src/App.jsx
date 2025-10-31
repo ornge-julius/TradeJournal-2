@@ -9,6 +9,7 @@ import AccountEditForm from './components/forms/AccountEditForm';
 import SignInForm from './components/forms/SignInForm';
 import TradeDetailView from './components/ui/TradeDetailView';
 import DashboardView from './components/views/DashboardView';
+import { DateFilterProvider } from './context/DateFilterContext';
 
 function App() {
   const [showAccountEditForm, setShowAccountEditForm] = useState(false);
@@ -242,7 +243,7 @@ function App() {
           />
         ) : (
           // Main Dashboard View
-          <>
+          <DateFilterProvider>
             <Header
               onToggleSettings={handleToggleSettings}
               onToggleTradeForm={handleToggleTradeForm}
@@ -318,7 +319,7 @@ function App() {
                 onViewTrade={handleTradeView}
               />
             )}
-          </>
+          </DateFilterProvider>
         )}
       </div>
     </div>
