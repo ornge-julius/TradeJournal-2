@@ -15,7 +15,7 @@ import { formatDate, formatDateForTooltip } from '../../utils/calculations';
 const CumulativeNetProfitChart = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6">
+      <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
         <div className="flex items-center gap-2 mb-4">
           <h3 className="text-xl font-semibold text-gray-200">Cumulative Net Profit Curve</h3>
           <Info className="w-4 h-4 text-gray-400" />
@@ -74,76 +74,78 @@ const CumulativeNetProfitChart = ({ data }) => {
   console.log("Sample data points:", chartData.slice(0, 5).map(p => ({ date: p.date, cumulative: p.cumulative })));
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6">
+    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
         <h3 className="text-xl font-semibold text-gray-200">Cumulative Net Profit Curve</h3>
         <Info className="w-4 h-4 text-gray-400" />
       </div>
-      <ResponsiveContainer width="100%" height={400}>
-        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 50 }}>
-          <defs>
-            <linearGradient id="cumulativeSplit" x1="0" y1="0" x2="0" y2="1">
-              <stop offset={gradientOffset} stopColor="#10B981" stopOpacity={0.25} />
-              <stop offset={gradientOffset} stopColor="#EF4444" stopOpacity={0.25} />
-            </linearGradient>
-          </defs>
-          {/* Grid and axes */}
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+      <div className="w-full">
+        <ResponsiveContainer width="100%" height={400}>
+          <AreaChart data={chartData} margin={{ top: 16, right: 16, left: 0, bottom: 48 }}>
+            <defs>
+              <linearGradient id="cumulativeSplit" x1="0" y1="0" x2="0" y2="1">
+                <stop offset={gradientOffset} stopColor="#10B981" stopOpacity={0.25} />
+                <stop offset={gradientOffset} stopColor="#EF4444" stopOpacity={0.25} />
+              </linearGradient>
+            </defs>
+            {/* Grid and axes */}
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           
-          {/* X-axis with date labels */}
-          <XAxis 
-            dataKey="date" 
-            stroke="#9CA3AF"
-            tick={{ fontSize: 12, fill: '#9CA3AF' }}
-            tickFormatter={(value) => formatDate(value)}
-            angle={-45}
-            textAnchor="end"
-            height={60}
-            interval="preserveStartEnd"
-          />
+            {/* X-axis with date labels */}
+            <XAxis
+              dataKey="date"
+              stroke="#9CA3AF"
+              tick={{ fontSize: 12, fill: '#9CA3AF' }}
+              tickFormatter={(value) => formatDate(value)}
+              angle={-45}
+              textAnchor="end"
+              height={60}
+              interval="preserveStartEnd"
+            />
           
-          {/* Y-axis with dollar values - domain ensures positive values are visible */}
-          <YAxis 
-            stroke="#9CA3AF"
-            tick={{ fontSize: 12, fill: '#9CA3AF' }}
-            tickFormatter={(value) => `$${value.toLocaleString()}`}
-            domain={domain}
-            allowDataOverflow={false}
-          />
+            {/* Y-axis with dollar values - domain ensures positive values are visible */}
+            <YAxis
+              stroke="#9CA3AF"
+              tick={{ fontSize: 12, fill: '#9CA3AF' }}
+              tickFormatter={(value) => `$${value.toLocaleString()}`}
+              domain={domain}
+              allowDataOverflow={false}
+            />
           
-          {/* Reference line at zero */}
-          <ReferenceLine y={0} stroke="#9CA3AF" strokeDasharray="2 2" />
+            {/* Reference line at zero */}
+            <ReferenceLine y={0} stroke="#9CA3AF" strokeDasharray="2 2" />
 
-          {/* Main area for cumulative curve with split-color fill by value */}
-          <Area
-            type="monotone"
-            dataKey="cumulative"
-            stroke="#60A5FA"
-            strokeWidth={1.5}
-            fill="url(#cumulativeSplit)"
-            dot={false}
-            activeDot={{ r: 4, fill: '#60A5FA', strokeWidth: 2 }}
-            isAnimationActive={true}
-            connectNulls={false}
-          />
+            {/* Main area for cumulative curve with split-color fill by value */}
+            <Area
+              type="monotone"
+              dataKey="cumulative"
+              stroke="#60A5FA"
+              strokeWidth={1.5}
+              fill="url(#cumulativeSplit)"
+              dot={false}
+              activeDot={{ r: 4, fill: '#60A5FA', strokeWidth: 2 }}
+              isAnimationActive={true}
+              connectNulls={false}
+            />
 
-          {/* Tooltip */}
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#1F2937', 
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#F3F4F6',
-              padding: '12px'
-            }}
-            itemStyle={{ color: '#F3F4F6' }}
-            labelStyle={{ color: '#F3F4F6', marginBottom: '8px', fontWeight: '600' }}
-            formatter={(value) => [`$${value.toLocaleString()}`, 'Profit']}
-            labelFormatter={(label) => formatDateForTooltip(label)}
-            cursor={{ stroke: '#6B7280', strokeWidth: 1 }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+            {/* Tooltip */}
+            <Tooltip
+              contentStyle={{
+                backgroundColor: '#1F2937',
+                border: '1px solid #374151',
+                borderRadius: '8px',
+                color: '#F3F4F6',
+                padding: '12px'
+              }}
+              itemStyle={{ color: '#F3F4F6' }}
+              labelStyle={{ color: '#F3F4F6', marginBottom: '8px', fontWeight: '600' }}
+              formatter={(value) => [`$${value.toLocaleString()}`, 'Profit']}
+              labelFormatter={(label) => formatDateForTooltip(label)}
+              cursor={{ stroke: '#6B7280', strokeWidth: 1 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };
