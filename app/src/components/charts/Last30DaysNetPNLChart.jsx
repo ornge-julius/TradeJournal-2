@@ -7,9 +7,53 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  ReferenceLine,
+  Rectangle
 } from 'recharts';
 import { Info } from 'lucide-react';
+
+// Custom bar shape with rounded corners that adapts to positive/negative values
+const RoundedBar = (props) => {
+  const { height, y, ...rest } = props;
+
+  // Positive: rounded top corners. Negative: rounded bottom corners with flat top.
+  if (height < 0) {
+    return (
+      <Rectangle
+        {...rest}
+        y={y + height}
+        height={-height}
+        radius={[0, 0, 8, 8]}
+      />
+    );
+  }
+
+  return <Rectangle {...rest} y={y} height={height} radius={[8, 8, 0, 0]} />;
+};
+
+const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload || payload.length === 0) {
+    return null;
+  }
+
+  const dataPoint = payload[0].payload;
+  const value = Number(payload[0].value || 0);
+  const valueColor = value >= 0 ? '#10B981' : '#EF4444';
+
+  return (
+    <div style={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: 8, color: '#F3F4F6', padding: '8px 10px' }}>
+      <div style={{ fontSize: 12, color: '#D1D5DB', marginBottom: 4 }}>{dataPoint.monthFull}</div>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
+        <span style={{ color: '#9CA3AF', fontSize: 12 }}>Net P&L</span>
+        <span style={{ color: valueColor, fontWeight: 600, fontSize: 12 }}>
+          {`$${value.toLocaleString()}`}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 
 const Last30DaysNetPNLChart = ({ data }) => {
   if (!data || data.length === 0) {
@@ -64,21 +108,13 @@ const Last30DaysNetPNLChart = ({ data }) => {
             tickFormatter={(value) => formatCurrency(value)}
             width={80}
           />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: '#1F2937',
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#F3F4F6'
-            }}
-            formatter={(value) => [formatCurrency(value), 'Net P&L']}
-            labelFormatter={(label) => formatTooltipDate(label)}
-          />
-          <Bar dataKey="netPNL" radius={[4, 4, 0, 0]}>
+          <ReferenceLine y={0} stroke="#4B5563" />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="netPNL" barSize={26} shape={<RoundedBar />}>
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={entry.isPositive ? '#10B981' : '#000000'}
+                fill={entry.netPNL >= 0 ? '#10B981' : '#EF4444'}
               />
             ))}
           </Bar>
