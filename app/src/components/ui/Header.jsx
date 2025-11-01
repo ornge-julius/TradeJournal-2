@@ -100,8 +100,8 @@ const Header = ({
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="hidden lg:block">
+          <div className="flex items-center gap-2 flex-1 justify-end">
+            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md flex-shrink-0">
               <GlobalDateFilter />
             </div>
 
@@ -173,11 +173,6 @@ const Header = ({
               >
                 <X className="h-5 w-5" />
               </button>
-            </div>
-
-            <div className="space-y-3">
-              <p className="text-sm text-gray-400">Filter trades</p>
-              <GlobalDateFilter />
             </div>
 
             <div className="space-y-3">
