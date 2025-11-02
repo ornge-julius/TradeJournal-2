@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Settings, Plus, LogIn, LogOut, User, Menu, X, Bell } from 'lucide-react';
+import { Settings, Plus, LogIn, LogOut, Menu, X } from 'lucide-react';
 import AccountSelector from './AccountSelector';
 import GlobalDateFilter from './GlobalDateFilter';
 
@@ -85,103 +85,76 @@ const Header = ({
             </div>
           </div>
 
-          <div className="hidden md:flex items-center gap-1 rounded-full bg-gray-800/60 p-1 border border-gray-700/80 shadow-inner">
-            {navItems.map((item) => (
-              <span
-                key={item.label}
-                className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
-                  item.isActive
-                    ? 'bg-gray-900 text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-700/70'
-                }`}
-              >
-                {item.label}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="hidden lg:block">
-              <GlobalDateFilter />
-            </div>
-
-            <button
-              type="button"
-              onClick={isAuthenticated ? handleToggleTradeForm : handleSignInClick}
-              aria-label={isAuthenticated ? 'Add new trade' : 'Sign in to add trades'}
-              className={`hidden md:flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all shadow-lg ${
-                isAuthenticated
-                  ? 'bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500'
-                  : 'bg-gray-800 hover:bg-gray-700 text-gray-300'
-              }`}
-            >
-              <Plus className="h-4 w-4" />
-              <span>{isAuthenticated ? 'New Trade' : 'Sign In'}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleToggleSettings}
-              className="hidden md:flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
-              aria-label="Settings"
-            >
-              <Settings className="h-5 w-5" />
-            </button>
-
-            <button
-              type="button"
-              className="hidden md:flex h-10 w-10 items-center justify-center rounded-full bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
-              aria-label="Notifications"
-            >
-              <Bell className="h-5 w-5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={toggleMenu}
-              className="hidden md:flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-600/80 to-emerald-600/80 text-white font-semibold shadow-lg hover:from-blue-600 hover:to-emerald-600 transition-all"
-              aria-label="Open profile menu"
-              aria-expanded={isMenuOpen}
-            >
-              {user ? userInitial : <User className="h-5 w-5" />}
-            </button>
-
-            <button
-              type="button"
-              onClick={toggleMenu}
-              className="md:hidden h-10 w-10 items-center justify-center rounded-xl bg-gray-800 text-gray-200 hover:bg-gray-700 transition-colors flex"
-              aria-label="Toggle menu"
-              aria-expanded={isMenuOpen}
-            >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={toggleMenu}
+            className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600/80 to-emerald-600/80 text-white shadow-lg transition-all hover:from-blue-600 hover:to-emerald-600"
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </nav>
 
-      {isMenuOpen && (
-        <div className="relative z-40">
-          <div className="fixed inset-0" onClick={closeMenu} aria-hidden="true" />
-          <div className="absolute right-4 md:right-10 top-20 md:top-24 w-[calc(100vw-2rem)] md:w-96 max-w-sm max-h-[calc(100vh-10rem)] overflow-y-auto rounded-3xl border border-gray-800 bg-gray-900/95 shadow-2xl backdrop-blur-xl p-6 space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Quick Access</h2>
-              <button
-                type="button"
-                onClick={closeMenu}
-                className="text-gray-400 hover:text-white transition-colors"
-                aria-label="Close menu"
-              >
-                <X className="h-5 w-5" />
-              </button>
+      <div
+        className={`fixed inset-0 z-40 transition-opacity duration-300 ${
+          isMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+      >
+        <div className="absolute inset-0 bg-black/60" onClick={closeMenu} aria-hidden="true" />
+      </div>
+
+      <aside
+        className={`fixed inset-y-0 right-0 z-50 w-full max-w-md transform transition-transform duration-300 ease-out ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        aria-hidden={!isMenuOpen}
+      >
+        <div className="flex h-full flex-col overflow-y-auto border-l border-gray-800 bg-gray-900/95 shadow-2xl backdrop-blur-xl">
+          <div className="flex items-center justify-between px-6 py-5">
+            <div className="flex flex-col">
+              <span className="text-base font-semibold text-white">Quick Access</span>
+              <span className="text-xs text-gray-400">Everything you need in one place</span>
+            </div>
+            <button
+              type="button"
+              onClick={closeMenu}
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-800/80 text-gray-300 transition-colors hover:bg-gray-700 hover:text-white"
+              aria-label="Close menu"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="px-6 pb-10 space-y-8">
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-gray-400 uppercase tracking-wide">Navigation</p>
+              <div className="space-y-2">
+                {navItems.map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={closeMenu}
+                    className={`w-full rounded-2xl px-4 py-3 text-left text-sm font-medium transition-colors ${
+                      item.isActive
+                        ? 'bg-gray-800 text-white shadow-lg'
+                        : 'bg-gray-900 text-gray-300 hover:bg-gray-800 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm text-gray-400">Filter trades</p>
-              <GlobalDateFilter />
+              <p className="text-sm font-semibold text-gray-400 uppercase tracking-wide">Filter trades</p>
+              <GlobalDateFilter inline />
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm text-gray-400">Manage your accounts</p>
+              <p className="text-sm font-semibold text-gray-400 uppercase tracking-wide">Manage your accounts</p>
               <AccountSelector
                 accounts={accounts}
                 selectedAccountId={selectedAccountId}
@@ -195,7 +168,7 @@ const Header = ({
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm text-gray-400">Authentication</p>
+              <p className="text-sm font-semibold text-gray-400 uppercase tracking-wide">Authentication</p>
               {isAuthenticated ? (
                 <>
                   <div className="flex items-center gap-3 rounded-2xl border border-gray-800 bg-gray-900/60 px-4 py-3">
@@ -231,7 +204,7 @@ const Header = ({
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm text-gray-400">Trading</p>
+              <p className="text-sm font-semibold text-gray-400 uppercase tracking-wide">Trading</p>
               {isAuthenticated ? (
                 <button
                   type="button"
@@ -274,7 +247,7 @@ const Header = ({
             </div>
           </div>
         </div>
-      )}
+      </aside>
     </header>
   );
 };

@@ -92,8 +92,8 @@ const CalendarGrid = ({ currentMonth, currentYear, selectedStart, selectedEnd, o
   );
 };
 
-const GlobalDateFilter = () => {
-  const { filter, presets, rangeLabel, setPreset, setCustomRange } = useDateFilter();
+const GlobalDateFilter = ({ inline = false }) => {
+  const { filter, presets, setPreset, setCustomRange } = useDateFilter();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(filter.preset || 'allTime');
   const [customFrom, setCustomFrom] = useState(filter.from || '');
@@ -130,8 +130,11 @@ const GlobalDateFilter = () => {
   }, [filter]);
 
   useEffect(() => {
+    const shouldListen = inline ? isPresetOpen : isOpen || isPresetOpen;
+    if (!shouldListen) return undefined;
+
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (!inline && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
       if (presetDropdownRef.current && !presetDropdownRef.current.contains(event.target)) {
@@ -139,11 +142,9 @@ const GlobalDateFilter = () => {
       }
     };
 
-    if (isOpen || isPresetOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isOpen, isPresetOpen]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [inline, isOpen, isPresetOpen]);
 
   const handlePresetChange = (value) => {
     setSelectedPreset(value);
@@ -248,20 +249,37 @@ const GlobalDateFilter = () => {
 
   const currentPresetLabel = presets.find(p => p.value === selectedPreset)?.label || 'All Time';
 
-  return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors shadow-lg hover:shadow-xl text-gray-200"
-      >
-        <Calendar className="h-4 w-4" />
-        <span className="text-sm font-medium">Date range</span>
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
+  const isDropdownOpen = inline || isOpen;
 
-      {isOpen && (
-        <div className="absolute left-0 md:left-auto md:right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-4">
+  return (
+    <div className={`relative ${inline ? 'w-full' : ''}`} ref={dropdownRef}>
+      {!inline && (
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors shadow-lg hover:shadow-xl text-gray-200"
+        >
+          <Calendar className="h-4 w-4" />
+          <span className="text-sm font-medium">Date range</span>
+          <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+      )}
+
+      {inline && (
+        <div className="flex items-center gap-2 mb-3">
+          <Calendar className="h-4 w-4 text-emerald-300" />
+          <span className="text-sm font-semibold text-gray-200">Date range</span>
+        </div>
+      )}
+
+      {isDropdownOpen && (
+        <div
+          className={
+            inline
+              ? 'w-full bg-gray-900/90 border border-gray-800 rounded-2xl shadow-2xl p-4'
+              : 'absolute left-0 md:left-auto md:right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-4'
+          }
+        >
           {/* Preset Dropdown */}
           <div className="relative mb-4" ref={presetDropdownRef}>
             <button
