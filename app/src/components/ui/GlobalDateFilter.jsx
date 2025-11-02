@@ -92,8 +92,8 @@ const CalendarGrid = ({ currentMonth, currentYear, selectedStart, selectedEnd, o
   );
 };
 
-const GlobalDateFilter = () => {
-  const { filter, presets, rangeLabel, setPreset, setCustomRange } = useDateFilter();
+const GlobalDateFilter = ({ variant = 'default' }) => {
+  const { filter, presets, setPreset, setCustomRange } = useDateFilter();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState(filter.preset || 'allTime');
   const [customFrom, setCustomFrom] = useState(filter.from || '');
@@ -248,20 +248,45 @@ const GlobalDateFilter = () => {
 
   const currentPresetLabel = presets.find(p => p.value === selectedPreset)?.label || 'All Time';
 
+  const isNavbarVariant = variant === 'navbar';
+  const buttonAriaLabel = isNavbarVariant ? 'Open date range filter' : undefined;
+  const dropdownAlignment = isNavbarVariant ? 'right-0' : 'left-0 md:left-auto md:right-0';
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors shadow-lg hover:shadow-xl text-gray-200"
+        aria-label={buttonAriaLabel}
+        aria-expanded={isOpen}
+        className={`flex items-center gap-2 rounded-xl transition-colors shadow-lg hover:shadow-xl text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 ${
+          isNavbarVariant
+            ? 'bg-gray-800/80 hover:bg-gray-700/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-gray-800/60'
+            : 'bg-gray-800 hover:bg-gray-700 px-4 py-2'
+        }`}
       >
         <Calendar className="h-4 w-4" />
-        <span className="text-sm font-medium">Date range</span>
-        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <span
+          className={`text-sm font-medium ${
+            isNavbarVariant ? 'hidden sm:inline' : ''
+          }`}
+        >
+          Date range
+        </span>
+        {isNavbarVariant && (
+          <span className="sr-only sm:hidden">Date range</span>
+        )}
+        <ChevronDown
+          className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''} ${
+            isNavbarVariant ? 'hidden sm:block' : ''
+          }`}
+        />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 md:left-auto md:right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-4">
+        <div
+          className={`absolute ${dropdownAlignment} top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-4`}
+        >
           {/* Preset Dropdown */}
           <div className="relative mb-4" ref={presetDropdownRef}>
             <button
