@@ -84,7 +84,7 @@ const TradeForm = ({
       await onSubmit(formData);
       setErrors({}); // Clear errors on successful submission
     } catch (err) {
-      console.error('Error submitting trade form:', err);
+      // Error handling
     }
   };
 

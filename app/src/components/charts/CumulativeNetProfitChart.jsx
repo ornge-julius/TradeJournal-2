@@ -26,7 +26,6 @@ const CumulativeNetProfitChart = ({ data }) => {
       </div>
     );
   }
-  console.log("cumulative net profit chart data", data);
 
   // Use provided data directly for charting
   const chartData = data;
@@ -69,9 +68,6 @@ const CumulativeNetProfitChart = ({ data }) => {
     return `${(maxValue / (maxValue - minValue)) * 100}%`;
   };
   const gradientOffset = getGradientOffset();
-
-  console.log("Chart domain:", domain, "Min:", minValue, "Max:", maxValue, "Has positive:", hasPositiveValues);
-  console.log("Sample data points:", chartData.slice(0, 5).map(p => ({ date: p.date, cumulative: p.cumulative })));
 
   return (
     <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">

@@ -13,13 +13,13 @@ export const useAuth = () => {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Error getting session:', error.message);
+          // Error handling
         } else if (session) {
           setUser(session.user);
           setIsAuthenticated(true);
         }
       } catch (err) {
-        console.error('Unexpected error getting session:', err);
+        // Error handling
       } finally {
         setIsLoading(false);
       }
@@ -30,8 +30,6 @@ export const useAuth = () => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
-        
         if (session) {
           setUser(session.user);
           setIsAuthenticated(true);
@@ -65,7 +63,6 @@ export const useAuth = () => {
         return data.user;
       }
     } catch (err) {
-      console.error('Error signing in:', err.message);
       throw err;
     } finally {
       setIsLoading(false);
@@ -85,7 +82,6 @@ export const useAuth = () => {
       setUser(null);
       setIsAuthenticated(false);
     } catch (err) {
-      console.error('Error signing out:', err.message);
       throw err;
     } finally {
       setIsLoading(false);
@@ -107,7 +103,6 @@ export const useAuth = () => {
 
       return data;
     } catch (err) {
-      console.error('Error signing up:', err.message);
       throw err;
     } finally {
       setIsLoading(false);

@@ -14,36 +14,23 @@ export const useTradeManagement = (selectedAccountId) => {
   const fetchTrades = useCallback(async () => {
     // Don't fetch if no account is selected
     if (!selectedAccountId) {
-      console.log('No account selected, skipping trade fetch');
       return;
     }
-
-    console.log('Fetching trades for account:', selectedAccountId);
     
     try {
-      const { data, error, status, statusText } = await supabase
+      const { data, error } = await supabase
         .from('trades')
         .select('*')
         .eq('account_id', selectedAccountId)
         .order('exit_date', { ascending: false });
 
-      console.log('Supabase response:', { data, error, status, statusText });
-
       if (error) {
-        console.error('Error fetching trades:', error);
-        console.error('Error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
         return;
       }
 
-      console.log('Successfully fetched trades:', data);
       dispatch({ type: TRADE_ACTIONS.SET_TRADES, payload: data || [] });
     } catch (err) {
-      console.error('Unexpected error in fetchTrades:', err);
+      // Error handling
     }
   }, [selectedAccountId]);
 
@@ -55,7 +42,6 @@ export const useTradeManagement = (selectedAccountId) => {
 
   const addTrade = useCallback(async (tradeData) => {
     if (!selectedAccountId) {
-      console.error('No account selected, cannot add trade');
       return null;
     }
 
@@ -65,12 +51,6 @@ export const useTradeManagement = (selectedAccountId) => {
     const positionType = parseInt(tradeData.position_type, 10);
 
     if ([entryPrice, exitPrice, positionType].some((value) => Number.isNaN(value)) || Number.isNaN(quantity)) {
-      console.error('Invalid numeric values provided when adding trade', {
-        entry_price: tradeData.entry_price,
-        exit_price: tradeData.exit_price,
-        quantity: tradeData.quantity,
-        position_type: tradeData.position_type
-      });
       return null;
     }
 
@@ -107,25 +87,14 @@ export const useTradeManagement = (selectedAccountId) => {
       newTrade.user_id = tradeData.user_id;
     }
 
-    console.log('Adding new trade:', newTrade);
-
     try {
-      const { data, error, status, statusText } = await supabase
+      const { data, error } = await supabase
         .from('trades')
         .insert([newTrade])
         .select()
         .single();
 
-      console.log('Add trade response:', { data, error, status, statusText });
-
       if (error) {
-        console.error('Error adding trade:', error);
-        console.error('Error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
         return null;
       }
 
@@ -135,20 +104,17 @@ export const useTradeManagement = (selectedAccountId) => {
       try {
         await fetchTrades();
       } catch (refetchError) {
-        console.error('Error refetching trades after add, falling back to dispatch:', refetchError);
         dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
       }
       
       return data;
     } catch (err) {
-      console.error('Unexpected error in addTrade:', err);
       return null;
     }
   }, [selectedAccountId]);
 
   const updateTrade = useCallback(async (tradeData) => {
     if (!selectedAccountId) {
-      console.error('No account selected, cannot update trade');
       return null;
     }
 
@@ -158,17 +124,10 @@ export const useTradeManagement = (selectedAccountId) => {
     const positionType = parseInt(tradeData.position_type, 10);
 
     if (!tradeData.id) {
-      console.error('Cannot update trade without an id');
       return null;
     }
 
     if ([entryPrice, exitPrice, positionType].some((value) => Number.isNaN(value)) || Number.isNaN(quantity)) {
-      console.error('Invalid numeric values provided when updating trade', {
-        entry_price: tradeData.entry_price,
-        exit_price: tradeData.exit_price,
-        quantity: tradeData.quantity,
-        position_type: tradeData.position_type
-      });
       return null;
     }
 
@@ -205,26 +164,15 @@ export const useTradeManagement = (selectedAccountId) => {
       updatedTrade.user_id = tradeData.user_id;
     }
 
-    console.log('Updating trade:', updatedTrade);
-
     try {
-      const { data, error, status, statusText } = await supabase
+      const { data, error } = await supabase
         .from('trades')
         .update(updatedTrade)
         .eq('id', tradeData.id)
         .select()
         .single();
 
-      console.log('Update trade response:', { data, error, status, statusText });
-
       if (error) {
-        console.error('Error updating trade:', error);
-        console.error('Error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
         return null;
       }
 
@@ -234,41 +182,27 @@ export const useTradeManagement = (selectedAccountId) => {
       try {
         await fetchTrades();
       } catch (refetchError) {
-        console.error('Error refetching trades after update, falling back to dispatch:', refetchError);
         dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
       }
       
       return data;
     } catch (err) {
-      console.error('Unexpected error in updateTrade:', err);
       return null;
     }
   }, [selectedAccountId]);
 
   const deleteTrade = useCallback(async (tradeId) => {
     if (!selectedAccountId) {
-      console.error('No account selected, cannot delete trade');
       return;
     }
 
-    console.log('Deleting trade:', tradeId);
-
     try {
-      const { error, status, statusText } = await supabase
+      const { error } = await supabase
         .from('trades')
         .delete()
         .eq('id', tradeId);
 
-      console.log('Delete trade response:', { error, status, statusText });
-
       if (error) {
-        console.error('Error deleting trade:', error);
-        console.error('Error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        });
         return;
       }
 
@@ -278,11 +212,10 @@ export const useTradeManagement = (selectedAccountId) => {
       try {
         await fetchTrades();
       } catch (refetchError) {
-        console.error('Error refetching trades after delete, falling back to dispatch:', refetchError);
         dispatch({ type: TRADE_ACTIONS.DELETE_TRADE, payload: tradeId });
       }
     } catch (err) {
-      console.error('Unexpected error in deleteTrade:', err);
+      // Error handling
     }
   }, [selectedAccountId]);
 

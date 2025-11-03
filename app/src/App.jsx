@@ -151,7 +151,6 @@ function AppContent() {
         clearEditingTrade();
       }
     } catch (err) {
-      console.error('Error deleting trade:', err);
       // You could add error handling/notification here
     }
   };

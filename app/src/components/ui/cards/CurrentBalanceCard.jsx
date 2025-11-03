@@ -13,8 +13,6 @@ const CurrentBalanceCard = ({ currentBalance = 0, trendData = [] }) => {
     }).format(value);
   };
   
-  // console.log("chartData:", chartData);
-  console.log("trendData:", trendData);
   const chartData = trendData.slice(-10).map((point, index) => ({
     index,
     value: point.balance ?? point.value ?? 0

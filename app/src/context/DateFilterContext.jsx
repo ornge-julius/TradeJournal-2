@@ -208,7 +208,6 @@ const readFilterFromUrl = () => {
 
     return buildFilter({ preset: presetParam, from: fromParam, to: toParam });
   } catch (error) {
-    console.warn('Failed to parse date filter from URL. Falling back to defaults.', error);
     return null;
   }
 };
@@ -231,7 +230,6 @@ const readFilterFromStorage = () => {
 
     return buildFilter(parsed);
   } catch (error) {
-    console.warn('Failed to parse stored dashboard date filter. Clearing persisted value.', error);
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem(STORAGE_KEY);
     }
@@ -256,7 +254,7 @@ const persistFilter = (filter) => {
       JSON.stringify({ preset, from, to })
     );
   } catch (error) {
-    console.warn('Failed to persist dashboard date filter.', error);
+    // Error handling
   }
 };
 
@@ -296,7 +294,7 @@ const updateUrl = (filter) => {
     const nextUrl = `${url.pathname}${params.toString() ? `?${params.toString()}` : ''}${url.hash}`;
     window.history.replaceState({}, '', nextUrl);
   } catch (error) {
-    console.warn('Failed to update URL with dashboard date filter.', error);
+    // Error handling
   }
 };
 
@@ -361,12 +359,6 @@ export const DateFilterProvider = ({ children }) => {
     updateUrl(filter);
 
     if (previousFilter.current !== filter) {
-      const payload = {
-        from: filter.fromUtc,
-        to: filter.toUtc,
-        preset: filter.preset
-      };
-      console.info('dashboard.filter.changed', payload);
       previousFilter.current = filter;
     }
   }, [filter]);
@@ -400,17 +392,14 @@ export const DateFilterProvider = ({ children }) => {
 
   const setCustomRange = useCallback(({ from, to }) => {
     if (from && !isValidDateInput(from)) {
-      console.warn('Ignoring custom date filter update due to invalid start date.', from);
       return;
     }
 
     if (to && !isValidDateInput(to)) {
-      console.warn('Ignoring custom date filter update due to invalid end date.', to);
       return;
     }
 
     if (from && to && from > to) {
-      console.warn('Ignoring custom date filter update because start is after end.', { from, to });
       return;
     }
 
@@ -459,13 +448,11 @@ export const filterTradesByEntryDate = (trades, filter) => {
 
   return trades.filter((trade) => {
     if (!trade || !trade.entry_date) {
-      console.warn('Trade is missing entry_date and will be excluded from date-filtered results.', trade);
       return false;
     }
 
     const entryTime = new Date(trade.entry_date).getTime();
     if (Number.isNaN(entryTime)) {
-      console.warn('Trade has invalid entry_date and will be excluded from date-filtered results.', trade);
       return false;
     }
 
