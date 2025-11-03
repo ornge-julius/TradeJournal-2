@@ -191,6 +191,14 @@ const createFilter = ({ preset, from, to }) => {
   };
 };
 
+const getDefaultFilter = () => {
+  const range = getPresetRange('last30');
+  if (!range) {
+    return DEFAULT_FILTER;
+  }
+  return createFilter({ preset: 'last30', ...range });
+};
+
 const readFilterFromUrl = () => {
   if (typeof window === 'undefined') {
     return null;
@@ -348,7 +356,7 @@ const describeRange = (filter) => {
 
 export const DateFilterProvider = ({ children }) => {
   const initialFilter = useMemo(() => {
-    return readFilterFromUrl() || readFilterFromStorage() || DEFAULT_FILTER;
+    return readFilterFromUrl() || readFilterFromStorage() || getDefaultFilter();
   }, []);
 
   const [filter, setFilter] = useState(initialFilter);
