@@ -1,11 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 
 const TradeHistoryTable = ({ trades, onViewTrade }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const tradesPerPage = 10;
+  const totalPages = Math.ceil(trades.length / tradesPerPage);
+  
+  // Calculate paginated trades
+  const startIndex = (currentPage - 1) * tradesPerPage;
+  const endIndex = startIndex + tradesPerPage;
+  const paginatedTrades = trades.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  };
+
   return (
     <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl overflow-hidden">
-      <div className="p-6 border-b border-gray-700">
+      <div className="p-6 border-b border-gray-700 flex justify-between items-center">
         <h3 className="text-xl font-semibold text-gray-200">Trade History</h3>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="p-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed text-gray-200 rounded-md transition-colors flex items-center justify-center"
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <span className="text-gray-300 text-sm">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="p-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed text-gray-200 rounded-md transition-colors flex items-center justify-center"
+              aria-label="Next page"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </div>
       <div className="overflow-x-auto overflow-y-auto max-h-[600px]">
         <table className="w-full">
@@ -27,7 +68,7 @@ const TradeHistoryTable = ({ trades, onViewTrade }) => {
             </tr>
           </thead>
           <tbody>
-            {trades.map((trade) => (
+            {paginatedTrades.map((trade) => (
               <tr key={trade.id} className="border-t border-gray-700 hover:bg-gray-700/30 transition-colors">
                 <td className="py-4 px-6">
                   <button 
