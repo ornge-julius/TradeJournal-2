@@ -1,9 +1,9 @@
 import React from 'react';
 import { Info } from 'lucide-react';
 
-const AvgWLCard = ({ avgWin, avgLoss }) => {
+const AvgWLCard = ({ title, avgWin, avgLoss }) => {
   const calculateRatio = () => {
-    if (!avgLoss || avgLoss === 0) return 'N/A';
+    if (!avgLoss || avgLoss === 0) return avgWin.toFixed(2);
     return (avgWin / avgLoss).toFixed(2);
   };
 
@@ -18,7 +18,7 @@ const AvgWLCard = ({ avgWin, avgLoss }) => {
   return (
     <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all h-full flex flex-col justify-center">
       <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-gray-400 text-sm font-medium">Avg W/L $</h3>
+        <h3 className="text-gray-400 text-sm font-medium">{title}</h3>
         <Info className="h-4 w-4 text-gray-400" />
       </div>
       

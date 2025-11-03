@@ -39,6 +39,7 @@ const DashboardMetricsCards = ({ metrics, currentBalance, balanceTrendData }) =>
       />
 
       <AvgWLCard
+        title="Avg W/L $"
         avgWin={avgWin}
         avgLoss={avgLoss}
       />

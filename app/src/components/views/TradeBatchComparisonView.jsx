@@ -8,6 +8,7 @@ import {
 import WinLossChart from '../charts/WinLossChart';
 import BatchComparisonLineChart from '../charts/BatchComparisonLineChart';
 import BatchMetricsCard from '../ui/BatchMetricsCard';
+import AvgWLCard from '../ui/cards/AvgWLCard';
 
 const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
   // Calculate batches
@@ -92,6 +93,27 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
           />
         </div>
 
+          {/* Previous Avg W/L $ */}
+          <AvgWLCard
+          title="Previous Avg W/L $"
+          subtitle={`${previousBatch.length} trades`}
+          metrics={previousMetrics}
+          trades={previousBatch}
+          onViewTrade={onViewTrade}
+          avgWin={previousMetrics.avgWin}
+          avgLoss={previousMetrics.avgLoss}
+        />
+
+        {/* Current Avg W/L $ */}
+        <AvgWLCard
+          title="Current Avg W/L $"
+          subtitle={`${currentBatch.length} trades`}
+          metrics={currentMetrics}
+          trades={currentBatch}
+          onViewTrade={onViewTrade}
+          avgWin={currentMetrics.avgWin}
+          avgLoss={currentMetrics.avgLoss}
+        />
       </div>
       
       {/* Cumulative P&L Comparison Line Chart */}
@@ -118,6 +140,7 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
           trades={currentBatch}
           onViewTrade={onViewTrade}
         />
+
 
       </div>
     </div>
