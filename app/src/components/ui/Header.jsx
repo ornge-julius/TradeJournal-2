@@ -9,7 +9,8 @@ import {
   Bell,
   LayoutDashboard,
   Wallet,
-  BarChart3
+  BarChart3,
+  GitCompare
 } from 'lucide-react';
 import AccountSelector from './AccountSelector';
 import GlobalDateFilter from './GlobalDateFilter';
@@ -27,7 +28,9 @@ const Header = ({
   isAuthenticated,
   user,
   onSignIn,
-  onSignOut
+  onSignOut,
+  currentView,
+  onNavigateView
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -92,8 +95,16 @@ const Header = ({
     onToggleSettings();
   };
 
+  const handleNavigateView = (view) => {
+    if (onNavigateView) {
+      onNavigateView(view);
+    }
+    closeMenu();
+  };
+
   const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, isActive: true },
+    { label: 'Dashboard', icon: LayoutDashboard, isActive: currentView === 'dashboard', view: 'dashboard' },
+    { label: 'Batch Comparison', icon: GitCompare, isActive: currentView === 'batchComparison', view: 'batchComparison' },
     { label: 'Accounts', icon: Wallet, isActive: false },
     { label: 'Performance', icon: BarChart3, isActive: false },
     { label: 'Settings', icon: Settings, isActive: false }
@@ -191,6 +202,11 @@ const Header = ({
                             <button
                               key={item.label}
                               type="button"
+                              onClick={() => {
+                                if (item.view && onNavigateView) {
+                                  handleNavigateView(item.view);
+                                }
+                              }}
                               className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                                 item.isActive
                                   ? 'bg-gray-800 text-white shadow-lg'

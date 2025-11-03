@@ -9,12 +9,14 @@ import AccountEditForm from './components/forms/AccountEditForm';
 import SignInForm from './components/forms/SignInForm';
 import TradeDetailView from './components/ui/TradeDetailView';
 import DashboardView from './components/views/DashboardView';
+import TradeBatchComparisonView from './components/views/TradeBatchComparisonView';
 import { DateFilterProvider } from './context/DateFilterContext';
 
 function App() {
   const [showAccountEditForm, setShowAccountEditForm] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [showSignInForm, setShowSignInForm] = useState(false);
+  const [currentView, setCurrentView] = useState('dashboard');
 
   // Authentication state
   const { user, isAuthenticated, isLoading: authLoading, signInWithEmail, signOut } = useAuth();
@@ -224,6 +226,13 @@ function App() {
     setShowSignInForm(false);
   };
 
+  const handleViewChange = (view) => {
+    setCurrentView(view);
+    // Clear viewing trade when switching views
+    clearViewingTrade();
+    clearEditingTrade();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -258,6 +267,8 @@ function App() {
               user={user}
               onSignIn={handleSignIn}
               onSignOut={handleSignOut}
+              currentView={currentView}
+              onNavigateView={handleViewChange}
             />
 
             {/* Settings Form */}
@@ -312,6 +323,12 @@ function App() {
                 <p className="text-gray-300 text-lg mb-4">No account selected</p>
                 <p className="text-gray-400">Please select an account to view trades and metrics.</p>
               </div>
+            ) : currentView === 'batchComparison' ? (
+              <TradeBatchComparisonView
+                trades={trades}
+                startingBalance={startingBalance}
+                onViewTrade={handleTradeView}
+              />
             ) : (
               <DashboardView
                 trades={trades}
