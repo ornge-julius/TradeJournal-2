@@ -11,32 +11,30 @@ const WinLossChart = ({ data, winningTrades, losingTrades }) => {
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius={60}
-            outerRadius={120}
-            paddingAngle={5}
+            startAngle={-90}
+            endAngle={270}
+            innerRadius={0}
+            outerRadius={100}
             dataKey="value"
+            stroke="#FFFFFF"
+            strokeWidth={2}
+            strokeOpacity={0.25}
+            labelLine={false}
+
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell key={`cell-${index}`} fill={entry.color} stroke="#FFFFFF" strokeWidth={1} strokeOpacity={0.25} />
             ))}
           </Pie>
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#1F2937', 
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#F3F4F6'
-            }}
-          />
         </PieChart>
       </ResponsiveContainer>
       <div className="flex justify-center gap-6 mt-4">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+          <span className="inline-flex h-3 w-3 rounded-full" style={{ backgroundColor: '#10B981' }} />
           <span className="text-sm text-gray-400">Wins ({winningTrades})</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          <span className="inline-flex h-3 w-3 rounded-full" style={{ backgroundColor: '#111827' }} />
           <span className="text-sm text-gray-400">Losses ({losingTrades})</span>
         </div>
       </div>

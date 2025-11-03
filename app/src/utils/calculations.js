@@ -348,7 +348,7 @@ export const generateWinLossChartData = (batch) => {
   if (!batch || batch.length === 0) {
     return [
       { name: 'Wins', value: 0, color: '#10B981' },
-      { name: 'Losses', value: 100, color: '#EF4444' }
+      { name: 'Losses', value: 100, color: '#111827' }
     ];
   }
   
@@ -361,7 +361,7 @@ export const generateWinLossChartData = (batch) => {
   
   return [
     { name: 'Wins', value: winRate, color: '#10B981' },
-    { name: 'Losses', value: lossRate, color: '#EF4444' }
+    { name: 'Losses', value: lossRate, color: '#111827' }
   ];
 };
 
