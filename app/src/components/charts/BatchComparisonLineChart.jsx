@@ -45,7 +45,7 @@ const CustomTooltip = ({ active, payload }) => {
 const BatchComparisonLineChart = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
+      <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl pt-4 pb-0 px-4 sm:pt-6 sm:pb-0 sm:px-6">
         <div className="flex items-center gap-2 mb-4">
           <h3 className="text-xl font-semibold text-gray-200">Cumulative P&L Comparison</h3>
           <Info className="w-4 h-4 text-gray-400" />
@@ -58,14 +58,14 @@ const BatchComparisonLineChart = ({ data }) => {
   }
   
   return (
-    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
+    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl pt-4 pb-0 px-4 sm:pt-6 sm:pb-0 sm:px-6">
       <div className="flex items-center gap-2 mb-4">
         <h3 className="text-xl font-semibold text-gray-200">Cumulative P&L Comparison</h3>
         <Info className="w-4 h-4 text-gray-400" />
       </div>
       <div className="w-full">
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={data} margin={{ top: 16, right: 16, left: 0, bottom: 16 }}>
+          <LineChart data={data} margin={{ top: 16, right: 16, left: 0, bottom: 48 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis
               dataKey="tradeNumber"
@@ -81,7 +81,7 @@ const BatchComparisonLineChart = ({ data }) => {
             <ReferenceLine y={0} stroke="#4B5563" />
             <Tooltip content={<CustomTooltip />} />
             <Legend 
-              wrapperStyle={{ color: '#F3F4F6' }}
+              wrapperStyle={{ color: '#F3F4F6', paddingTop: '16px' }}
               iconType="line"
             />
             <Line

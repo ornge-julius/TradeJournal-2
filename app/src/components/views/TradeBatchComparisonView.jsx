@@ -67,17 +67,11 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
       
       {/* Win Rate Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Previous Batch Win Rate */}
         <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
-          <h3 className="text-xl font-semibold mb-4 text-gray-200">Current Batch Win Rate</h3>
-          <WinLossChart
-            data={currentWinLossData}
-            winningTrades={currentMetrics.winningTrades}
-            losingTrades={currentMetrics.losingTrades}
-          />
-        </div>
-        
-        <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
-          <h3 className="text-xl font-semibold mb-4 text-gray-200">Previous Batch Win Rate</h3>
+          <h3 className="text-xl font-semibold mb-4 text-gray-200">
+            Previous Batch Win Rate: {previousMetrics.winRate.toFixed(1)}%
+          </h3>
           {/* When 10 or fewer trades, previousBatch will have same data as currentBatch */}
           <WinLossChart
             data={previousWinLossData}
@@ -85,6 +79,19 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
             losingTrades={previousMetrics.losingTrades}
           />
         </div>
+        
+        {/* Current Batch Win Rate */}
+        <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
+          <h3 className="text-xl font-semibold mb-4 text-gray-200">
+            Current Batch Win Rate: {currentMetrics.winRate.toFixed(1)}%
+          </h3>
+          <WinLossChart
+            data={currentWinLossData}
+            winningTrades={currentMetrics.winningTrades}
+            losingTrades={currentMetrics.losingTrades}
+          />
+        </div>
+
       </div>
       
       {/* Cumulative P&L Comparison Line Chart */}
@@ -92,16 +99,7 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
       <BatchComparisonLineChart data={comparisonLineData} />
       
       {/* Performance Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Current Batch Metrics */}
-        <BatchMetricsCard
-          title="Current Batch"
-          subtitle={`${currentBatch.length} trades`}
-          metrics={currentMetrics}
-          trades={currentBatch}
-          onViewTrade={onViewTrade}
-        />
-        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">        
         {/* Previous Batch Metrics */}
         {/* When 10 or fewer trades, previousBatch will have same data as currentBatch */}
         <BatchMetricsCard
@@ -111,6 +109,16 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
           trades={previousBatch}
           onViewTrade={onViewTrade}
         />
+
+        {/* Current Batch Metrics */}
+        <BatchMetricsCard
+          title="Current Batch"
+          subtitle={`${currentBatch.length} trades`}
+          metrics={currentMetrics}
+          trades={currentBatch}
+          onViewTrade={onViewTrade}
+        />
+
       </div>
     </div>
   );
