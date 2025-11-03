@@ -25,7 +25,7 @@ export const useTradeManagement = (selectedAccountId) => {
         .from('trades')
         .select('*')
         .eq('account_id', selectedAccountId)
-        .order('entry_date', { ascending: false });
+        .order('exit_date', { ascending: false });
 
       console.log('Supabase response:', { data, error, status, statusText });
 
