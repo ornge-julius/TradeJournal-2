@@ -1,183 +1,324 @@
+#!/usr/bin/env python3
+"""
+Transform Robinhood trades CSV to Supabase trades table format.
+Matches BTO (Buy To Open) with STC (Sell To Close) transactions to create complete trades.
+"""
+
 import csv
 import re
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from collections import defaultdict
 
-def parse_option_description(description: str) -> Dict[str, str]:
-    """
-    Parse the option description to extract symbol, strike, expiration, type, and price
-    Example: "BOT +1 SPY 100 (Weeklys) 8 APR 25 510 CALL @2.56 CBOE"
-    """
-    # Pattern to match option descriptions
-    pattern = r'(BOT|SOLD)\s+([+-]\d+)\s+(\w+)\s+(\d+)\s*\(?([^)]*)\)?\s*(\d+)\s+(\w+)\s+(\d+)\s+(\d+)\s+(CALL|PUT)\s+@([\d.]+)'
-    
-    match = re.search(pattern, description)
-    if not match:
-        return {}
-    
-    return {
-        'action': match.group(1),  # BOT or SOLD
-        'quantity': match.group(2),  # +1 or -1
-        'symbol': match.group(3),  # SPY, MSFT, etc.
-        'contract_size': match.group(4),  # 100
-        'expiry_type': match.group(5),  # Weeklys, Quarterlys, etc.
-        'day': match.group(6),  # 8
-        'month': match.group(7),  # APR
-        'year': match.group(8),  # 25
-        'strike': match.group(9),  # 510
-        'option_type': match.group(10),  # CALL or PUT
-        'price': match.group(11)  # 2.56
-    }
+# Constants
+ACCOUNT_ID = ""
+USER_ID = ""
+SOURCE = "DATA UPLOAD"
+REASONING = "DATA UPLOAD"
 
-def parse_date(date_str: str) -> str:
-    """Convert date from M/D/YY format to YYYY-MM-DD format"""
+# Position type mapping
+POSITION_TYPE_CALL = 1
+POSITION_TYPE_PUT = 0
+
+# Result mapping
+RESULT_WIN = 1
+RESULT_LOSS = 0
+
+
+def parse_amount(amount_str):
+    """Parse amount string like '($386.04)' or '$225.95' to float."""
+    # Remove dollar sign and parentheses
+    cleaned = amount_str.replace('$', '').replace('(', '').replace(')', '').strip()
+    # If original had parentheses, it's negative
+    if '(' in amount_str:
+        return -float(cleaned)
+    return float(cleaned)
+
+
+def parse_date(date_str):
+    """Parse MM/DD/YYYY date string to YYYY-MM-DD HH:mm:ss format."""
     try:
-        # Parse date like "4/9/25" to "2025-04-09"
-        date_obj = datetime.strptime(date_str, "%m/%d/%y")
-        return date_obj.strftime("%Y-%m-%d")
+        dt = datetime.strptime(date_str, "%m/%d/%Y")
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
     except ValueError:
-        return date_str
+        return None
 
-def group_trades_by_symbol_and_expiry(trades: List[Dict]) -> List[Dict]:
-    """
-    Group trades by symbol, expiration, and strike to create complete trade pairs
-    """
-    trade_groups = {}
-    
-    for trade in trades:
-        if trade['TYPE'] != 'TRD':
-            continue
-            
-        parsed = parse_option_description(trade['DESCRIPTION'])
-        if not parsed:
-            continue
-            
-        # Create a unique key for grouping
-        key = f"{parsed['symbol']}_{parsed['strike']}_{parsed['option_type']}_{parsed['day']}_{parsed['month']}_{parsed['year']}"
-        
-        if key not in trade_groups:
-            trade_groups[key] = []
-        
-        trade_groups[key].append({
-            'trade': trade,
-            'parsed': parsed
-        })
-    
-    return trade_groups
 
-def create_complete_trades(trade_groups: Dict) -> List[Dict]:
+def parse_price(price_str):
+    """Parse price string like '$3.86' to float."""
+    return float(price_str.replace('$', '').strip())
+
+
+def get_position_type(description):
+    """Extract position type from description. Call = 1, Put = 0."""
+    if 'Call' in description:
+        return POSITION_TYPE_CALL
+    elif 'Put' in description:
+        return POSITION_TYPE_PUT
+    return None
+
+
+def get_symbol(instrument):
+    """Get symbol from instrument column."""
+    return instrument.strip().upper()
+
+
+def match_trades(transactions):
     """
-    Create complete trade records from grouped trades
+    Match BTO and STC transactions to create complete trades.
+    Handles quantity matching and partial fills.
+    Returns list of matched trades.
     """
-    complete_trades = []
+    # Group transactions by a unique key (symbol + description)
+    pending_opens = defaultdict(list)  # key -> list of BTO transactions with remaining quantity
+    trades = []
     
-    for key, trades in trade_groups.items():
-        # Sort trades by time
-        trades.sort(key=lambda x: x['trade']['TIME'])
+    # Sort transactions by date, then by transaction code (BTO before STC on same date)
+    def sort_key(trans):
+        date_str = trans['activity_date']
+        try:
+            dt = datetime.strptime(date_str, "%m/%d/%Y")
+            # Use transaction code: BTO=0 (comes first), STC=1 (comes after)
+            code_order = 0 if trans['trans_code'] == 'BTO' else 1
+            return (dt, code_order)
+        except:
+            return (date_str, 0)
+    
+    sorted_transactions = sorted(transactions, key=sort_key)
+    
+    for trans in sorted_transactions:
+        trans_code = trans['trans_code']
+        symbol = get_symbol(trans['instrument'])
+        description = trans['description']
+        key = f"{symbol}|{description}"
+        trans_quantity = int(trans['quantity'])
         
-        # Find buy and sell trades
-        buy_trades = [t for t in trades if t['parsed']['action'] == 'BOT']
-        sell_trades = [t for t in trades if t['parsed']['action'] == 'SOLD']
-        
-        # Create copies to avoid modification issues
-        buy_trades_copy = buy_trades.copy()
-        sell_trades_copy = sell_trades.copy()
-        
-        # Match buy and sell trades
-        for buy_trade in buy_trades_copy:
-            if buy_trade not in buy_trades:  # Skip if already used
+        if trans_code == 'BTO':
+            # Add to pending opens with quantity tracking
+            pending_opens[key].append({
+                'trans': trans,
+                'remaining_qty': trans_quantity
+            })
+        elif trans_code == 'STC':
+            # Try to match with pending BTOs
+            remaining_stc_qty = trans_quantity
+            
+            while remaining_stc_qty > 0 and key in pending_opens and len(pending_opens[key]) > 0:
+                # Get the first available BTO
+                bto_entry = pending_opens[key][0]
+                bto = bto_entry['trans']
+                bto_remaining = bto_entry['remaining_qty']
+                
+                # Determine how much to match
+                match_qty = min(remaining_stc_qty, bto_remaining)
+                
+                # Create a trade with the matched quantity
+                trade = create_trade_with_quantity(bto, trans, match_qty)
+                if trade:
+                    trades.append(trade)
+                
+                # Update remaining quantities
+                remaining_stc_qty -= match_qty
+                bto_entry['remaining_qty'] -= match_qty
+                
+                # Remove BTO if fully matched
+                if bto_entry['remaining_qty'] <= 0:
+                    pending_opens[key].pop(0)
+            
+            # If there's still unmatched STC quantity, it's an error
+            if remaining_stc_qty > 0:
+                print(f"Warning: STC without matching BTO: {symbol} {description} on {trans['activity_date']} (qty: {remaining_stc_qty})")
+    
+    # Handle any remaining unmatched BTO transactions (incomplete trades)
+    for key, bto_list in pending_opens.items():
+        for bto_entry in bto_list:
+            bto = bto_entry['trans']
+            symbol = get_symbol(bto['instrument'])
+            print(f"Warning: Unmatched BTO (incomplete trade): {symbol} {bto['description']} on {bto['activity_date']} (qty: {bto_entry['remaining_qty']})")
+    
+    return trades
+
+
+def create_trade_with_quantity(bto, stc, match_qty):
+    """
+    Create a trade record from BTO and STC transactions with specified quantity.
+    Handles partial matches where match_qty may be less than full transaction quantities.
+    """
+    # Parse amounts
+    bto_total_amount = parse_amount(bto['amount'])  # Already negative (cost)
+    stc_total_amount = parse_amount(stc['amount'])  # Already positive (proceeds)
+    
+    # Get quantities
+    bto_qty = int(bto['quantity'])
+    stc_qty = int(stc['quantity'])
+    
+    # Calculate per-unit amounts
+    bto_per_unit = bto_total_amount / bto_qty if bto_qty > 0 else 0
+    stc_per_unit = stc_total_amount / stc_qty if stc_qty > 0 else 0
+    
+    # Calculate matched amounts (proportional to match_qty)
+    matched_bto_amount = bto_per_unit * match_qty
+    matched_stc_amount = stc_per_unit * match_qty
+    
+    # Calculate profit: STC proceeds + BTO cost (since BTO is negative)
+    profit = matched_stc_amount + matched_bto_amount
+    
+    # Determine result (win or loss)
+    result = RESULT_WIN if profit > 0 else RESULT_LOSS
+    
+    # Get position type
+    position_type = get_position_type(bto['description'])
+    if position_type is None:
+        print(f"Warning: Could not determine position type for: {bto['description']}")
+        return None
+    
+    # Parse dates
+    entry_date = parse_date(bto['activity_date'])
+    exit_date = parse_date(stc['activity_date'])
+    
+    if not entry_date or not exit_date:
+        print(f"Warning: Invalid date format")
+        return None
+    
+    # Parse prices (these are per-unit already)
+    entry_price = parse_price(bto['price'])
+    exit_price = parse_price(stc['price'])
+    
+    # Create trade record
+    trade = {
+        'symbol': get_symbol(bto['instrument']),
+        'position_type': position_type,
+        'entry_price': entry_price,
+        'exit_price': exit_price,
+        'quantity': match_qty,
+        'entry_date': entry_date,
+        'exit_date': exit_date,
+        'source': SOURCE,
+        'reasoning': REASONING,
+        'result': result,
+        'notes': None,
+        'account_id': ACCOUNT_ID,
+        'user_id': USER_ID,
+        'profit': round(profit, 2),
+        'option': bto['description']
+    }
+    
+    return trade
+
+
+def create_trade(bto, stc):
+    """Create a trade record from BTO and STC transactions (full quantity match)."""
+    bto_qty = int(bto['quantity'])
+    return create_trade_with_quantity(bto, stc, bto_qty)
+
+
+def read_input_csv(input_file):
+    """Read the input CSV file and return list of transactions."""
+    transactions = []
+    
+    with open(input_file, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            # Skip empty rows
+            if not row:
                 continue
-                
-            for sell_trade in sell_trades_copy:
-                if sell_trade not in sell_trades:  # Skip if already used
-                    continue
-                    
-                # Check if quantities match
-                buy_qty = abs(int(buy_trade['parsed']['quantity']))
-                sell_qty = abs(int(sell_trade['parsed']['quantity']))
-                
-                if buy_qty == sell_qty:
-                    # Create complete trade record
-                    complete_trade = {
-                        'symbol': buy_trade['parsed']['symbol'],
-                        'position_type': 1 if buy_trade['parsed']['option_type'] == 'CALL' else 2,  # 1=CALL, 2=PUT
-                        'entry_price': float(buy_trade['parsed']['price']),
-                        'exit_price': float(sell_trade['parsed']['price']),
-                        'quantity': round((buy_qty * int(buy_trade['parsed']['contract_size']))/100),
-                        'entry_date': parse_date(buy_trade['trade']['DATE']),
-                        'exit_date': parse_date(sell_trade['trade']['DATE']),
-                        'source': f"{buy_trade['trade']['REF #']}_{sell_trade['trade']['REF #']}",
-                        'reasoning': f"ORB",
-                        'result': None,  # Will need to be calculated or set manually
-                        'notes': f"Entry: {buy_trade['trade']['TIME']}, Exit: {sell_trade['trade']['TIME']}",
-                        'account_id': "f5bf8559-5779-47ce-ba65-75737aed3622",  # Set as needed
-                        'user_id': "7c2bb6e3-c000-4c1d-8402-d83c96bfadd0",  # Set as needed
-                        'profit': None  # Will be calculated
-                    }
-                    
-                    # Calculate profit
-                    entry_cost = complete_trade['entry_price'] * complete_trade['quantity']
-                    exit_proceeds = complete_trade['exit_price'] * complete_trade['quantity']
-                    profit = (exit_proceeds - entry_cost) * 100  # Multiply by 100
-                    complete_trade['profit'] = int(round(profit))  # Round to nearest integer
-                    complete_trade['result'] = 1 if complete_trade['profit'] > 0 else 0
-                    
-                    complete_trades.append(complete_trade)
-                    
-                    # Remove used trades to avoid double-counting
-                    if buy_trade in buy_trades:
-                        buy_trades.remove(buy_trade)
-                    if sell_trade in sell_trades:
-                        sell_trades.remove(sell_trade)
+            # Check if all values are None or empty strings
+            is_empty = True
+            for v in row.values():
+                if v is not None and isinstance(v, str) and v.strip():
+                    is_empty = False
                     break
+            if is_empty:
+                continue
+            
+            # Clean up keys and values (remove quotes if present, handle None values)
+            clean_row = {}
+            for k, v in row.items():
+                # Handle None keys or values
+                clean_key = k.strip().strip('"') if k is not None else ''
+                clean_value = v.strip().strip('"') if v is not None else ''
+                clean_row[clean_key] = clean_value
+            
+            trans_code = clean_row.get('Trans Code', '').strip()
+            
+            # Only process BTO and STC transactions
+            if trans_code in ['BTO', 'STC']:
+                transactions.append({
+                    'activity_date': clean_row.get('Activity Date', ''),
+                    'process_date': clean_row.get('Process Date', ''),
+                    'settle_date': clean_row.get('Settle Date', ''),
+                    'instrument': clean_row.get('Instrument', ''),
+                    'description': clean_row.get('Description', ''),
+                    'trans_code': trans_code,
+                    'quantity': clean_row.get('Quantity', ''),
+                    'price': clean_row.get('Price', ''),
+                    'amount': clean_row.get('Amount', '')
+                })
     
-    return complete_trades
+    return transactions
 
-def write_database_csv(complete_trades: List[Dict], output_file: str):
-    """
-    Write the transformed trades to a CSV file suitable for database import
-    """
+
+def write_output_csv(trades, output_file):
+    """Write trades to output CSV file."""
+    if not trades:
+        print("No trades to write.")
+        return
+    
+    # Define column order matching the schema
     fieldnames = [
-        'symbol', 'position_type', 'entry_price', 'exit_price', 'quantity',
-        'entry_date', 'exit_date', 'source', 'reasoning', 'result',
-        'notes', 'account_id', 'user_id', 'profit'
+        'symbol',
+        'position_type',
+        'entry_price',
+        'exit_price',
+        'quantity',
+        'entry_date',
+        'exit_date',
+        'source',
+        'reasoning',
+        'result',
+        'notes',
+        'account_id',
+        'user_id',
+        'profit',
+        'option'
     ]
     
-    with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    with open(output_file, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         
-        for trade in complete_trades:
+        for trade in trades:
             writer.writerow(trade)
+    
+    print(f"Successfully wrote {len(trades)} trades to {output_file}")
+
 
 def main():
-    # Read the original CSV
-    trades = []
-    with open('cash_balance.csv', 'r', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        trades = list(reader)
+    input_file = './RH_trades_090125_103125.csv'
+    output_file = './trades_for_database.csv'
     
-    print(f"Read {len(trades)} rows from cash_balance.csv")
+    print(f"Reading transactions from {input_file}...")
+    transactions = read_input_csv(input_file)
+    print(f"Found {len(transactions)} transactions")
     
-    # Group trades
-    trade_groups = group_trades_by_symbol_and_expiry(trades)
-    print(f"Found {len(trade_groups)} unique trade groups")
+    print("Matching BTO and STC transactions...")
+    trades = match_trades(transactions)
+    print(f"Created {len(trades)} complete trades")
     
-    # Create complete trades
-    complete_trades = create_complete_trades(trade_groups)
-    print(f"Created {len(complete_trades)} complete trade records")
+    print(f"Writing trades to {output_file}...")
+    write_output_csv(trades, output_file)
     
-    # Write to new CSV
-    output_file = 'trades_for_database.csv'
-    write_database_csv(complete_trades, output_file)
-    print(f"Wrote {len(complete_trades)} trades to {output_file}")
-    
-    # Show sample of transformed data
-    if complete_trades:
-        print("\nSample transformed trade:")
-        sample = complete_trades[0]
-        for key, value in sample.items():
-            print(f"  {key}: {value}")
+    # Print summary
+    if trades:
+        wins = sum(1 for t in trades if t['result'] == RESULT_WIN)
+        losses = sum(1 for t in trades if t['result'] == RESULT_LOSS)
+        total_profit = sum(t['profit'] for t in trades)
+        
+        print("\nSummary:")
+        print(f"  Total trades: {len(trades)}")
+        print(f"  Wins: {wins}")
+        print(f"  Losses: {losses}")
+        print(f"  Total profit: ${total_profit:.2f}")
+
 
 if __name__ == "__main__":
     main()

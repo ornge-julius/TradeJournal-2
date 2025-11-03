@@ -23,13 +23,12 @@ export const useAppState = () => {
         if (accountError) {
           // If account not found, show a helpful message
           if (accountError.code === 'PGRST116') {
-            console.error('Account not found. Please check if the account ID exists in the database.');
+            // Error handling
           }
           return;
         }
 
         if (!accountData) {
-          console.error('No account data returned');
           return;
         }
 
@@ -66,7 +65,7 @@ export const useAppState = () => {
         }
 
       } catch (err) {
-        console.error('Unexpected error in fetchAccount:', err);
+        // Error handling
       }
     };
 
@@ -78,7 +77,6 @@ export const useAppState = () => {
     const balance = parseFloat(newBalance);
     
     if (!accountsState.selectedAccountId) {
-      console.error('No account selected, cannot update balance');
       return;
     }
     
@@ -98,15 +96,11 @@ export const useAppState = () => {
 
       // Handle database errors
       if (error) {
-        console.error('Database error in updateStartingBalance:', error);
         // Rollback the optimistic update
         accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: previousBalance });
         return;
       }
-
-      console.log('Starting balance updated successfully');
     } catch (err) {
-      console.error('Unexpected error in updateStartingBalance:', err);
       // Rollback the optimistic update
       accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: previousBalance });
     }
