@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useTradeManagement } from './hooks/useTradeManagement';
 import { useAppState } from './hooks/useAppState';
 import { useAuth } from './hooks/useAuth';
@@ -9,9 +10,10 @@ import AccountEditForm from './components/forms/AccountEditForm';
 import SignInForm from './components/forms/SignInForm';
 import TradeDetailView from './components/ui/TradeDetailView';
 import DashboardView from './components/views/DashboardView';
+import TradeBatchComparisonView from './components/views/TradeBatchComparisonView';
 import { DateFilterProvider } from './context/DateFilterContext';
 
-function App() {
+function AppContent() {
   const [showAccountEditForm, setShowAccountEditForm] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [showSignInForm, setShowSignInForm] = useState(false);
@@ -224,6 +226,7 @@ function App() {
     setShowSignInForm(false);
   };
 
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -313,16 +316,41 @@ function App() {
                 <p className="text-gray-400">Please select an account to view trades and metrics.</p>
               </div>
             ) : (
-              <DashboardView
-                trades={trades}
-                startingBalance={startingBalance}
-                onViewTrade={handleTradeView}
-              />
+              <Routes>
+                <Route 
+                  path="/comparison" 
+                  element={
+                    <TradeBatchComparisonView
+                      trades={trades}
+                      startingBalance={startingBalance}
+                      onViewTrade={handleTradeView}
+                    />
+                  } 
+                />
+                <Route 
+                  path="/" 
+                  element={
+                    <DashboardView
+                      trades={trades}
+                      startingBalance={startingBalance}
+                      onViewTrade={handleTradeView}
+                    />
+                  } 
+                />
+              </Routes>
             )}
           </DateFilterProvider>
         )}
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

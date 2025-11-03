@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Settings,
   Plus,
@@ -9,7 +10,8 @@ import {
   Bell,
   LayoutDashboard,
   Wallet,
-  BarChart3
+  BarChart3,
+  GitCompare
 } from 'lucide-react';
 import AccountSelector from './AccountSelector';
 import GlobalDateFilter from './GlobalDateFilter';
@@ -29,9 +31,13 @@ const Header = ({
   onSignIn,
   onSignOut
 }) => {
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
+  
+  // Determine current view from location
+  const currentView = location.pathname === '/comparison' ? 'batchComparison' : 'dashboard';
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
@@ -93,10 +99,11 @@ const Header = ({
   };
 
   const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, isActive: true },
-    { label: 'Accounts', icon: Wallet, isActive: false },
-    { label: 'Performance', icon: BarChart3, isActive: false },
-    { label: 'Settings', icon: Settings, isActive: false }
+    { label: 'Dashboard', icon: LayoutDashboard, path: '/', isActive: currentView === 'dashboard' },
+    { label: 'Batch Comparison', icon: GitCompare, path: '/comparison', isActive: currentView === 'batchComparison' },
+    { label: 'Accounts', icon: Wallet, path: '#', isActive: false },
+    { label: 'Performance', icon: BarChart3, path: '#', isActive: false },
+    { label: 'Settings', icon: Settings, path: '#', isActive: false }
   ];
 
   return (
@@ -187,6 +194,31 @@ const Header = ({
                       <nav className="mt-4 space-y-1">
                         {navItems.map((item) => {
                           const Icon = item.icon;
+                          const isLink = item.path !== '#';
+                          const content = (
+                            <>
+                              <Icon className="h-5 w-5" />
+                              <span>{item.label}</span>
+                            </>
+                          );
+                          
+                          if (isLink) {
+                            return (
+                              <Link
+                                key={item.label}
+                                to={item.path}
+                                onClick={closeMenu}
+                                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                                  item.isActive
+                                    ? 'bg-gray-800 text-white shadow-lg'
+                                    : 'text-gray-300 hover:bg-gray-800/70 hover:text-white'
+                                }`}
+                              >
+                                {content}
+                              </Link>
+                            );
+                          }
+                          
                           return (
                             <button
                               key={item.label}
@@ -197,8 +229,7 @@ const Header = ({
                                   : 'text-gray-300 hover:bg-gray-800/70 hover:text-white'
                               }`}
                             >
-                              <Icon className="h-5 w-5" />
-                              <span>{item.label}</span>
+                              {content}
                             </button>
                           );
                         })}

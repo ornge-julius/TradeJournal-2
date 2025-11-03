@@ -291,3 +291,113 @@ export const generateMonthlyNetPNLData = (trades) => {
     tradeCount: item.count
   }));
 };
+
+// Calculate trade batches (current and previous batch of up to 10 trades each)
+// Trades are ordered by entry_date descending (newest first, index 0 = most recent)
+export const calculateTradeBatches = (trades) => {
+  const totalTrades = trades.length;
+  
+  if (totalTrades === 0) {
+    return { currentBatch: [], previousBatch: [] };
+  }
+  
+  // Special case: 10 or fewer trades - show same data for both batches
+  if (totalTrades <= 10) {
+    const allTrades = trades.slice(0); // Copy all trades
+    return { currentBatch: allTrades, previousBatch: allTrades };
+  }
+  
+  // Normal case: 11+ trades
+  const remainder = totalTrades % 10;
+  
+  // Current batch (most recent up to 10 trades)
+  let currentBatchStart = 0;
+  let currentBatchEnd;
+  
+  if (remainder === 0) {
+    // Exactly a multiple of 10: current batch is the last 10
+    currentBatchEnd = 9;
+  } else {
+    // Incomplete batch: current batch is the remainder
+    currentBatchEnd = remainder - 1;
+  }
+  
+  const currentBatch = trades.slice(currentBatchStart, currentBatchEnd + 1);
+  
+  // Previous batch (previous 10 trades)
+  let previousBatchStart;
+  let previousBatchEnd;
+  
+  if (remainder === 0) {
+    // If current batch is exactly 10, previous batch starts at index 10
+    previousBatchStart = 10;
+    previousBatchEnd = Math.min(19, totalTrades - 1);
+  } else {
+    // Current batch is incomplete, previous batch starts after it
+    previousBatchStart = remainder;
+    previousBatchEnd = Math.min(remainder + 9, totalTrades - 1);
+  }
+  
+  const previousBatch = trades.slice(previousBatchStart, previousBatchEnd + 1);
+  
+  return { currentBatch, previousBatch };
+};
+
+// Generate win/loss chart data for a batch
+export const generateWinLossChartData = (batch) => {
+  if (!batch || batch.length === 0) {
+    return [
+      { name: 'Wins', value: 0, color: '#10B981' },
+      { name: 'Losses', value: 100, color: '#111827' }
+    ];
+  }
+  
+  const winningTrades = batch.filter(t => t.profit > 0 || t.result === 1).length;
+  const losingTrades = batch.filter(t => t.profit < 0 || t.result === 0).length;
+  const totalTrades = batch.length;
+  
+  const winRate = totalTrades > 0 ? (winningTrades / totalTrades) * 100 : 0;
+  const lossRate = 100 - winRate;
+  
+  return [
+    { name: 'Wins', value: winRate, color: '#10B981' },
+    { name: 'Losses', value: lossRate, color: '#111827' }
+  ];
+};
+
+// Generate cumulative P&L line chart data for batch comparison
+export const generateBatchComparisonData = (currentBatch, previousBatch) => {
+  if ((!currentBatch || currentBatch.length === 0) && (!previousBatch || previousBatch.length === 0)) {
+    return [];
+  }
+
+  const maxLength = Math.max(currentBatch.length, previousBatch.length);
+  const data = [];
+  
+  let currentCumulative = 0;
+  let previousCumulative = 0;
+  
+  for (let i = 0; i < maxLength; i++) {
+    const currentTrade = currentBatch[i];
+    const previousTrade = previousBatch[i];
+    
+    if (currentTrade) {
+      currentCumulative += currentTrade.profit || 0;
+    }
+    
+    if (previousTrade) {
+      previousCumulative += previousTrade.profit || 0;
+    }
+    
+    data.push({
+      tradeNumber: i + 1,
+      currentCumulative: currentCumulative,
+      previousCumulative: previousCumulative,
+      // Only include values if trade exists
+      currentValue: currentTrade ? currentCumulative : null,
+      previousValue: previousTrade ? previousCumulative : null
+    });
+  }
+  
+  return data;
+};
