@@ -9,9 +9,7 @@ import {
   X,
   Bell,
   LayoutDashboard,
-  Wallet,
-  BarChart3,
-  GitCompare,
+  TrendingUpDown,
   Sun,
   Moon
 } from 'lucide-react';
@@ -104,10 +102,10 @@ const Header = ({
 
   const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/', isActive: currentView === 'dashboard' },
-    { label: 'Batch Comparison', icon: GitCompare, path: '/comparison', isActive: currentView === 'batchComparison' },
-    { label: 'Accounts', icon: Wallet, path: '#', isActive: false },
-    { label: 'Performance', icon: BarChart3, path: '#', isActive: false },
-    { label: 'Settings', icon: Settings, path: '#', isActive: false }
+    { label: 'Batch Comparison', icon: TrendingUpDown, path: '/comparison', isActive: currentView === 'batchComparison' },
+    // { label: 'Accounts', icon: Wallet, path: '#', isActive: false },
+    // { label: 'Performance', icon: BarChart3, path: '#', isActive: false },
+    // { label: 'Settings', icon: Settings, path: '#', isActive: false }
   ];
 
   return (
@@ -133,8 +131,8 @@ const Header = ({
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-semibold text-gray-900 dark:text-white">Trade Journal</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 hidden sm:inline">Smarter insights for every trade</span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white font-mono italic">ProfitPath</span>
+              <span className="text-xs text-gray-600 dark:text-gray-400 hidden sm:inline">Track. Learn. Evolve. Profit.</span>
             </div>
           </div>
 
@@ -158,40 +156,6 @@ const Header = ({
                 className="absolute right-0 top-[calc(100%+0.75rem)] w-[min(20rem,calc(100vw-2rem))] sm:w-80"
               >
                 <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/95 shadow-2xl backdrop-blur-xl">
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800/70">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg"
-                        aria-hidden="true"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          className="h-6 w-6"
-                        >
-                          <path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9" opacity="0.4" />
-                          <path d="M5 17c1.5-2 3.5-3 7-3s5.5 1 7 3" />
-                          <path d="M12 12.5c1.5 0 3-1 3-2.5S13.5 7.5 12 7.5s-3 1-3 2.5 1.5 2.5 3 2.5z" />
-                        </svg>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-base font-semibold text-gray-900 dark:text-white">Trade Journal</span>
-                        <span className="text-xs text-gray-600 dark:text-gray-400">Command center</span>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={closeMenu}
-                      className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
-                      aria-label="Close navigation menu"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-
                   <div className="px-5 py-4 max-h-[min(75vh,28rem)] overflow-y-auto space-y-6">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Navigation</p>
@@ -316,17 +280,6 @@ const Header = ({
                               }`}
                             />
                           </div>
-                        </button>
-                      </div>
-
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Notifications</p>
-                        <button
-                          type="button"
-                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          <Bell className="h-4 w-4" />
-                          Notification center
                         </button>
                       </div>
 
