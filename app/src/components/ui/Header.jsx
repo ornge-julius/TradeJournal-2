@@ -11,10 +11,13 @@ import {
   LayoutDashboard,
   Wallet,
   BarChart3,
-  GitCompare
+  GitCompare,
+  Sun,
+  Moon
 } from 'lucide-react';
 import AccountSelector from './AccountSelector';
 import GlobalDateFilter from './GlobalDateFilter';
+import { useTheme } from '../../context/ThemeContext';
 
 const Header = ({ 
   onToggleSettings, 
@@ -35,6 +38,7 @@ const Header = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
+  const { theme, toggleTheme, isDark } = useTheme();
   
   // Determine current view from location
   const currentView = location.pathname === '/comparison' ? 'batchComparison' : 'dashboard';
@@ -107,7 +111,7 @@ const Header = ({
   ];
 
   return (
-    <header className="sticky top-0 z-30 backdrop-blur-lg bg-gray-900/80 border-b border-gray-800 mb-8">
+    <header className="sticky top-0 z-30 backdrop-blur-lg bg-white/95 dark:bg-gray-900/80 border-b border-gray-200 shadow-lg hover:shadow-xl dark:border-gray-800 mb-8">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3 flex-shrink-0">
@@ -129,8 +133,8 @@ const Header = ({
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-semibold text-white">Trade Journal</span>
-              <span className="text-xs text-gray-400 hidden sm:inline">Smarter insights for every trade</span>
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">Trade Journal</span>
+              <span className="text-xs text-gray-600 dark:text-gray-400 hidden sm:inline">Smarter insights for every trade</span>
             </div>
           </div>
 
@@ -153,8 +157,8 @@ const Header = ({
                 ref={menuRef}
                 className="absolute right-0 top-[calc(100%+0.75rem)] w-[min(20rem,calc(100vw-2rem))] sm:w-80"
               >
-                <div className="rounded-2xl border border-gray-800 bg-gray-900/95 shadow-2xl backdrop-blur-xl">
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800/70">
+                <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/95 shadow-2xl backdrop-blur-xl">
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800/70">
                     <div className="flex items-center gap-3">
                       <div
                         className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg"
@@ -174,14 +178,14 @@ const Header = ({
                         </svg>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-base font-semibold text-white">Trade Journal</span>
-                        <span className="text-xs text-gray-400">Command center</span>
+                        <span className="text-base font-semibold text-gray-900 dark:text-white">Trade Journal</span>
+                        <span className="text-xs text-gray-600 dark:text-gray-400">Command center</span>
                       </div>
                     </div>
                     <button
                       type="button"
                       onClick={closeMenu}
-                      className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-300 transition-colors hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
                       aria-label="Close navigation menu"
                     >
                       <X className="h-4 w-4" />
@@ -190,7 +194,7 @@ const Header = ({
 
                   <div className="px-5 py-4 max-h-[min(75vh,28rem)] overflow-y-auto space-y-6">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Navigation</p>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Navigation</p>
                       <nav className="mt-4 space-y-1">
                         {navItems.map((item) => {
                           const Icon = item.icon;
@@ -210,8 +214,8 @@ const Header = ({
                                 onClick={closeMenu}
                                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                                   item.isActive
-                                    ? 'bg-gray-800 text-white shadow-lg'
-                                    : 'text-gray-300 hover:bg-gray-800/70 hover:text-white'
+                                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
+                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white'
                                 }`}
                               >
                                 {content}
@@ -225,8 +229,8 @@ const Header = ({
                               type="button"
                               className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                                 item.isActive
-                                  ? 'bg-gray-800 text-white shadow-lg'
-                                  : 'text-gray-300 hover:bg-gray-800/70 hover:text-white'
+                                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
+                                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white'
                               }`}
                             >
                               {content}
@@ -237,7 +241,7 @@ const Header = ({
                     </div>
 
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Accounts</p>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Accounts</p>
                       <div className="mt-4">
                         <AccountSelector
                           accounts={accounts}
@@ -254,7 +258,7 @@ const Header = ({
 
                     <div className="space-y-4">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Trading</p>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Trading</p>
                         <div className="mt-4 space-y-3">
                           {isAuthenticated ? (
                             <button
@@ -270,7 +274,7 @@ const Header = ({
                             <button
                               type="button"
                               onClick={handleSignInClick}
-                              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-800 px-4 py-3 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-700"
+                              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
                             >
                               <LogIn className="h-4 w-4" />
                               Sign in to add trades
@@ -280,7 +284,7 @@ const Header = ({
                           <button
                             type="button"
                             onClick={isAuthenticated ? handleToggleSettings : handleSignInClick}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-800 px-4 py-3 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-700"
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
                           >
                             <Settings className="h-4 w-4" />
                             {isAuthenticated ? 'Settings' : 'Sign in to manage settings'}
@@ -288,11 +292,38 @@ const Header = ({
                         </div>
                       </div>
 
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Notifications</p>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Appearance</p>
                         <button
                           type="button"
-                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gray-800 px-4 py-3 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-700"
+                          onClick={toggleTheme}
+                          className="mt-4 flex w-full items-center justify-between rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          <div className="flex items-center gap-2">
+                            {isDark ? (
+                              <Moon className="h-4 w-4" />
+                            ) : (
+                              <Sun className="h-4 w-4" />
+                            )}
+                            <span>{isDark ? 'Dark Mode' : 'Light Mode'}</span>
+                          </div>
+                          <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                            isDark ? 'bg-blue-600' : 'bg-gray-300'
+                          }`}>
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                isDark ? 'translate-x-6' : 'translate-x-1'
+                              }`}
+                            />
+                          </div>
+                        </button>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Notifications</p>
+                        <button
+                          type="button"
+                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
                         >
                           <Bell className="h-4 w-4" />
                           Notification center
@@ -300,23 +331,23 @@ const Header = ({
                       </div>
 
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Authentication</p>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Authentication</p>
                         <div className="mt-4 space-y-3">
                           {isAuthenticated ? (
                             <>
-                              <div className="flex items-center gap-3 rounded-xl border border-gray-800 bg-gray-900/70 px-4 py-3">
+                              <div className="flex items-center gap-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/70 px-4 py-3">
                                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-emerald-600 text-sm font-semibold text-white">
                                   {user?.email?.charAt(0)?.toUpperCase() || 'TJ'}
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-sm font-medium text-white truncate">{user?.email}</span>
-                                  <span className="text-xs text-gray-400">Signed in</span>
+                                  <span className="text-sm font-medium text-gray-900 dark:text-white truncate">{user?.email}</span>
+                                  <span className="text-xs text-gray-600 dark:text-gray-400">Signed in</span>
                                 </div>
                               </div>
                               <button
                                 type="button"
                                 onClick={handleSignOutClick}
-                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-800 px-4 py-3 text-sm font-medium text-gray-200 transition-colors hover:bg-gray-700"
+                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
                               >
                                 <LogOut className="h-4 w-4" />
                                 Sign Out
@@ -326,7 +357,7 @@ const Header = ({
                             <button
                               type="button"
                               onClick={handleSignInClick}
-                              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:from-blue-500 hover:to-emerald-500"
+                              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:from-blue-500 hover:to-emerald-500 dark:hover:from-blue-500 dark:hover:to-emerald-500"
                             >
                               <LogIn className="h-5 w-5" />
                               Sign In

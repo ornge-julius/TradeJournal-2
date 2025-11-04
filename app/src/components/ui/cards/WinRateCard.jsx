@@ -54,13 +54,13 @@ const WinRateCard = ({
   const hasTrades = (Number.isFinite(total) ? total : 0) > 0;
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-6 hover:bg-gray-800/70 transition-all">
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all">
       <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-gray-400 text-sm font-medium">Win Rate</h3>
-        <Info className="h-4 w-4 text-gray-400" />
+        <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium">Win Rate</h3>
+        <Info className="h-4 w-4 text-gray-600 dark:text-gray-400" />
       </div>
 
-      <p className="text-2xl font-bold text-white mb-4">{validWinRate.toFixed(2)}%</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{validWinRate.toFixed(2)}%</p>
 
       <div className="h-28">
         <ResponsiveContainer width="100%" height="100%">
@@ -88,15 +88,15 @@ const WinRateCard = ({
       </div>
 
       <div className="mt-4 flex items-center justify-around text-xs">
-        <div className="flex items-center gap-2 text-gray-300">
+        <div className="flex items-center gap-2">
           <span className="inline-flex h-2.5 w-2.5 rounded-full" style={{ backgroundColor: WIN_COLOR }} />
-          <span className="font-medium text-white">{wins.toLocaleString()}</span>
-          <span className="text-gray-500">Wins</span>
+          <span className="font-medium text-gray-900 dark:text-white">{wins.toLocaleString()}</span>
+          <span className="text-gray-600 dark:text-gray-500">Wins</span>
         </div>
-        <div className="flex items-center gap-2 text-gray-300">
+        <div className="flex items-center gap-2">
           <span className="inline-flex h-2.5 w-2.5 rounded-full" style={{ backgroundColor: LOSS_COLOR }} />
-          <span className="font-medium text-white">{losses.toLocaleString()}</span>
-          <span className="text-gray-500">Losses</span>
+          <span className="font-medium text-gray-900 dark:text-white">{losses.toLocaleString()}</span>
+          <span className="text-gray-600 dark:text-gray-500">Losses</span>
         </div>
       </div>
     </div>
