@@ -1,5 +1,6 @@
-# ProfitPath
+<img width="400" height="800" alt="FullLogo_Transparent" src="https://github.com/user-attachments/assets/9c636134-6144-411d-a2d2-ee71d99d4757" /> 
 
+# ProfitPath
 A professional React application for tracking and analyzing options trading performance. Built with modern React patterns, reducers for state management, and a clean component architecture.
 
 ## Features
