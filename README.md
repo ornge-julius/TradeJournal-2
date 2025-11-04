@@ -17,8 +17,6 @@ A professional React application for tracking and analyzing options trading perf
 - **Tailwind CSS** - Utility-first CSS framework
 - **Recharts** - React charting library
 - **Lucide React** - Modern icon library
-- **Custom Hooks** - For state management and business logic
-- **Reducer Pattern** - For complex state management
 - **Supabase** - Hosted Postgres database and auth
 
 ## Project Structure
