@@ -16,6 +16,7 @@ import {
 import AccountSelector from './AccountSelector';
 import GlobalDateFilter from './GlobalDateFilter';
 import { useTheme } from '../../context/ThemeContext';
+import logoImage from '../../assets/FullLogo_Transparent.png';
 
 const Header = ({ 
   onToggleSettings, 
@@ -109,31 +110,17 @@ const Header = ({
   ];
 
   return (
-    <header className="sticky top-0 z-30 backdrop-blur-lg bg-white/95 dark:bg-gray-900/80 border-b border-gray-200 shadow-lg hover:shadow-xl dark:border-gray-800 mb-8">
+    <header className="sticky top-0 z-30 backdrop-blur-lg bg-white/95 dark:bg-gray-600/80 border-b border-gray-200 shadow-lg hover:shadow-xl dark:border-gray-800 mb-8">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg"
-              aria-hidden="true"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="h-6 w-6"
-              >
-                <path d="M3 12c0-4.97 4.03-9 9-9s9 4.03 9 9" opacity="0.4" />
-                <path d="M5 17c1.5-2 3.5-3 7-3s5.5 1 7 3" />
-                <path d="M12 12.5c1.5 0 3-1 3-2.5S13.5 7.5 12 7.5s-3 1-3 2.5 1.5 2.5 3 2.5z" />
-              </svg>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-semibold text-gray-900 dark:text-white font-mono italic">ProfitPath</span>
-              <span className="text-xs text-gray-600 dark:text-gray-400 hidden sm:inline">Track. Learn. Evolve. Profit.</span>
-            </div>
+            <Link to="/">
+              <img
+                src={logoImage}
+                alt="ProfitPath Logo"
+                className="h-20 w-auto"
+              />
+            </Link>
           </div>
 
           <div className="relative flex items-center gap-2 sm:gap-3">
