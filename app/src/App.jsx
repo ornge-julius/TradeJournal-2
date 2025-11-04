@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 import { useTradeManagement } from './hooks/useTradeManagement';
 import { useAppState } from './hooks/useAppState';
 import { useAuth } from './hooks/useAuth';
@@ -353,6 +354,7 @@ function App() {
       <BrowserRouter>
         <AppContent />
         <SpeedInsights />
+        <Analytics />
       </BrowserRouter>
     </ThemeProvider>
   );
