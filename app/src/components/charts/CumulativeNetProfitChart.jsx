@@ -11,16 +11,19 @@ import {
 } from 'recharts';
 import { Info } from 'lucide-react';
 import { formatDate, formatDateForTooltip } from '../../utils/calculations';
+import { useTheme } from '../../context/ThemeContext';
 
 const CumulativeNetProfitChart = ({ data }) => {
+  const { isDark } = useTheme();
+  
   if (!data || data.length === 0) {
     return (
-      <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
+      <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6">
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-xl font-semibold text-gray-200">Cumulative Net Profit Curve</h3>
-          <Info className="w-4 h-4 text-gray-400" />
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200">Cumulative Net Profit Curve</h3>
+          <Info className="w-4 h-4 text-gray-600 dark:text-gray-400" />
         </div>
-        <div className="flex items-center justify-center h-[400px] text-gray-400">
+        <div className="flex items-center justify-center h-[400px] text-gray-600 dark:text-gray-400">
           No data available
         </div>
       </div>
@@ -70,10 +73,10 @@ const CumulativeNetProfitChart = ({ data }) => {
   const gradientOffset = getGradientOffset();
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl p-4 sm:p-6">
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-xl font-semibold text-gray-200">Cumulative Net Profit Curve</h3>
-        <Info className="w-4 h-4 text-gray-400" />
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200">Cumulative Net Profit Curve</h3>
+        <Info className="w-4 h-4 text-gray-600 dark:text-gray-400" />
       </div>
       <div className="w-full">
         <ResponsiveContainer width="100%" height={400}>
@@ -85,13 +88,13 @@ const CumulativeNetProfitChart = ({ data }) => {
               </linearGradient>
             </defs>
             {/* Grid and axes */}
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#374151" : "#E5E7EB"} />
           
             {/* X-axis with date labels */}
             <XAxis
               dataKey="date"
-              stroke="#9CA3AF"
-              tick={{ fontSize: 12, fill: '#9CA3AF' }}
+              stroke={isDark ? "#9CA3AF" : "#6B7280"}
+              tick={{ fontSize: 12, fill: isDark ? '#9CA3AF' : '#6B7280' }}
               tickFormatter={(value) => formatDate(value)}
               angle={-45}
               textAnchor="end"
@@ -101,25 +104,25 @@ const CumulativeNetProfitChart = ({ data }) => {
           
             {/* Y-axis with dollar values - domain ensures positive values are visible */}
             <YAxis
-              stroke="#9CA3AF"
-              tick={{ fontSize: 12, fill: '#9CA3AF' }}
+              stroke={isDark ? "#9CA3AF" : "#6B7280"}
+              tick={{ fontSize: 12, fill: isDark ? '#9CA3AF' : '#6B7280' }}
               tickFormatter={(value) => `$${value.toLocaleString()}`}
               domain={domain}
               allowDataOverflow={false}
             />
           
             {/* Reference line at zero */}
-            <ReferenceLine y={0} stroke="#9CA3AF" strokeDasharray="2 2" />
+            <ReferenceLine y={0} stroke={isDark ? "#9CA3AF" : "#6B7280"} strokeDasharray="2 2" />
 
             {/* Main area for cumulative curve with split-color fill by value */}
             <Area
               type="monotone"
               dataKey="cumulative"
-              stroke="#60A5FA"
+              stroke={isDark ? "#60A5FA" : "#000000"}
               strokeWidth={1.5}
               fill="url(#cumulativeSplit)"
               dot={false}
-              activeDot={{ r: 4, fill: '#60A5FA', strokeWidth: 2 }}
+              activeDot={{ r: 4, fill: isDark ? '#60A5FA' : '#000000', strokeWidth: 2 }}
               isAnimationActive={true}
               connectNulls={false}
             />
@@ -127,17 +130,17 @@ const CumulativeNetProfitChart = ({ data }) => {
             {/* Tooltip */}
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1F2937',
-                border: '1px solid #374151',
+                backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+                border: isDark ? '1px solid #374151' : '1px solid #E5E7EB',
                 borderRadius: '8px',
-                color: '#F3F4F6',
+                color: isDark ? '#F3F4F6' : '#111827',
                 padding: '12px'
               }}
-              itemStyle={{ color: '#F3F4F6' }}
-              labelStyle={{ color: '#F3F4F6', marginBottom: '8px', fontWeight: '600' }}
+              itemStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
+              labelStyle={{ color: isDark ? '#F3F4F6' : '#111827', marginBottom: '8px', fontWeight: '600' }}
               formatter={(value) => [`$${value.toLocaleString()}`, 'Profit']}
               labelFormatter={(label) => formatDateForTooltip(label)}
-              cursor={{ stroke: '#6B7280', strokeWidth: 1 }}
+              cursor={{ stroke: isDark ? '#6B7280' : '#9CA3AF', strokeWidth: 1 }}
             />
           </AreaChart>
         </ResponsiveContainer>

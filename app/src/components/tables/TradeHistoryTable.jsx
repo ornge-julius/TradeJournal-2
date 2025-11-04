@@ -21,26 +21,26 @@ const TradeHistoryTable = ({ trades, onViewTrade }) => {
   };
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl overflow-hidden">
-      <div className="p-6 border-b border-gray-700 flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-200">Trade History</h3>
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl overflow-hidden">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200">Trade History</h3>
         {totalPages > 1 && (
           <div className="flex items-center gap-3">
             <button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}
-              className="p-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed text-gray-200 rounded-md transition-colors flex items-center justify-center"
+              className="p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-500 disabled:cursor-not-allowed text-gray-900 dark:text-gray-200 rounded-md transition-colors flex items-center justify-center"
               aria-label="Previous page"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <span className="text-gray-300 text-sm">
+            <span className="text-gray-700 dark:text-gray-300 text-sm">
               Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className="p-2 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed text-gray-200 rounded-md transition-colors flex items-center justify-center"
+              className="p-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:bg-gray-50 dark:disabled:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-500 disabled:cursor-not-allowed text-gray-900 dark:text-gray-200 rounded-md transition-colors flex items-center justify-center"
               aria-label="Next page"
             >
               <ChevronRight className="h-5 w-5" />
@@ -50,51 +50,51 @@ const TradeHistoryTable = ({ trades, onViewTrade }) => {
       </div>
       <div className="overflow-x-auto overflow-y-auto max-h-[600px]">
         <table className="w-full">
-          <thead className="bg-gray-700 sticky top-0 z-10">
+          <thead className="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
             <tr>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Symbol</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Option</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Type</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Entry Price</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Exit Price</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Qty</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300 w-32">Entry Date</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300 w-32">Exit Date</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Profit</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Result</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300 w-48">Reason</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Source</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-300">Notes</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Symbol</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Option</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Type</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Entry Price</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Exit Price</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Qty</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300 w-32">Entry Date</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300 w-32">Exit Date</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Profit</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Result</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300 w-48">Reason</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Source</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Notes</th>
             </tr>
           </thead>
           <tbody>
             {paginatedTrades.map((trade) => (
-              <tr key={trade.id} className="border-t border-gray-700 hover:bg-gray-700/30 transition-colors">
+              <tr key={trade.id} className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                 <td className="py-4 px-6">
                   <button 
                     onClick={() => onViewTrade(trade)}
-                    className="font-medium text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+                    className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors cursor-pointer"
                   >
                     {trade.symbol}
                   </button>
                 </td>
                 <td className="py-4 px-6">
-                  <div className="text-sm text-gray-300 max-w-32 truncate" title={trade.option}>
+                  <div className="text-sm text-gray-700 dark:text-gray-300 max-w-32 truncate" title={trade.option}>
                     {trade.option || '-'}
                   </div>
                 </td>
                 <td className="py-4 px-6">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    trade.position_type === 1 ? 'bg-green-900/50 text-green-300' : 'bg-red-900/50 text-red-300'
+                    trade.position_type === 1 ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300'
                   }`}>
                     {getTradeTypeText(trade.position_type)}
                   </span>
                 </td>
-                <td className="py-4 px-6 text-gray-300">${trade.entry_price.toFixed(2)}</td>
-                <td className="py-4 px-6 text-gray-300">${trade.exit_price.toFixed(2)}</td>
-                <td className="py-4 px-6 text-gray-300">{trade.quantity}</td>
-                <td className="py-4 px-6 text-gray-300 text-sm w-32">{trade.entry_date}</td>
-                <td className="py-4 px-6 text-gray-300 text-sm w-32">{trade.exit_date}</td>
+                <td className="py-4 px-6 text-gray-700 dark:text-gray-300">${trade.entry_price.toFixed(2)}</td>
+                <td className="py-4 px-6 text-gray-700 dark:text-gray-300">${trade.exit_price.toFixed(2)}</td>
+                <td className="py-4 px-6 text-gray-700 dark:text-gray-300">{trade.quantity}</td>
+                <td className="py-4 px-6 text-gray-700 dark:text-gray-300 text-sm w-32">{trade.entry_date}</td>
+                <td className="py-4 px-6 text-gray-700 dark:text-gray-300 text-sm w-32">{trade.exit_date}</td>
                 <td className="py-4 px-6">
                   <span className={`font-bold ${trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     ${trade.profit.toLocaleString()}
@@ -103,26 +103,26 @@ const TradeHistoryTable = ({ trades, onViewTrade }) => {
                 <td className="py-4 px-6">
                   {trade.result !== undefined ? (
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      isWin(trade.result) ? 'bg-emerald-900/50 text-emerald-300' : 'bg-red-900/50 text-red-300'
+                      isWin(trade.result) ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300'
                     }`}>
                       {getResultText(trade.result)}
                     </span>
                   ) : (
-                    <span className="text-gray-500 text-sm">-</span>
+                    <span className="text-gray-500 dark:text-gray-500 text-sm">-</span>
                   )}
                 </td>
                 <td className="py-4 px-6 w-48">
-                  <div className="text-sm text-gray-300 max-w-48 truncate" title={trade.reasoning}>
+                  <div className="text-sm text-gray-700 dark:text-gray-300 max-w-48 truncate" title={trade.reasoning}>
                     {trade.reasoning || '-'}
                   </div>
                 </td>
                 <td className="py-4 px-6">
-                  <div className="text-sm text-purple-300 max-w-32 truncate" title={trade.source}>
+                  <div className="text-sm text-purple-600 dark:text-purple-300 max-w-32 truncate" title={trade.source}>
                     {trade.source || '-'}
                   </div>
                 </td>
                 <td className="py-4 px-6">
-                  <div className="text-sm text-gray-300 max-w-40 truncate" title={trade.notes}>
+                  <div className="text-sm text-gray-700 dark:text-gray-300 max-w-40 truncate" title={trade.notes}>
                     {trade.notes || '-'}
                   </div>
                 </td>

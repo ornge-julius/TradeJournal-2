@@ -62,7 +62,7 @@ const CalendarGrid = ({ currentMonth, currentYear, selectedStart, selectedEnd, o
   return (
     <div className="grid grid-cols-7 gap-1 mt-2">
       {DAYS_OF_WEEK.map((day) => (
-        <div key={day} className="text-center text-xs text-gray-400 py-2">
+        <div key={day} className="text-center text-xs text-gray-600 dark:text-gray-400 py-2">
           {day}
         </div>
       ))}
@@ -78,10 +78,10 @@ const CalendarGrid = ({ currentMonth, currentYear, selectedStart, selectedEnd, o
             onClick={() => handleDateClick(day, month, year)}
             className={`
               aspect-square flex items-center justify-center text-sm rounded transition-colors
-              ${!isCurrentMonth ? 'text-gray-600' : 'text-gray-200'}
+              ${!isCurrentMonth ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-gray-200'}
               ${isSelected ? 'bg-emerald-500 text-white font-semibold' : ''}
-              ${inRange && !isSelected ? 'bg-emerald-500/30 text-white' : ''}
-              ${!inRange && !isSelected && isCurrentMonth ? 'hover:bg-gray-800' : ''}
+              ${inRange && !isSelected ? 'bg-emerald-100 dark:bg-emerald-500/30 text-emerald-900 dark:text-white' : ''}
+              ${!inRange && !isSelected && isCurrentMonth ? 'hover:bg-gray-100 dark:hover:bg-gray-800' : ''}
             `}
           >
             {day}
@@ -259,10 +259,10 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
         onClick={() => setIsOpen(!isOpen)}
         aria-label={buttonAriaLabel}
         aria-expanded={isOpen}
-        className={`flex items-center gap-2 rounded-xl transition-colors shadow-lg hover:shadow-xl text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 ${
+        className={`flex items-center gap-2 rounded-xl transition-colors shadow-lg hover:shadow-xl text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 ${
           isNavbarVariant
-            ? 'bg-gray-800/80 hover:bg-gray-700/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-gray-800/60'
-            : 'bg-gray-800 hover:bg-gray-700 px-4 py-2'
+            ? 'bg-white dark:bg-gray-800/80 hover:bg-gray-50 dark:hover:bg-gray-700/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-white dark:supports-[backdrop-filter]:bg-gray-800/60 border border-gray-200 dark:border-gray-700'
+            : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 px-4 py-2 border border-gray-200 dark:border-gray-700'
         }`}
       >
         <Calendar className="h-4 w-4" />
@@ -285,28 +285,28 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
 
       {isOpen && (
         <div
-          className={`absolute ${dropdownAlignment} top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-50 p-4`}
+          className={`absolute ${dropdownAlignment} top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl z-50 p-4`}
         >
           {/* Preset Dropdown */}
           <div className="relative mb-4" ref={presetDropdownRef}>
             <button
               type="button"
               onClick={() => setIsPresetOpen(!isPresetOpen)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center justify-between hover:bg-gray-700 transition-colors"
+              className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               <span>{currentPresetLabel}</span>
               <ChevronDown className={`h-4 w-4 transition-transform ${isPresetOpen ? 'rotate-180' : ''}`} />
             </button>
             
             {isPresetOpen && (
-              <div className="absolute top-full left-0 mt-1 w-full bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto">
+              <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto">
                 {presets.map((preset) => (
                   <button
                     key={preset.value}
                     type="button"
                     onClick={() => handlePresetChange(preset.value)}
-                    className={`w-full px-3 py-2 text-sm text-left hover:bg-gray-700 transition-colors flex items-center gap-2 ${
-                      selectedPreset === preset.value ? 'text-emerald-300' : 'text-gray-200'
+                    className={`w-full px-3 py-2 text-sm text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 ${
+                      selectedPreset === preset.value ? 'text-emerald-600 dark:text-emerald-300' : 'text-gray-900 dark:text-gray-200'
                     }`}
                   >
                     {selectedPreset === preset.value ? (
@@ -330,8 +330,8 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
               onClick={handleFromDateClick}
               className={`flex-1 px-3 py-2 rounded-lg border text-sm transition-colors ${
                 selectingStart && selectedPreset === 'custom'
-                  ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300'
-                  : 'border-gray-700 bg-gray-800 text-gray-200 hover:bg-gray-700'
+                  ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                  : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               {filter.from ? formatDisplayDate(filter.from) : 'Start date'}
@@ -341,8 +341,8 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
               onClick={handleToDateClick}
               className={`flex-1 px-3 py-2 rounded-lg border text-sm transition-colors ${
                 !selectingStart && selectedPreset === 'custom'
-                  ? 'border-emerald-500 bg-emerald-500/20 text-emerald-300'
-                  : 'border-gray-700 bg-gray-800 text-gray-200 hover:bg-gray-700'
+                  ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                  : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               {filter.to ? formatDisplayDate(filter.to) : 'End date'}
@@ -354,20 +354,20 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
             <button
               type="button"
               onClick={() => handleMonthChange('prev')}
-              className="p-1 hover:bg-gray-800 rounded transition-colors"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
             >
-              <ChevronLeft className="h-5 w-5 text-gray-400" />
+              <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             </button>
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="px-3 py-1 text-sm font-medium text-gray-200 hover:bg-gray-800 rounded transition-colors"
+                className="px-3 py-1 text-sm font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
               >
                 {MONTHS[currentMonth]}
               </button>
               <button
                 type="button"
-                className="px-3 py-1 text-sm font-medium text-gray-200 hover:bg-gray-800 rounded transition-colors"
+                className="px-3 py-1 text-sm font-medium text-gray-900 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
               >
                 {currentYear}
               </button>
@@ -375,9 +375,9 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
             <button
               type="button"
               onClick={() => handleMonthChange('next')}
-              className="p-1 hover:bg-gray-800 rounded transition-colors"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
             >
-              <ChevronRight className="h-5 w-5 text-gray-400" />
+              <ChevronRight className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             </button>
           </div>
 

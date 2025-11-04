@@ -59,7 +59,7 @@ const AccountSelector = ({
       {/* Account Selector Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 min-w-[200px] justify-between"
+        className="bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 min-w-[200px] justify-between border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white"
       >
         <span className="truncate">
           {selectedAccount ? selectedAccount.name : 'Select Account'}
@@ -69,20 +69,20 @@ const AccountSelector = ({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50">
+        <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50">
           {/* Current Account Info */}
-          <div className="p-4 border-b border-gray-700">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-white">{selectedAccount?.name}</h3>
-                <p className="text-sm text-gray-400">
+                <h3 className="font-semibold text-gray-900 dark:text-white">{selectedAccount?.name}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Balance: ${selectedAccount?.currentBalance?.toLocaleString() || 0}
                 </p>
               </div>
               {isAuthenticated && (
                 <button
                   onClick={() => onEditAccount(selectedAccount)}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
                   <Settings className="h-4 w-4" />
                 </button>
@@ -95,8 +95,8 @@ const AccountSelector = ({
             {accounts.map((account) => (
               <div
                 key={account.id}
-                className={`p-3 hover:bg-gray-700 cursor-pointer transition-colors ${
-                  account.id === selectedAccountId ? 'bg-gray-700' : ''
+                className={`p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors ${
+                  account.id === selectedAccountId ? 'bg-gray-50 dark:bg-gray-700' : ''
                 }`}
                 onClick={() => {
                   onSelectAccount(account.id);
@@ -105,8 +105,8 @@ const AccountSelector = ({
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium text-white">{account.name}</div>
-                    <div className="text-sm text-gray-400">
+                    <div className="font-medium text-gray-900 dark:text-white">{account.name}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       ${account.currentBalance?.toLocaleString() || 0}
                     </div>
                   </div>
@@ -116,7 +116,7 @@ const AccountSelector = ({
                         e.stopPropagation();
                         handleDeleteAccount(account.id);
                       }}
-                      className="text-gray-400 hover:text-red-400 transition-colors p-1"
+                      className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors p-1"
                       title="Delete Account"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -128,7 +128,7 @@ const AccountSelector = ({
           </div>
 
           {/* Add New Account */}
-          <div className="p-4 border-t border-gray-700">
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
             {isAuthenticated ? (
               !showAddForm ? (
                 <button
@@ -145,7 +145,7 @@ const AccountSelector = ({
                     placeholder="Account Name"
                     value={newAccountName}
                     onChange={(e) => setNewAccountName(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-blue-500"
                     required
                   />
                   <input
@@ -153,7 +153,7 @@ const AccountSelector = ({
                     placeholder="Starting Balance"
                     value={newAccountBalance}
                     onChange={(e) => setNewAccountBalance(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-blue-500"
                     step="0.01"
                     min="0"
                     required
@@ -172,7 +172,7 @@ const AccountSelector = ({
                         setNewAccountName('');
                         setNewAccountBalance('');
                       }}
-                      className="flex-1 bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                      className="flex-1 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-900 dark:text-white px-4 py-2 rounded-lg font-medium transition-colors"
                     >
                       Cancel
                     </button>
@@ -181,7 +181,7 @@ const AccountSelector = ({
               )
             ) : (
               <div className="space-y-3 text-center">
-                <p className="text-sm text-gray-400">Sign in to add or manage accounts.</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Sign in to add or manage accounts.</p>
                 <button
                   type="button"
                   onClick={handleRequireAuthentication}
