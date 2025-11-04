@@ -114,11 +114,13 @@ const Header = ({
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3 flex-shrink-0">
-            <img
-              src={logoImage}
-              alt="ProfitPath Logo"
-              className="h-20 w-auto"
-            />
+            <Link to="/">
+              <img
+                src={logoImage}
+                alt="ProfitPath Logo"
+                className="h-20 w-auto"
+              />
+            </Link>
           </div>
 
           <div className="relative flex items-center gap-2 sm:gap-3">
