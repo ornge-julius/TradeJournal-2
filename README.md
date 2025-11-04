@@ -1,4 +1,4 @@
-# Trading Journal App
+# ProfitPath
 
 A professional React application for tracking and analyzing options trading performance. Built with modern React patterns, reducers for state management, and a clean component architecture.
 
