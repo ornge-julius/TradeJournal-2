@@ -87,6 +87,46 @@ npm run build
    - `trades` for trade history
    - `accounts` with a `starting_balance` column
 
+## SnapTrade Synchronization (Robinhood)
+
+The project includes a command-line importer that pulls executed Robinhood option trades from your SnapTrade connection and stores them in the Supabase `trades` table. The script lives at `app/scripts/syncRobinhoodSnaptrade.js` and can be executed with the bundled npm script:
+
+```bash
+cd app
+npm run sync:robinhood
+```
+
+### Required Environment Variables
+
+Configure the following values in `app/.env` (or your shell) before running the sync:
+
+| Variable | Description |
+| --- | --- |
+| `SNAPTRADE_CLIENT_ID` | SnapTrade partner client ID. |
+| `SNAPTRADE_CONSUMER_KEY` | SnapTrade consumer key used to sign requests. |
+| `SNAPTRADE_USER_ID` | SnapTrade user ID for the connected Robinhood account. |
+| `SNAPTRADE_USER_SECRET` | SnapTrade user secret associated with the user ID. |
+| `SNAPTRADE_TARGET_ACCOUNT_ID` | Supabase `accounts` table ID that imported trades should be linked to. |
+| `SUPABASE_URL` | Supabase project URL. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (used for server-side inserts). |
+
+Optional variables:
+
+- `SNAPTRADE_TARGET_USER_ID` – associates inserted trades with a Supabase user.
+- `SNAPTRADE_BROKERAGE_NAME` – defaults to `Robinhood`; override to filter by a different brokerage label in SnapTrade.
+- `SNAPTRADE_ACCOUNT_IDS` – comma-separated list of SnapTrade account IDs to sync (skips brokerage name filtering).
+- `SNAPTRADE_START_DATE` – limits activity retrieval to transactions on/after the provided date (YYYY-MM-DD).
+- `SNAPTRADE_ENV_PATH` – custom path to an additional `.env` file.
+
+The importer performs the following steps:
+
+1. Authenticates with SnapTrade using the partner credentials and user secret.
+2. Locates Robinhood accounts and retrieves historical activities.
+3. Matches option open/close legs into completed trades, computing position details and P&L.
+4. Inserts only new trades into Supabase (based on a deterministic `source` identifier).
+
+Because the script uses the Supabase service role key, run it in a secure environment and avoid committing secrets to version control.
+
 ## Data Structure
 
 ### Trade Object

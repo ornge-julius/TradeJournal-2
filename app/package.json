@@ -7,19 +7,22 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "dotenv": "^17.2.3",
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.9.5",
     "react-scripts": "5.0.1",
     "recharts": "^2.8.0",
+    "snaptrade-typescript-sdk": "^9.0.146",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sync:robinhood": "node scripts/syncRobinhoodSnaptrade.js"
   },
   "eslintConfig": {
     "extends": [
