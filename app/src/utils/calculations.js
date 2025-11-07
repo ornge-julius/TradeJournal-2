@@ -60,15 +60,15 @@ export const generateCumulativeProfitData = (trades) => {
     return [];
   }
 
-  const tradesWithEntryDate = trades.filter((trade) => trade && trade.entry_date && !Number.isNaN(new Date(trade.entry_date).getTime()));
+  const tradesWithExitDate = trades.filter((trade) => trade && trade.exit_date && !Number.isNaN(new Date(trade.exit_date).getTime()));
 
-  if (tradesWithEntryDate.length === 0) {
+  if (tradesWithExitDate.length === 0) {
     return [];
   }
 
-  const sortedTrades = [...tradesWithEntryDate].sort((a, b) => {
-    const dateA = new Date(a.entry_date);
-    const dateB = new Date(b.entry_date);
+  const sortedTrades = [...tradesWithExitDate].sort((a, b) => {
+    const dateA = new Date(a.exit_date);
+    const dateB = new Date(b.exit_date);
     return dateA - dateB;
   });
 
@@ -78,7 +78,7 @@ export const generateCumulativeProfitData = (trades) => {
   sortedTrades.forEach((trade) => {
     cumulative += trade.profit || 0;
     data.push({
-      date: trade.entry_date,
+      date: trade.exit_date,
       cumulative: cumulative,
       profit: trade.profit
     });
@@ -89,15 +89,15 @@ export const generateCumulativeProfitData = (trades) => {
 
 // Generate chart data for account balance
 export const generateAccountBalanceData = (trades, startingBalance) => {
-  const tradesWithEntryDate = trades.filter((trade) => trade && trade.entry_date && !Number.isNaN(new Date(trade.entry_date).getTime()));
+  const tradesWithExitDate = trades.filter((trade) => trade && trade.exit_date && !Number.isNaN(new Date(trade.exit_date).getTime()));
 
-  if (tradesWithEntryDate.length === 0) {
+  if (tradesWithExitDate.length === 0) {
     return [{ date: 'Start', balance: startingBalance, tradeNum: 0 }];
   }
 
-  const sortedTrades = [...tradesWithEntryDate].sort((a, b) => {
-    const dateA = new Date(a.entry_date);
-    const dateB = new Date(b.entry_date);
+  const sortedTrades = [...tradesWithExitDate].sort((a, b) => {
+    const dateA = new Date(a.exit_date);
+    const dateB = new Date(b.exit_date);
     return dateA - dateB;
   });
 
@@ -108,7 +108,7 @@ export const generateAccountBalanceData = (trades, startingBalance) => {
     const profit = trade.profit || 0;
     balance += profit;
     data.push({
-      date: trade.entry_date,
+      date: trade.exit_date,
       balance,
       tradeNum: index + 1
     });
@@ -251,13 +251,13 @@ export const generateMonthlyNetPNLData = (trades) => {
   const monthlyData = {};
 
   trades.forEach((trade) => {
-    const entryDate = trade.entry_date ? new Date(trade.entry_date) : null;
-    if (!entryDate || isNaN(entryDate.getTime())) {
+    const exitDate = trade.exit_date ? new Date(trade.exit_date) : null;
+    if (!exitDate || isNaN(exitDate.getTime())) {
       return;
     }
 
-    const year = entryDate.getFullYear();
-    const month = entryDate.getMonth();
+    const year = exitDate.getFullYear();
+    const month = exitDate.getMonth();
     const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
 
     if (!monthlyData[monthKey]) {

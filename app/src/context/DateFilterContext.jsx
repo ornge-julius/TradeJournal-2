@@ -442,7 +442,7 @@ export const useDateFilter = () => {
   return context;
 };
 
-export const filterTradesByEntryDate = (trades, filter) => {
+export const filterTradesByExitDate = (trades, filter) => {
   if (!Array.isArray(trades) || trades.length === 0) {
     return [];
   }
@@ -455,20 +455,20 @@ export const filterTradesByEntryDate = (trades, filter) => {
   const toTime = filter.toUtc ? new Date(filter.toUtc).getTime() : null;
 
   return trades.filter((trade) => {
-    if (!trade || !trade.entry_date) {
+    if (!trade || !trade.exit_date) {
       return false;
     }
 
-    const entryTime = new Date(trade.entry_date).getTime();
-    if (Number.isNaN(entryTime)) {
+    const exitTime = new Date(trade.exit_date).getTime();
+    if (Number.isNaN(exitTime)) {
       return false;
     }
 
-    if (fromTime !== null && entryTime < fromTime) {
+    if (fromTime !== null && exitTime < fromTime) {
       return false;
     }
 
-    if (toTime !== null && entryTime > toTime) {
+    if (toTime !== null && exitTime > toTime) {
       return false;
     }
 
