@@ -12,13 +12,13 @@ import {
   generateMonthlyNetPNLData,
   generateLast30DaysNetPNLData
 } from '../../utils/calculations';
-import { filterTradesByEntryDate, useDateFilter } from '../../context/DateFilterContext';
+import { filterTradesByExitDate, useDateFilter } from '../../context/DateFilterContext';
 
 const DashboardContent = ({ trades, startingBalance, onViewTrade }) => {
   const { filter } = useDateFilter();
 
   const filteredTrades = useMemo(() => {
-    return filterTradesByEntryDate(trades, filter);
+    return filterTradesByExitDate(trades, filter);
   }, [trades, filter]);
 
   const metrics = useMemo(() => {
