@@ -4,7 +4,6 @@ import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const WIN_COLOR = '#10B981';
 const LOSS_COLOR = '#111827';
-const EMPTY_COLOR = '#1f2937';
 
 const clampPercentage = (value) => {
   if (typeof value !== 'number' || Number.isNaN(value)) {
@@ -33,7 +32,6 @@ const WinRateCard = ({
 
   const wins = Number.isFinite(winningTrades) && winningTrades > 0 ? Math.round(winningTrades) : 0;
   const losses = Number.isFinite(losingTrades) && losingTrades > 0 ? Math.round(losingTrades) : 0;
-  const total = Number.isFinite(totalTrades) ? totalTrades : wins + losses;
 
   const chartData = useMemo(() => {
     const baseData = [
@@ -50,8 +48,6 @@ const WinRateCard = ({
 
     return baseData;
   }, [lossRate, validWinRate]);
-
-  const hasTrades = (Number.isFinite(total) ? total : 0) > 0;
 
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all">

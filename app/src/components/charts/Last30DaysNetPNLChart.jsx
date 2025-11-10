@@ -81,14 +81,6 @@ const Last30DaysNetPNLChart = ({ data }) => {
     );
   }
 
-  const formatTooltipDate = (dateString) => {
-    const date = new Date(dateString);
-    if (Number.isNaN(date.getTime())) {
-      return dateString;
-    }
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
-
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',

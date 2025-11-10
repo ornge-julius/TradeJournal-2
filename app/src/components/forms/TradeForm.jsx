@@ -12,7 +12,6 @@ const TradeForm = ({
   onDelete 
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     symbol: '',
     position_type: getTradeTypeNumber('CALL'),
@@ -52,23 +51,7 @@ const TradeForm = ({
         source: ''
       });
     }
-    setErrors({}); // Clear errors when form changes
   }, [editingTrade]);
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.symbol.trim()) newErrors.symbol = true;
-    if (!formData.entry_price) newErrors.entry_price = true;
-    if (!formData.exit_price) newErrors.exit_price = true;
-    if (!formData.quantity) newErrors.quantity = true;
-    if (!formData.entry_date) newErrors.entry_date = true;
-    if (!formData.exit_date) newErrors.exit_date = true;
-    if (!formData.reasoning.trim()) newErrors.reasoning = true;
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,14 +65,12 @@ const TradeForm = ({
 
     try {
       await onSubmit(formData);
-      setErrors({}); // Clear errors on successful submission
     } catch (err) {
       // Error handling
     }
   };
 
   const handleCancel = () => {
-    setErrors({}); // Clear errors on cancel
     if (editingTrade) {
       onCancel();
     } else {

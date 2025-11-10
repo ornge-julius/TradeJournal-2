@@ -7,7 +7,6 @@ import {
   LogOut,
   Menu,
   X,
-  Bell,
   LayoutDashboard,
   TrendingUpDown,
   Sun,
@@ -37,7 +36,7 @@ const Header = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
-  const { theme, toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
   
   // Determine current view from location
   const currentView = location.pathname === '/comparison' ? 'batchComparison' : 'dashboard';

@@ -353,7 +353,6 @@ export const generateWinLossChartData = (batch) => {
   }
   
   const winningTrades = batch.filter(t => t.profit > 0 || t.result === 1).length;
-  const losingTrades = batch.filter(t => t.profit < 0 || t.result === 0).length;
   const totalTrades = batch.length;
   
   const winRate = totalTrades > 0 ? (winningTrades / totalTrades) * 100 : 0;

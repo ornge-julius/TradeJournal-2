@@ -87,7 +87,7 @@ export const useAppState = () => {
     accountsDispatch({ type: ACCOUNTS_ACTIONS.UPDATE_STARTING_BALANCE, payload: balance });
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('accounts')
         .upsert({ 
           id: accountsState.selectedAccountId, 
