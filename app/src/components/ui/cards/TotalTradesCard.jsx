@@ -68,13 +68,6 @@ const TotalTradesCard = ({ totalTrades = 0, winningTrades = 0, losingTrades = 0 
         { name: 'Total Trades', value: 1, color: EMPTY_COLOR }
       ];
 
-  const renderLabel = ({ value }) => {
-    if (!hasBreakdown || value === 0) {
-      return '';
-    }
-    return value;
-  };
-
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all">
       <div className="flex items-center gap-2 mb-2">

@@ -111,7 +111,7 @@ export const useTradeManagement = (selectedAccountId) => {
     } catch (err) {
       return null;
     }
-  }, [selectedAccountId]);
+  }, [selectedAccountId, fetchTrades]);
 
   const updateTrade = useCallback(async (tradeData) => {
     if (!selectedAccountId) {
@@ -189,7 +189,7 @@ export const useTradeManagement = (selectedAccountId) => {
     } catch (err) {
       return null;
     }
-  }, [selectedAccountId]);
+  }, [selectedAccountId, fetchTrades]);
 
   const deleteTrade = useCallback(async (tradeId) => {
     if (!selectedAccountId) {
@@ -217,7 +217,7 @@ export const useTradeManagement = (selectedAccountId) => {
     } catch (err) {
       // Error handling
     }
-  }, [selectedAccountId]);
+  }, [selectedAccountId, fetchTrades]);
 
   const setEditingTrade = useCallback((trade) => {
     dispatch({ type: TRADE_ACTIONS.SET_EDITING_TRADE, payload: trade });

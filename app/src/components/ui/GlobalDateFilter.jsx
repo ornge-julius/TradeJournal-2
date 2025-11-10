@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Calendar, ChevronDown, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useDateFilter } from '../../context/DateFilterContext';
 
@@ -67,7 +67,6 @@ const CalendarGrid = ({ currentMonth, currentYear, selectedStart, selectedEnd, o
         </div>
       ))}
       {days.map(({ day, month, year, isCurrentMonth }, index) => {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const inRange = isDateInRange(day, month, year);
         const isSelected = isDateSelected(day, month, year);
 
