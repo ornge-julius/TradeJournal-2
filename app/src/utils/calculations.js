@@ -370,16 +370,36 @@ export const generateBatchComparisonData = (currentBatch, previousBatch) => {
     return [];
   }
 
-  const maxLength = Math.max(currentBatch.length, previousBatch.length);
+  const getExitTimestamp = (trade) => {
+    if (!trade || !trade.exit_date) {
+      return Number.POSITIVE_INFINITY;
+    }
+
+    const timestamp = new Date(trade.exit_date).getTime();
+    return Number.isNaN(timestamp) ? Number.POSITIVE_INFINITY : timestamp;
+  };
+
+  const sortByExitDate = (batch) => {
+    if (!Array.isArray(batch)) {
+      return [];
+    }
+
+    return [...batch].sort((a, b) => getExitTimestamp(a) - getExitTimestamp(b));
+  };
+
+  const orderedCurrentBatch = sortByExitDate(currentBatch);
+  const orderedPreviousBatch = sortByExitDate(previousBatch);
+
+  const maxLength = Math.max(orderedCurrentBatch.length, orderedPreviousBatch.length);
   const data = [];
-  
+
   let currentCumulative = 0;
   let previousCumulative = 0;
-  
+
   for (let i = 0; i < maxLength; i++) {
-    const currentTrade = currentBatch[i];
-    const previousTrade = previousBatch[i];
-    
+    const currentTrade = orderedCurrentBatch[i];
+    const previousTrade = orderedPreviousBatch[i];
+
     if (currentTrade) {
       currentCumulative += currentTrade.profit || 0;
     }
