@@ -61,21 +61,29 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
             <div className="flex justify-between items-start gap-4">
               <span className="text-sm text-gray-600 dark:text-gray-400 pt-1">Symbols</span>
               <div className="flex flex-wrap justify-end gap-2">
-                {trades.map((trade) => (
-                  <a
-                    key={trade.id}
-                    href="#"
-                    onClick={(event) => {
-                      event.preventDefault();
-                      if (onViewTrade) {
-                        onViewTrade(trade);
-                      }
-                    }}
-                    className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-                  >
-                    {trade.symbol || '—'}
-                  </a>
-                ))}
+                {trades.map((trade) => {
+                  const isClickable = Boolean(onViewTrade);
+
+                  return (
+                    <button
+                      key={trade.id}
+                      type="button"
+                      onClick={() => {
+                        if (isClickable) {
+                          onViewTrade(trade);
+                        }
+                      }}
+                      className={`text-sm font-medium transition-colors ${
+                        isClickable
+                          ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
+                          : 'text-gray-500 dark:text-gray-400 cursor-default'
+                      }`}
+                      disabled={!isClickable}
+                    >
+                      {trade.symbol || '—'}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
