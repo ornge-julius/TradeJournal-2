@@ -9,6 +9,7 @@ import {
   X,
   LayoutDashboard,
   TrendingUpDown,
+  Tag,
   Sun,
   Moon
 } from 'lucide-react';
@@ -39,7 +40,11 @@ const Header = ({
   const { toggleTheme, isDark } = useTheme();
   
   // Determine current view from location
-  const currentView = location.pathname === '/comparison' ? 'batchComparison' : 'dashboard';
+  const currentView = location.pathname === '/comparison' 
+    ? 'batchComparison' 
+    : location.pathname === '/tags' 
+    ? 'tags' 
+    : 'dashboard';
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
@@ -103,6 +108,7 @@ const Header = ({
   const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/', isActive: currentView === 'dashboard' },
     { label: 'Batch Comparison', icon: TrendingUpDown, path: '/comparison', isActive: currentView === 'batchComparison' },
+    { label: 'Tags', icon: Tag, path: '/tags', isActive: currentView === 'tags' },
     // { label: 'Accounts', icon: Wallet, path: '#', isActive: false },
     // { label: 'Performance', icon: BarChart3, path: '#', isActive: false },
     // { label: 'Settings', icon: Settings, path: '#', isActive: false }
