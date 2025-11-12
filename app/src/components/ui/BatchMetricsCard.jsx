@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BatchMetricsCard = ({ title, subtitle, metrics, trades }) => {
+const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => {
   if (!metrics) {
     return (
       <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6">
@@ -54,6 +54,32 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades }) => {
           <span className="text-sm text-gray-600 dark:text-gray-400">Total Trades</span>
           <span className="text-lg font-semibold text-gray-900 dark:text-white">{totalTrades}</span>
         </div>
+
+        {/* Symbols */}
+        {trades && trades.length > 0 && (
+          <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-sm text-gray-600 dark:text-gray-400 pt-1">Symbols</span>
+              <div className="flex flex-wrap justify-end gap-2">
+                {trades.map((trade) => (
+                  <a
+                    key={trade.id}
+                    href="#"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      if (onViewTrade) {
+                        onViewTrade(trade);
+                      }
+                    }}
+                    className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                  >
+                    {trade.symbol || '—'}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Total Profit/Loss */}
         <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
