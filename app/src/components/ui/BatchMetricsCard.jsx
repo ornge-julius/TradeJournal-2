@@ -41,6 +41,9 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
     return 'text-gray-600 dark:text-gray-400';
   };
 
+  const winners = trades.filter(trade => trade.result === 1);
+  const losers = trades.filter(trade => trade.result === 0);
+
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6">
       <div className="mb-4">
@@ -54,40 +57,6 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
           <span className="text-sm text-gray-600 dark:text-gray-400">Total Trades</span>
           <span className="text-lg font-semibold text-gray-900 dark:text-white">{totalTrades}</span>
         </div>
-
-        {/* Symbols */}
-        {trades && trades.length > 0 && (
-          <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex justify-between items-start gap-4">
-              <span className="text-sm text-gray-600 dark:text-gray-400 pt-1">Symbols</span>
-              <div className="flex flex-wrap justify-end gap-2">
-                {trades.map((trade) => {
-                  const isClickable = Boolean(onViewTrade);
-
-                  return (
-                    <button
-                      key={trade.id}
-                      type="button"
-                      onClick={() => {
-                        if (isClickable) {
-                          onViewTrade(trade);
-                        }
-                      }}
-                      className={`text-sm font-medium transition-colors ${
-                        isClickable
-                          ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
-                          : 'text-gray-500 dark:text-gray-400 cursor-default'
-                      }`}
-                      disabled={!isClickable}
-                    >
-                      {trade.symbol || '—'}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Total Profit/Loss */}
         <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
@@ -109,11 +78,80 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
           <span className="text-lg font-semibold text-emerald-400">{winningTrades}</span>
         </div>
 
+        {/* Winners */}
+        {winners && winners.length > 0 && (
+          <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-sm text-gray-600 dark:text-gray-400 pt-1">Winners</span>
+              <div className="flex flex-wrap justify-end gap-2">
+                {winners.map((winner) => {
+                  const isClickable = Boolean(onViewTrade);
+
+                  return (
+                    <button
+                      key={winner.id}
+                      type="button"
+                      onClick={() => {
+                        if (isClickable) {
+                          onViewTrade(winner);
+                        }
+                      }}
+                      className={`text-sm font-medium transition-colors ${
+                        isClickable
+                          ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
+                          : 'text-gray-500 dark:text-gray-400 cursor-default'
+                      }`}
+                      disabled={!isClickable}
+                    >
+                      {winner.symbol || '—'}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+
         {/* Losing Trades */}
         <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
           <span className="text-sm text-gray-600 dark:text-gray-400">Losing Trades</span>
           <span className="text-lg font-semibold text-red-400">{losingTrades}</span>
         </div>
+
+        {/* Losers */}
+        {losers && losers.length > 0 && (
+          <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-start gap-4">
+              <span className="text-sm text-gray-600 dark:text-gray-400 pt-1">Losers</span>
+              <div className="flex flex-wrap justify-end gap-2">
+                {losers.map((loser) => {
+                  const isClickable = Boolean(onViewTrade);
+
+                  return (
+                    <button
+                      key={loser.id}
+                      type="button"
+                      onClick={() => {
+                        if (isClickable) {
+                          onViewTrade(loser);
+                        }
+                      }}
+                      className={`text-sm font-medium transition-colors ${
+                        isClickable
+                          ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
+                          : 'text-gray-500 dark:text-gray-400 cursor-default'
+                      }`}
+                      disabled={!isClickable}
+                    >
+                      {loser.symbol || '—'}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Average Win */}
         <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
@@ -136,7 +174,7 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
           <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
             <span className="text-sm text-gray-600 dark:text-gray-400">Best Trade</span>
             <span className="text-lg font-semibold text-emerald-400">
-              {formatCurrency(bestTrade.profit)}
+              ({bestTrade.symbol || '—'}) {formatCurrency(bestTrade.profit)}
             </span>
           </div>
         )}
@@ -146,7 +184,7 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600 dark:text-gray-400">Worst Trade</span>
             <span className="text-lg font-semibold text-red-400">
-              {formatCurrency(worstTrade.profit)}
+              ({worstTrade.symbol || '—'}) {formatCurrency(worstTrade.profit)}
             </span>
           </div>
         )}
