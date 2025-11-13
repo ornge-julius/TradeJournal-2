@@ -7,7 +7,7 @@ import TagCard from '../ui/TagCard';
 import ConfirmModal from '../ui/ConfirmModal';
 
 const TagsManagementView = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { tags, loading, error, createTag, updateTag, deleteTag } = useTagManagement();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingTag, setEditingTag] = useState(null);
