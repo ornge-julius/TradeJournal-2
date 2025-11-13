@@ -31,6 +31,7 @@ The database schema for tags should already be in place (see `TAG_SCHEMA_UPDATE.
    - Display all user's tags in a list or grid layout
    - Show tag name, color (if set), and usage count (number of trades using the tag)
    - Display tags in a visually appealing way (e.g., tag badges/chips)
+   - Tag badges/chips should show the tag name in white with the chip background color as the tag color
    - Show empty state when user has no tags
    - Tags should be sortable (by name, usage count, creation date)
 
@@ -41,6 +42,7 @@ The database schema for tags should already be in place (see `TAG_SCHEMA_UPDATE.
    - Validate tag name (not empty, reasonable length, unique per user)
    - Show error messages for validation failures
    - After creation, tag should appear in the list immediately
+   - Tag color should be save as a hex value in the `color` column
 
 4. **Update Tag**
    - Allow users to edit tag name and color
@@ -311,7 +313,7 @@ const TagsManagementView = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tags Management</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tag Management</h1>
         <button
           onClick={() => setShowCreateForm(true)}
           className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 rounded-lg text-white font-medium hover:from-blue-500 hover:to-emerald-500 transition-all"

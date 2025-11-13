@@ -13,6 +13,7 @@ import SignInForm from './components/forms/SignInForm';
 import TradeDetailView from './components/ui/TradeDetailView';
 import DashboardView from './components/views/DashboardView';
 import TradeBatchComparisonView from './components/views/TradeBatchComparisonView';
+import TagsManagementView from './components/views/TagsManagementView';
 import { DateFilterProvider } from './context/DateFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -327,6 +328,12 @@ function AppContent() {
                       startingBalance={startingBalance}
                       onViewTrade={handleTradeView}
                     />
+                  } 
+                />
+                <Route 
+                  path="/tags" 
+                  element={
+                    <TagsManagementView />
                   } 
                 />
                 <Route 
