@@ -3,6 +3,16 @@ import { tradeReducer, TRADE_ACTIONS, initialTradeState } from '../reducers/trad
 import { calculateProfit } from '../utils/calculations';
 import { supabase } from '../supabaseClient';
 
+const mapTradeWithTags = (trade) => {
+  const tags = trade?.trade_tags?.map((association) => association.tag).filter(Boolean) || [];
+  const { trade_tags, ...rest } = trade || {};
+
+  return {
+    ...rest,
+    tags
+  };
+};
+
 export const useTradeManagement = (selectedAccountId) => {
   const [state, dispatch] = useReducer(tradeReducer, initialTradeState);
 
@@ -20,7 +30,12 @@ export const useTradeManagement = (selectedAccountId) => {
     try {
       const { data, error } = await supabase
         .from('trades')
-        .select('*')
+        .select(`
+          *,
+          trade_tags (
+            tag:tags (*)
+          )
+        `)
         .eq('account_id', selectedAccountId)
         .order('exit_date', { ascending: false });
 
@@ -28,7 +43,9 @@ export const useTradeManagement = (selectedAccountId) => {
         return;
       }
 
-      dispatch({ type: TRADE_ACTIONS.SET_TRADES, payload: data || [] });
+      const tradesWithTags = (data || []).map((trade) => mapTradeWithTags(trade));
+
+      dispatch({ type: TRADE_ACTIONS.SET_TRADES, payload: tradesWithTags });
     } catch (err) {
       // Error handling
     }
@@ -66,6 +83,8 @@ export const useTradeManagement = (selectedAccountId) => {
         ? null
         : parseInt(tradeData.result, 10);
 
+    const tagIds = Array.isArray(tradeData.tagIds) ? tradeData.tagIds : [];
+
     const newTrade = {
       symbol: tradeData.symbol,
       position_type: Number.isNaN(positionType) ? null : positionType,
@@ -98,16 +117,42 @@ export const useTradeManagement = (selectedAccountId) => {
         return null;
       }
 
+      if (data && tagIds.length > 0) {
+        const { error: tagInsertError } = await supabase
+          .from('trade_tags')
+          .insert(
+            tagIds.map((tagId) => ({
+              trade_id: data.id,
+              tag_id: tagId
+            }))
+          );
+
+        if (tagInsertError) {
+          throw tagInsertError;
+        }
+      }
+
       // Refetch all trades instead of just dispatching ADD_TRADE
       // This ensures proper sort order and updates all charts and metrics
       // If refetch fails, fall back to adding the trade directly to state
       try {
         await fetchTrades();
       } catch (refetchError) {
-        dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: data });
+        dispatch({ type: TRADE_ACTIONS.ADD_TRADE, payload: mapTradeWithTags({ ...data, trade_tags: [] }) });
       }
-      
-      return data;
+
+      const { data: tradeWithTags } = await supabase
+        .from('trades')
+        .select(`
+          *,
+          trade_tags (
+            tag:tags (*)
+          )
+        `)
+        .eq('id', data.id)
+        .single();
+
+      return tradeWithTags ? mapTradeWithTags(tradeWithTags) : data;
     } catch (err) {
       return null;
     }
@@ -143,6 +188,8 @@ export const useTradeManagement = (selectedAccountId) => {
         ? null
         : parseInt(tradeData.result, 10);
 
+    const tagIds = Array.isArray(tradeData.tagIds) ? tradeData.tagIds : [];
+
     const updatedTrade = {
       symbol: tradeData.symbol,
       position_type: Number.isNaN(positionType) ? null : positionType,
@@ -176,16 +223,51 @@ export const useTradeManagement = (selectedAccountId) => {
         return null;
       }
 
+      const { error: deleteError } = await supabase
+        .from('trade_tags')
+        .delete()
+        .eq('trade_id', tradeData.id);
+
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      if (tagIds.length > 0) {
+        const { error: tagInsertError } = await supabase
+          .from('trade_tags')
+          .insert(
+            tagIds.map((tagId) => ({
+              trade_id: tradeData.id,
+              tag_id: tagId
+            }))
+          );
+
+        if (tagInsertError) {
+          throw tagInsertError;
+        }
+      }
+
       // Refetch all trades instead of just dispatching UPDATE_TRADE
       // This ensures proper sort order and updates all charts and metrics
       // If refetch fails, fall back to updating the trade directly in state
       try {
         await fetchTrades();
       } catch (refetchError) {
-        dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: data });
+        dispatch({ type: TRADE_ACTIONS.UPDATE_TRADE, payload: mapTradeWithTags({ ...data, trade_tags: [] }) });
       }
-      
-      return data;
+
+      const { data: tradeWithTags } = await supabase
+        .from('trades')
+        .select(`
+          *,
+          trade_tags (
+            tag:tags (*)
+          )
+        `)
+        .eq('id', tradeData.id)
+        .single();
+
+      return tradeWithTags ? mapTradeWithTags(tradeWithTags) : data;
     } catch (err) {
       return null;
     }

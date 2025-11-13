@@ -9,20 +9,34 @@ export const useTagManagement = () => {
   const [error, setError] = useState(null);
 
   const fetchTags = useCallback(async () => {
-    if (!user) return;
-
     try {
       setLoading(true);
-      const { data, error: fetchError } = await supabase
+      let query = supabase
         .from('tags')
         .select('*, trade_tags(id)')
-        .eq('user_id', user.id)
         .order('name', { ascending: true });
 
-      if (fetchError) throw fetchError;
+      // If user is logged in, filter by user_id
+      // If not logged in, try to fetch all tags (may fail due to RLS)
+      if (user) {
+        query = query.eq('user_id', user.id);
+      }
+
+      const { data, error: fetchError } = await query;
+
+      if (fetchError) {
+        // If error is due to RLS (not authenticated), set empty tags array
+        // Otherwise, throw the error
+        if (fetchError.code === 'PGRST301' || fetchError.message?.includes('permission') || fetchError.message?.includes('RLS')) {
+          setTags([]);
+          setError(null);
+          return;
+        }
+        throw fetchError;
+      }
 
       // Transform data to include usage count
-      const tagsWithUsage = data.map(tag => ({
+      const tagsWithUsage = (data || []).map(tag => ({
         ...tag,
         usage_count: tag.trade_tags?.length || 0
       }));
@@ -32,6 +46,8 @@ export const useTagManagement = () => {
     } catch (err) {
       setError(err.message);
       console.error('Error fetching tags:', err);
+      // Set empty tags on error to prevent UI from breaking
+      setTags([]);
     } finally {
       setLoading(false);
     }

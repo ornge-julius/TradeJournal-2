@@ -1,7 +1,7 @@
 import React from 'react';
 import { Edit2, Trash2 } from 'lucide-react';
 
-const TagCard = ({ tag, onEdit, onDelete }) => {
+const TagCard = ({ tag, onEdit, onDelete, canEdit = true }) => {
   const tagColor = tag.color || '#3B82F6';
 
   return (
@@ -16,22 +16,28 @@ const TagCard = ({ tag, onEdit, onDelete }) => {
             {tag.name}
           </span>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={onEdit}
-            className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            title="Edit tag"
-          >
-            <Edit2 className="h-4 w-4" />
-          </button>
-          <button
-            onClick={onDelete}
-            className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-            title="Delete tag"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
+        {canEdit && (onEdit || onDelete) && (
+          <div className="flex gap-2">
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                title="Edit tag"
+              >
+                <Edit2 className="h-4 w-4" />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={onDelete}
+                className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                title="Delete tag"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
       </div>
       <div className="text-sm text-gray-600 dark:text-gray-400">
         Used by {tag.usage_count || 0} trade{tag.usage_count !== 1 ? 's' : ''}
