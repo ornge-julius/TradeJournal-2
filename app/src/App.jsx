@@ -51,7 +51,7 @@ function AppContent() {
     setViewingTrade,
     clearEditingTrade,
     clearViewingTrade
-  } = useTradeManagement(selectedAccountId);
+  } = useTradeManagement(selectedAccountId, user);
 
   // Check if account is still loading
   const isAccountLoading = accounts.length === 0 && selectedAccountId === null;
