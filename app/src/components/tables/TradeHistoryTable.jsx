@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
+import TagBadge from '../ui/TagBadge';
 
 const TradeHistoryTable = ({ trades, onViewTrade }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,6 +65,7 @@ const TradeHistoryTable = ({ trades, onViewTrade }) => {
               <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Result</th>
               <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300 w-48">Reason</th>
               <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Source</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Tags</th>
               <th className="text-left py-4 px-6 font-medium text-gray-700 dark:text-gray-300">Notes</th>
             </tr>
           </thead>
@@ -119,6 +121,17 @@ const TradeHistoryTable = ({ trades, onViewTrade }) => {
                 <td className="py-4 px-6">
                   <div className="text-sm text-purple-600 dark:text-purple-300 max-w-32 truncate" title={trade.source}>
                     {trade.source || '-'}
+                  </div>
+                </td>
+                <td className="py-4 px-6">
+                  <div className="flex flex-wrap gap-1.5 max-w-44">
+                    {trade.tags && trade.tags.length > 0 ? (
+                      trade.tags.map((tag) => (
+                        <TagBadge key={tag.id} tag={tag} size="small" />
+                      ))
+                    ) : (
+                      <span className="text-gray-400 dark:text-gray-500 text-xs">—</span>
+                    )}
                   </div>
                 </td>
                 <td className="py-4 px-6">

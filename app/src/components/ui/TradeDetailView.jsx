@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft, Edit, ExternalLink, Target, Calendar } from 'lucide-react';
 import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 import TradeForm from '../forms/TradeForm';
+import TagBadge from './TagBadge';
 
 const TradeDetailView = ({
   trade,
@@ -35,6 +36,15 @@ const TradeDetailView = ({
               Trade Details
             </h1>
             <p className="text-gray-600 dark:text-gray-400">Complete information for {trade.symbol} trade</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {trade.tags && trade.tags.length > 0 ? (
+                trade.tags.map((tag) => (
+                  <TagBadge key={tag.id} tag={tag} size="small" />
+                ))
+              ) : (
+                <span className="text-sm text-gray-500 dark:text-gray-500">No tags assigned</span>
+              )}
+            </div>
           </div>
           <div className="flex gap-4">
             {!isEditing && isAuthenticated && (
@@ -146,6 +156,18 @@ const TradeDetailView = ({
                 <span className="text-purple-600 dark:text-purple-300 font-medium">{trade.source}</span>
               </div>
             )}
+            <div className="py-3">
+              <span className="text-gray-600 dark:text-gray-400 block mb-2">Tags</span>
+              <div className="flex flex-wrap gap-2">
+                {trade.tags && trade.tags.length > 0 ? (
+                  trade.tags.map((tag) => (
+                    <TagBadge key={tag.id} tag={tag} />
+                  ))
+                ) : (
+                  <span className="text-sm text-gray-500 dark:text-gray-500">No tags assigned</span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

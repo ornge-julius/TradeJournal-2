@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { X, Trash2 } from 'lucide-react';
 import { getResultNumber, getTradeTypeNumber } from '../../utils/calculations';
 import ConfirmModal from '../ui/ConfirmModal';
+import { useTagManagement } from '../../hooks/useTagManagement';
+import TagSelector from '../ui/TagSelector';
 
 const TradeForm = ({ 
   isOpen, 
@@ -26,15 +28,27 @@ const TradeForm = ({
     option: '',
     source: ''
   });
+  const [selectedTagIds, setSelectedTagIds] = useState([]);
+  const { tags, loading: tagsLoading } = useTagManagement();
 
   useEffect(() => {
     if (editingTrade) {
+      const {
+        tags: tradeTags,
+        profit,
+        account_id,
+        user_id,
+        trade_tags,
+        ...tradeFields
+      } = editingTrade;
+
       setFormData({
-        ...editingTrade,
+        ...tradeFields,
         entry_price: editingTrade.entry_price.toString(),
         exit_price: editingTrade.exit_price.toString(),
         quantity: editingTrade.quantity.toString()
       });
+      setSelectedTagIds((tradeTags || []).map((tag) => tag.id));
     } else {
       setFormData({
         symbol: '',
@@ -50,6 +64,7 @@ const TradeForm = ({
         option: '',
         source: ''
       });
+      setSelectedTagIds([]);
     }
   }, [editingTrade]);
 
@@ -64,7 +79,10 @@ const TradeForm = ({
     }
 
     try {
-      await onSubmit(formData);
+      await onSubmit({
+        ...formData,
+        tagIds: selectedTagIds
+      });
     } catch (err) {
       // Error handling
     }
@@ -236,7 +254,17 @@ const TradeForm = ({
               className="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 resize-none"
             />
           </div>
-          
+
+          <div className="md:col-span-3">
+            <TagSelector
+              tags={tags}
+              selectedTagIds={selectedTagIds}
+              onChange={setSelectedTagIds}
+              disabled={tagsLoading}
+              loading={tagsLoading}
+            />
+          </div>
+
           <div className="flex gap-2 md:col-span-3">
             <button
               type="submit"
