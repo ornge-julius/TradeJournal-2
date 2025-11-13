@@ -16,7 +16,10 @@
     "react-router-dom": "^7.9.5",
     "react-scripts": "5.0.1",
     "recharts": "^2.8.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "ajv": "^6.12.6",
+    "ajv-keywords": "^3.5.2",
+    "ajv-formats": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -46,5 +49,15 @@
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.0"
+  },
+  "overrides": {
+    "ajv": "^6.12.6",
+    "ajv-keywords": "^3.5.2",
+    "ajv-formats": "^1.6.1",
+    "schema-utils": {
+      "ajv": "^6.12.6",
+      "ajv-keywords": "^3.5.2",
+      "ajv-formats": "^1.6.1"
+    }
   }
 }
