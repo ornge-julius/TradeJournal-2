@@ -36,15 +36,6 @@ const TradeDetailView = ({
               Trade Details
             </h1>
             <p className="text-gray-600 dark:text-gray-400">Complete information for {trade.symbol} trade</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {trade.tags && trade.tags.length > 0 ? (
-                trade.tags.map((tag) => (
-                  <TagBadge key={tag.id} tag={tag} size="small" />
-                ))
-              ) : (
-                <span className="text-sm text-gray-500 dark:text-gray-500">No tags assigned</span>
-              )}
-            </div>
           </div>
           <div className="flex gap-4">
             {!isEditing && isAuthenticated && (

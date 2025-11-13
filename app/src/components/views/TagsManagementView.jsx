@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useTagManagement } from '../../hooks/useTagManagement';
+import { useAuth } from '../../hooks/useAuth';
 import TagForm from '../forms/TagForm';
 import TagCard from '../ui/TagCard';
 import ConfirmModal from '../ui/ConfirmModal';
 
 const TagsManagementView = () => {
+  const { user, isAuthenticated } = useAuth();
   const { tags, loading, error, createTag, updateTag, deleteTag } = useTagManagement();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingTag, setEditingTag] = useState(null);
@@ -62,13 +64,20 @@ const TagsManagementView = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tag Management</h1>
-        <button
-          onClick={() => setShowCreateForm(true)}
-          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 rounded-lg text-white font-medium hover:from-blue-500 hover:to-emerald-500 transition-all"
-        >
-          <Plus className="h-5 w-5" />
-          Create Tag
-        </button>
+        {isAuthenticated && (
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 rounded-lg text-white font-medium hover:from-blue-500 hover:to-emerald-500 transition-all"
+          >
+            <Plus className="h-5 w-5" />
+            Create Tag
+          </button>
+        )}
+        {!isAuthenticated && (
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Sign in to create and edit tags
+          </p>
+        )}
       </div>
 
       {showCreateForm && (
@@ -90,13 +99,19 @@ const TagsManagementView = () => {
 
       {tags.length === 0 ? (
         <div className="text-center py-12 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl">
-          <p className="text-gray-400 mb-4">No tags yet. Create your first tag to get started!</p>
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 rounded-lg text-white font-medium hover:from-blue-500 hover:to-emerald-500 transition-all"
-          >
-            Create Tag
-          </button>
+          <p className="text-gray-400 mb-4">
+            {isAuthenticated 
+              ? "No tags yet. Create your first tag to get started!" 
+              : "No tags available. Sign in to view your tags."}
+          </p>
+          {isAuthenticated && (
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 rounded-lg text-white font-medium hover:from-blue-500 hover:to-emerald-500 transition-all"
+            >
+              Create Tag
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -104,8 +119,9 @@ const TagsManagementView = () => {
             <TagCard
               key={tag.id}
               tag={tag}
-              onEdit={() => setEditingTag(tag)}
-              onDelete={() => setDeletingTag(tag)}
+              onEdit={isAuthenticated ? () => setEditingTag(tag) : undefined}
+              onDelete={isAuthenticated ? () => setDeletingTag(tag) : undefined}
+              canEdit={isAuthenticated}
             />
           ))}
         </div>
