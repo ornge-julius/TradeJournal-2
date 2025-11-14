@@ -13,14 +13,12 @@ import {
   generateMonthlyNetPNLData,
   generateLast30DaysNetPNLData
 } from '../../utils/calculations';
-import { filterTradesByExitDate, useDateFilter } from '../../context/DateFilterContext';
+import { useDateFilter } from '../../context/DateFilterContext';
+import { useFilteredTrades } from '../../hooks/useFilteredTrades';
 
 const DashboardContent = ({ trades, startingBalance }) => {
   const { filter } = useDateFilter();
-
-  const filteredTrades = useMemo(() => {
-    return filterTradesByExitDate(trades, filter);
-  }, [trades, filter]);
+  const filteredTrades = useFilteredTrades(trades);
 
   // Calculate all-time metrics from all trades (not filtered)
   const allTimeMetrics = useMemo(() => {
@@ -73,7 +71,7 @@ const DashboardContent = ({ trades, startingBalance }) => {
         <Last30DaysNetPNLChart data={last30DaysNetPNLData} />
       </div>
 
-      <TradeHistoryTable trades={trades} title="Trade History" />
+      <TradeHistoryTable trades={filteredTrades} title="Trade History" />
     </div>
   );
 };
