@@ -1,17 +1,13 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Fab } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
-import { useDateFilter, filterTradesByExitDate } from '../../context/DateFilterContext';
+import { useFilteredTrades } from '../../hooks/useFilteredTrades';
 import { useAuth } from '../../hooks/useAuth';
 import TradeHistoryTable from '../tables/TradeHistoryTable';
 
 const TradeHistoryView = ({ trades, onToggleTradeForm }) => {
   const { isAuthenticated } = useAuth();
-  const { filter } = useDateFilter();
-
-  const filteredTrades = useMemo(() => {
-    return filterTradesByExitDate(trades, filter);
-  }, [trades, filter]);
+  const filteredTrades = useFilteredTrades(trades);
 
   return (
     <div className="space-y-6 relative">

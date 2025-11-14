@@ -16,7 +16,9 @@ import TagsManagementView from './components/views/TagsManagementView';
 import TradeHistoryView from './components/views/TradeHistoryView';
 import TradeDetailPage from './components/views/TradeDetailPage';
 import { DateFilterProvider } from './context/DateFilterContext';
+import { TagFilterProvider } from './context/TagFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
+import GlobalTagFilter from './components/ui/GlobalTagFilter';
 
 function AppContent() {
   const [showAccountEditForm, setShowAccountEditForm] = useState(false);
@@ -241,23 +243,36 @@ function AppContent() {
     setShowSignInForm(false);
   };
 
-  const MainLayout = () => (
-    <DateFilterProvider>
-      <Header
-        onToggleSettings={handleToggleSettings}
-        onToggleTradeForm={handleToggleTradeForm}
-        showTradeForm={showTradeForm}
-        accounts={accounts}
-        selectedAccountId={selectedAccountId}
-        onSelectAccount={handleSelectAccount}
-        onAddAccount={handleAddAccount}
-        onEditAccount={handleEditAccount}
-        onDeleteAccount={handleDeleteAccount}
-        isAuthenticated={isAuthenticated}
-        user={user}
-        onSignIn={handleSignIn}
-        onSignOut={handleSignOut}
-      />
+  const MainLayout = () => {
+    const showTagFilter = location.pathname === '/' || location.pathname === '/history';
+
+    return (
+      <DateFilterProvider>
+        <TagFilterProvider>
+          <Header
+            onToggleSettings={handleToggleSettings}
+            onToggleTradeForm={handleToggleTradeForm}
+            showTradeForm={showTradeForm}
+            accounts={accounts}
+            selectedAccountId={selectedAccountId}
+            onSelectAccount={handleSelectAccount}
+            onAddAccount={handleAddAccount}
+            onEditAccount={handleEditAccount}
+            onDeleteAccount={handleDeleteAccount}
+            isAuthenticated={isAuthenticated}
+            user={user}
+            onSignIn={handleSignIn}
+            onSignOut={handleSignOut}
+          />
+
+          {/* Global Tag Filter - positioned in top right below header */}
+          {showTagFilter && (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+              <div className="flex justify-end relative">
+                <GlobalTagFilter />
+              </div>
+            </div>
+          )}
 
       {/* Settings Form */}
       <SettingsForm
@@ -312,10 +327,12 @@ function AppContent() {
           <p className="text-gray-400">Please select an account to view trades and metrics.</p>
         </div>
       ) : (
-        <Outlet />
-      )}
-    </DateFilterProvider>
-  );
+          <Outlet />
+        )}
+        </TagFilterProvider>
+      </DateFilterProvider>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white p-6">
