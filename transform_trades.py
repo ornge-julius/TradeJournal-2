@@ -35,10 +35,10 @@ def parse_amount(amount_str):
 
 
 def parse_date(date_str):
-    """Parse MM/DD/YYYY date string to MM/DD/YYYY format."""
+    """Parse MM/DD/YYYY date string to YYYY-MM-DD HH:mm:ss format."""
     try:
         dt = datetime.strptime(date_str, "%m/%d/%Y")
-        return dt.strftime("%m/%d/%Y")
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
     except ValueError:
         return None
 
