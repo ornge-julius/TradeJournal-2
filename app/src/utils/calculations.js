@@ -4,6 +4,41 @@ export const calculateProfit = (entryPrice, exitPrice, quantity, type) => {
   return profit
 };
 
+// Calculate balance at a specific date
+// Returns the account balance at the start of the target date (before any trades on that date)
+export const calculateBalanceAtDate = (trades, startingBalance, targetDate) => {
+  if (!targetDate) {
+    return startingBalance;
+  }
+
+  if (!Array.isArray(trades) || trades.length === 0) {
+    return startingBalance;
+  }
+
+  const targetTime = new Date(targetDate).getTime();
+  if (Number.isNaN(targetTime)) {
+    return startingBalance;
+  }
+
+  // Filter trades that exited before the target date
+  const tradesBeforeDate = trades.filter((trade) => {
+    if (!trade || !trade.exit_date) {
+      return false;
+    }
+    const exitTime = new Date(trade.exit_date).getTime();
+    if (Number.isNaN(exitTime)) {
+      return false;
+    }
+    // Include trades that exited before the target date (not on or after)
+    return exitTime < targetTime;
+  });
+
+  // Calculate total profit from trades before the target date
+  const totalProfit = tradesBeforeDate.reduce((sum, trade) => sum + (trade.profit || 0), 0);
+
+  return startingBalance + totalProfit;
+};
+
 // Calculate trade metrics
 export const calculateMetrics = (trades, startingBalance) => {
   const totalTrades = trades.length;

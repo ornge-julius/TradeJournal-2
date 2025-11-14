@@ -6,6 +6,7 @@ import Last30DaysNetPNLChart from '../charts/Last30DaysNetPNLChart';
 import DashboardMetricsCards from '../ui/DashboardMetricsCards';
 import {
   calculateMetrics,
+  calculateBalanceAtDate,
   generateCumulativeProfitData,
   generateAccountBalanceData,
   generateBalanceTrendData,
@@ -21,6 +22,12 @@ const DashboardContent = ({ trades, startingBalance }) => {
     return filterTradesByExitDate(trades, filter);
   }, [trades, filter]);
 
+  // Calculate all-time metrics from all trades (not filtered)
+  const allTimeMetrics = useMemo(() => {
+    return calculateMetrics(trades, startingBalance);
+  }, [trades, startingBalance]);
+
+  // Calculate metrics for filtered trades (used for other cards)
   const metrics = useMemo(() => {
     return calculateMetrics(filteredTrades, startingBalance);
   }, [filteredTrades, startingBalance]);
@@ -29,9 +36,19 @@ const DashboardContent = ({ trades, startingBalance }) => {
     return generateCumulativeProfitData(filteredTrades);
   }, [filteredTrades]);
 
+  // Calculate the starting balance at the beginning of the filtered period
+  const filteredPeriodStartingBalance = useMemo(() => {
+    if (!filter || !filter.fromUtc) {
+      // No filter or no start date - use original starting balance
+      return startingBalance;
+    }
+    // Calculate balance at the start of the filtered period
+    return calculateBalanceAtDate(trades, startingBalance, filter.fromUtc);
+  }, [trades, startingBalance, filter]);
+
   const accountBalanceData = useMemo(() => {
-    return generateAccountBalanceData(filteredTrades, startingBalance);
-  }, [filteredTrades, startingBalance]);
+    return generateAccountBalanceData(filteredTrades, filteredPeriodStartingBalance);
+  }, [filteredTrades, filteredPeriodStartingBalance]);
 
   const balanceTrendData = useMemo(() => {
     return generateBalanceTrendData(accountBalanceData);
@@ -47,7 +64,7 @@ const DashboardContent = ({ trades, startingBalance }) => {
 
   return (
     <div className="space-y-8">
-      <DashboardMetricsCards metrics={metrics} currentBalance={metrics.currentBalance} balanceTrendData={balanceTrendData} />
+      <DashboardMetricsCards metrics={metrics} currentBalance={allTimeMetrics.currentBalance} balanceTrendData={balanceTrendData} />
 
       <CumulativeNetProfitChart data={cumulativeProfitData} />
 
