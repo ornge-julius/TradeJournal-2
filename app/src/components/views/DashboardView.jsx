@@ -13,13 +13,16 @@ import {
   generateLast30DaysNetPNLData
 } from '../../utils/calculations';
 import { filterTradesByExitDate, useDateFilter } from '../../context/DateFilterContext';
+import { filterTradesByTags, useTagFilter } from '../../context/TagFilterContext';
 
 const DashboardContent = ({ trades, startingBalance }) => {
   const { filter } = useDateFilter();
+  const { selectedTagIds } = useTagFilter();
 
   const filteredTrades = useMemo(() => {
-    return filterTradesByExitDate(trades, filter);
-  }, [trades, filter]);
+    const dateFilteredTrades = filterTradesByExitDate(trades, filter);
+    return filterTradesByTags(dateFilteredTrades, selectedTagIds);
+  }, [trades, filter, selectedTagIds]);
 
   const metrics = useMemo(() => {
     return calculateMetrics(filteredTrades, startingBalance);
@@ -42,8 +45,8 @@ const DashboardContent = ({ trades, startingBalance }) => {
   }, [filteredTrades]);
   
   const last30DaysNetPNLData = useMemo(() => {
-    return generateLast30DaysNetPNLData(trades);
-  }, [trades]);
+    return generateLast30DaysNetPNLData(filteredTrades);
+  }, [filteredTrades]);
 
   return (
     <div className="space-y-8">
@@ -56,7 +59,7 @@ const DashboardContent = ({ trades, startingBalance }) => {
         <Last30DaysNetPNLChart data={last30DaysNetPNLData} />
       </div>
 
-      <TradeHistoryTable trades={trades} />
+      <TradeHistoryTable trades={filteredTrades} />
     </div>
   );
 };

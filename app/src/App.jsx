@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
@@ -15,6 +15,7 @@ import TradeBatchComparisonView from './components/views/TradeBatchComparisonVie
 import TagsManagementView from './components/views/TagsManagementView';
 import TradeDetailPage from './components/views/TradeDetailPage';
 import { DateFilterProvider } from './context/DateFilterContext';
+import { TagFilterProvider } from './context/TagFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
 
 function AppContent() {
@@ -52,6 +53,35 @@ function AppContent() {
     setEditingTrade,
     clearEditingTrade
   } = useTradeManagement(selectedAccountId);
+
+  const availableTags = useMemo(() => {
+    const tagMap = new Map();
+
+    trades.forEach((trade) => {
+      (trade?.tags || []).forEach((tag) => {
+        if (!tag || tag.id === null || tag.id === undefined) {
+          return;
+        }
+
+        const id = String(tag.id);
+        if (!tagMap.has(id)) {
+          tagMap.set(id, tag);
+        }
+      });
+    });
+
+    return Array.from(tagMap.values()).sort((a, b) => {
+      const nameA = a?.name?.toLowerCase() || '';
+      const nameB = b?.name?.toLowerCase() || '';
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+  }, [trades]);
 
   // Check if account is still loading
   const isAccountLoading = accounts.length === 0 && selectedAccountId === null;
@@ -241,79 +271,82 @@ function AppContent() {
   };
 
   const MainLayout = () => (
-    <DateFilterProvider>
-      <Header
-        onToggleSettings={handleToggleSettings}
-        onToggleTradeForm={handleToggleTradeForm}
-        showTradeForm={showTradeForm}
-        accounts={accounts}
-        selectedAccountId={selectedAccountId}
-        onSelectAccount={handleSelectAccount}
-        onAddAccount={handleAddAccount}
-        onEditAccount={handleEditAccount}
-        onDeleteAccount={handleDeleteAccount}
-        isAuthenticated={isAuthenticated}
-        user={user}
-        onSignIn={handleSignIn}
-        onSignOut={handleSignOut}
-      />
+    <TagFilterProvider>
+      <DateFilterProvider>
+        <Header
+          onToggleSettings={handleToggleSettings}
+          onToggleTradeForm={handleToggleTradeForm}
+          showTradeForm={showTradeForm}
+          accounts={accounts}
+          selectedAccountId={selectedAccountId}
+          onSelectAccount={handleSelectAccount}
+          onAddAccount={handleAddAccount}
+          onEditAccount={handleEditAccount}
+          onDeleteAccount={handleDeleteAccount}
+          isAuthenticated={isAuthenticated}
+          user={user}
+          onSignIn={handleSignIn}
+          onSignOut={handleSignOut}
+          availableTags={availableTags}
+        />
 
-      {/* Settings Form */}
-      <SettingsForm
-        isOpen={showBalanceForm}
-        onClose={handleToggleSettings}
-        onSubmit={handleUpdateBalance}
-        currentBalance={startingBalance}
-      />
+        {/* Settings Form */}
+        <SettingsForm
+          isOpen={showBalanceForm}
+          onClose={handleToggleSettings}
+          onSubmit={handleUpdateBalance}
+          currentBalance={startingBalance}
+        />
 
-      {/* Trade Form */}
-      <TradeForm
-        isOpen={showTradeForm}
-        onClose={toggleTradeForm}
-        onSubmit={handleTradeSubmit}
-        editingTrade={editingTrade}
-        onCancel={handleCancelTradeForm}
-        onDelete={handleTradeDelete}
-      />
+        {/* Trade Form */}
+        <TradeForm
+          isOpen={showTradeForm}
+          onClose={toggleTradeForm}
+          onSubmit={handleTradeSubmit}
+          editingTrade={editingTrade}
+          onCancel={handleCancelTradeForm}
+          onDelete={handleTradeDelete}
+        />
 
-      {/* Account Edit Form */}
-      <AccountEditForm
-        isOpen={showAccountEditForm}
-        onClose={() => {
-          setShowAccountEditForm(false);
-          setEditingAccount(null);
-        }}
-        onSubmit={handleAccountEditSubmit}
-        account={editingAccount}
-      />
+        {/* Account Edit Form */}
+        <AccountEditForm
+          isOpen={showAccountEditForm}
+          onClose={() => {
+            setShowAccountEditForm(false);
+            setEditingAccount(null);
+          }}
+          onSubmit={handleAccountEditSubmit}
+          account={editingAccount}
+        />
 
-      {/* Sign In Form */}
-      <SignInForm
-        isOpen={showSignInForm}
-        onClose={handleCloseSignInForm}
-        onSignIn={handleSignInSubmit}
-      />
+        {/* Sign In Form */}
+        <SignInForm
+          isOpen={showSignInForm}
+          onClose={handleCloseSignInForm}
+          onSignIn={handleSignInSubmit}
+        />
 
-      {/* Loading State */}
-      {authLoading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">Loading authentication...</p>
-        </div>
-      ) : isAccountLoading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">Loading account data...</p>
-        </div>
-      ) : !selectedAccountId ? (
-        <div className="text-center py-12">
-          <p className="text-gray-300 text-lg mb-4">No account selected</p>
-          <p className="text-gray-400">Please select an account to view trades and metrics.</p>
-        </div>
-      ) : (
-        <Outlet />
-      )}
-    </DateFilterProvider>
+        {/* Loading State */}
+        {authLoading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-300">Loading authentication...</p>
+          </div>
+        ) : isAccountLoading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-300">Loading account data...</p>
+          </div>
+        ) : !selectedAccountId ? (
+          <div className="text-center py-12">
+            <p className="text-gray-300 text-lg mb-4">No account selected</p>
+            <p className="text-gray-400">Please select an account to view trades and metrics.</p>
+          </div>
+        ) : (
+          <Outlet />
+        )}
+      </DateFilterProvider>
+    </TagFilterProvider>
   );
 
   return (

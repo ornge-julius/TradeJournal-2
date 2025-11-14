@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 import TagBadge from '../ui/TagBadge';
+import { useTagFilter } from '../../context/TagFilterContext';
 
 const TradeHistoryTable = ({ trades }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
+  const { hasActiveFilters, clearTags } = useTagFilter();
   const tradesPerPage = 10;
-  const totalPages = Math.ceil(trades.length / tradesPerPage);
-  
+  const totalPages = Math.max(1, Math.ceil(trades.length / tradesPerPage));
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [trades.length]);
+
+  const isFilteredEmptyState = hasActiveFilters && trades.length === 0;
+
   // Calculate paginated trades
   const startIndex = (currentPage - 1) * tradesPerPage;
   const endIndex = startIndex + tradesPerPage;
@@ -22,6 +30,26 @@ const TradeHistoryTable = ({ trades }) => {
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   };
+
+  if (isFilteredEmptyState) {
+    return (
+      <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl overflow-hidden">
+        <div className="p-8 text-center space-y-3">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">No trades match the selected tags</h3>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            Adjust or clear your tag filters to see trade history results.
+          </p>
+          <button
+            type="button"
+            onClick={clearTags}
+            className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          >
+            Clear tag filters
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl overflow-hidden">

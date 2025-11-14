@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import AccountSelector from './AccountSelector';
 import GlobalDateFilter from './GlobalDateFilter';
+import TagFilter from './TagFilter';
 import { useTheme } from '../../context/ThemeContext';
 import logoImage from '../../assets/FullLogo_Transparent.png';
 
@@ -31,7 +32,8 @@ const Header = ({
   isAuthenticated,
   user,
   onSignIn,
-  onSignOut
+  onSignOut,
+  availableTags = []
 }) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -130,6 +132,7 @@ const Header = ({
 
           <div className="relative flex items-center gap-2 sm:gap-3">
             <GlobalDateFilter variant="navbar" />
+            <TagFilter availableTags={availableTags} variant="navbar" />
 
             <button
               type="button"
