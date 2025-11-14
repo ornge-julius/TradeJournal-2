@@ -305,16 +305,8 @@ export const useTradeManagement = (selectedAccountId) => {
     dispatch({ type: TRADE_ACTIONS.SET_EDITING_TRADE, payload: trade });
   }, []);
 
-  const setViewingTrade = useCallback((trade) => {
-    dispatch({ type: TRADE_ACTIONS.SET_VIEWING_TRADE, payload: trade });
-  }, []);
-
   const clearEditingTrade = useCallback(() => {
     dispatch({ type: TRADE_ACTIONS.CLEAR_EDITING_TRADE });
-  }, []);
-
-  const clearViewingTrade = useCallback(() => {
-    dispatch({ type: TRADE_ACTIONS.CLEAR_VIEWING_TRADE });
   }, []);
 
   // Function to set trades for a specific account
@@ -326,14 +318,11 @@ export const useTradeManagement = (selectedAccountId) => {
     trades: accountTrades, // Return filtered trades for current account
     allTrades: state.trades, // Return all trades for cross-account operations
     editingTrade: state.editingTrade,
-    viewingTrade: state.viewingTrade,
     addTrade,
     updateTrade,
     deleteTrade,
     setEditingTrade,
-    setViewingTrade,
     clearEditingTrade,
-    clearViewingTrade,
     setAccountTrades
   };
 };

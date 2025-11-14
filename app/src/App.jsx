@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 import { useTradeManagement } from './hooks/useTradeManagement';
@@ -10,10 +10,10 @@ import TradeForm from './components/forms/TradeForm';
 import SettingsForm from './components/forms/SettingsForm';
 import AccountEditForm from './components/forms/AccountEditForm';
 import SignInForm from './components/forms/SignInForm';
-import TradeDetailView from './components/ui/TradeDetailView';
 import DashboardView from './components/views/DashboardView';
 import TradeBatchComparisonView from './components/views/TradeBatchComparisonView';
 import TagsManagementView from './components/views/TagsManagementView';
+import TradeDetailPage from './components/views/TradeDetailPage';
 import { DateFilterProvider } from './context/DateFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -21,6 +21,9 @@ function AppContent() {
   const [showAccountEditForm, setShowAccountEditForm] = useState(false);
   const [editingAccount, setEditingAccount] = useState(null);
   const [showSignInForm, setShowSignInForm] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Authentication state
   const { user, isAuthenticated, isLoading: authLoading, signInWithEmail, signOut } = useAuth();
@@ -43,18 +46,16 @@ function AppContent() {
   const {
     trades,
     editingTrade,
-    viewingTrade,
     addTrade,
     updateTrade,
     deleteTrade,
     setEditingTrade,
-    setViewingTrade,
-    clearEditingTrade,
-    clearViewingTrade
+    clearEditingTrade
   } = useTradeManagement(selectedAccountId);
 
   // Check if account is still loading
   const isAccountLoading = accounts.length === 0 && selectedAccountId === null;
+  const isDetailPage = location.pathname.startsWith('/detail');
 
   const ensureAuthenticated = () => {
     if (!isAuthenticated) {
@@ -66,19 +67,16 @@ function AppContent() {
 
   const handleTradeSubmit = async (tradeData) => {
     if (!ensureAuthenticated()) {
-      return;
+      return false;
     }
+
     if (editingTrade) {
       const updatedTrade = await updateTrade({ ...editingTrade, ...tradeData });
 
       if (updatedTrade) {
-        if (viewingTrade && viewingTrade.id === updatedTrade.id) {
-          setViewingTrade(updatedTrade);
-        }
-
         clearEditingTrade();
 
-        if (!viewingTrade) {
+        if (showTradeForm) {
           toggleTradeForm();
         }
 
@@ -91,7 +89,7 @@ function AppContent() {
     const newTrade = await addTrade(tradeData);
 
     if (newTrade) {
-      if (!viewingTrade) {
+      if (showTradeForm) {
         toggleTradeForm();
       }
 
@@ -105,9 +103,10 @@ function AppContent() {
     if (!ensureAuthenticated()) {
       return;
     }
+
     setEditingTrade(trade);
-    // Only toggle trade form if we're on the main page (not viewing a trade)
-    if (!viewingTrade) {
+
+    if (!isDetailPage && !showTradeForm) {
       toggleTradeForm();
     }
   };
@@ -119,43 +118,55 @@ function AppContent() {
     toggleTradeForm();
   };
 
-  const handleTradeView = (trade) => {
-    setViewingTrade(trade);
+  const handleCancelTradeForm = () => {
+    clearEditingTrade();
+    if (showTradeForm) {
+      toggleTradeForm();
+    }
   };
 
-  const handleBackToList = () => {
-    clearViewingTrade();
-    // Clear any editing trade when going back to main page
+  const handleCancelDetailEdit = () => {
     clearEditingTrade();
   };
 
-  const handleCancelEdit = () => {
-    clearEditingTrade();
-    toggleTradeForm();
+  const navigateBackFromDetail = () => {
+    const from = location.state && typeof location.state === 'object' ? location.state.from : null;
+
+    if (from) {
+      navigate(from);
+    } else {
+      navigate('/', { replace: true });
+    }
   };
 
   const handleTradeDelete = async (tradeId) => {
     if (!ensureAuthenticated()) {
-      return;
+      return false;
     }
-    
+
     try {
       await deleteTrade(tradeId);
-      
-      // If we're viewing the trade that was deleted, go back to list
-      if (viewingTrade && viewingTrade.id === tradeId) {
-        clearViewingTrade();
+
+      if (editingTrade && editingTrade.id === tradeId) {
         clearEditingTrade();
-      } else if (editingTrade && editingTrade.id === tradeId) {
-        // If we're editing the trade that was deleted
-        clearEditingTrade();
-        toggleTradeForm();
+        if (showTradeForm) {
+          toggleTradeForm();
+        }
       } else if (editingTrade) {
-        // If we're editing a different trade, just clear editing
         clearEditingTrade();
       }
+
+      const currentTradeId = location.pathname.startsWith('/detail/')
+        ? location.pathname.replace('/detail/', '')
+        : null;
+
+      if (currentTradeId && String(currentTradeId) === String(tradeId)) {
+        navigateBackFromDetail();
+      }
+
+      return true;
     } catch (err) {
-      // You could add error handling/notification here
+      return false;
     }
   };
 
@@ -229,127 +240,121 @@ function AppContent() {
     setShowSignInForm(false);
   };
 
+  const MainLayout = () => (
+    <DateFilterProvider>
+      <Header
+        onToggleSettings={handleToggleSettings}
+        onToggleTradeForm={handleToggleTradeForm}
+        showTradeForm={showTradeForm}
+        accounts={accounts}
+        selectedAccountId={selectedAccountId}
+        onSelectAccount={handleSelectAccount}
+        onAddAccount={handleAddAccount}
+        onEditAccount={handleEditAccount}
+        onDeleteAccount={handleDeleteAccount}
+        isAuthenticated={isAuthenticated}
+        user={user}
+        onSignIn={handleSignIn}
+        onSignOut={handleSignOut}
+      />
+
+      {/* Settings Form */}
+      <SettingsForm
+        isOpen={showBalanceForm}
+        onClose={handleToggleSettings}
+        onSubmit={handleUpdateBalance}
+        currentBalance={startingBalance}
+      />
+
+      {/* Trade Form */}
+      <TradeForm
+        isOpen={showTradeForm}
+        onClose={toggleTradeForm}
+        onSubmit={handleTradeSubmit}
+        editingTrade={editingTrade}
+        onCancel={handleCancelTradeForm}
+        onDelete={handleTradeDelete}
+      />
+
+      {/* Account Edit Form */}
+      <AccountEditForm
+        isOpen={showAccountEditForm}
+        onClose={() => {
+          setShowAccountEditForm(false);
+          setEditingAccount(null);
+        }}
+        onSubmit={handleAccountEditSubmit}
+        account={editingAccount}
+      />
+
+      {/* Sign In Form */}
+      <SignInForm
+        isOpen={showSignInForm}
+        onClose={handleCloseSignInForm}
+        onSignIn={handleSignInSubmit}
+      />
+
+      {/* Loading State */}
+      {authLoading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading authentication...</p>
+        </div>
+      ) : isAccountLoading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading account data...</p>
+        </div>
+      ) : !selectedAccountId ? (
+        <div className="text-center py-12">
+          <p className="text-gray-300 text-lg mb-4">No account selected</p>
+          <p className="text-gray-400">Please select an account to view trades and metrics.</p>
+        </div>
+      ) : (
+        <Outlet />
+      )}
+    </DateFilterProvider>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Trade Detail View */}
-        {viewingTrade ? (
-          <TradeDetailView
-            trade={viewingTrade}
-            onBack={handleBackToList}
-            onEdit={handleTradeEdit}
-            isEditing={editingTrade && editingTrade.id === viewingTrade.id}
-            onSubmit={handleTradeSubmit}
-            onCancelEdit={() => {
-              clearEditingTrade();
-            }}
-            onDelete={handleTradeDelete}
-            isAuthenticated={isAuthenticated}
+        <Routes>
+          <Route
+            path="/detail/:tradeId"
+            element={
+              <TradeDetailPage
+                trades={trades}
+                editingTrade={editingTrade}
+                onEdit={handleTradeEdit}
+                onSubmit={handleTradeSubmit}
+                onCancelEdit={handleCancelDetailEdit}
+                onDelete={handleTradeDelete}
+                isAuthenticated={isAuthenticated}
+              />
+            }
           />
-        ) : (
-          // Main Dashboard View
-          <DateFilterProvider>
-            <Header
-              onToggleSettings={handleToggleSettings}
-              onToggleTradeForm={handleToggleTradeForm}
-              showTradeForm={showTradeForm}
-              accounts={accounts}
-              selectedAccountId={selectedAccountId}
-              onSelectAccount={handleSelectAccount}
-              onAddAccount={handleAddAccount}
-              onEditAccount={handleEditAccount}
-              onDeleteAccount={handleDeleteAccount}
-              isAuthenticated={isAuthenticated}
-              user={user}
-              onSignIn={handleSignIn}
-              onSignOut={handleSignOut}
-            />
-
-            {/* Settings Form */}
-            <SettingsForm
-              isOpen={showBalanceForm}
-              onClose={handleToggleSettings}
-              onSubmit={handleUpdateBalance}
-              currentBalance={startingBalance}
-            />
-
-            {/* Trade Form */}
-            <TradeForm
-              isOpen={showTradeForm}
-              onClose={toggleTradeForm}
-              onSubmit={handleTradeSubmit}
-              editingTrade={editingTrade}
-              onCancel={handleCancelEdit}
-              onDelete={handleTradeDelete}
-            />
-
-            {/* Account Edit Form */}
-            <AccountEditForm
-              isOpen={showAccountEditForm}
-              onClose={() => {
-                setShowAccountEditForm(false);
-                setEditingAccount(null);
-              }}
-              onSubmit={handleAccountEditSubmit}
-              account={editingAccount}
-            />
-
-            {/* Sign In Form */}
-            <SignInForm
-              isOpen={showSignInForm}
-              onClose={handleCloseSignInForm}
-              onSignIn={handleSignInSubmit}
-            />
-
-            {/* Loading State */}
-            {authLoading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p className="text-gray-300">Loading authentication...</p>
-              </div>
-            ) : isAccountLoading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p className="text-gray-300">Loading account data...</p>
-              </div>
-            ) : !selectedAccountId ? (
-              <div className="text-center py-12">
-                <p className="text-gray-300 text-lg mb-4">No account selected</p>
-                <p className="text-gray-400">Please select an account to view trades and metrics.</p>
-              </div>
-            ) : (
-              <Routes>
-                <Route 
-                  path="/comparison" 
-                  element={
-                    <TradeBatchComparisonView
-                      trades={trades}
-                      startingBalance={startingBalance}
-                      onViewTrade={handleTradeView}
-                    />
-                  } 
+          <Route path="/" element={<MainLayout />}>
+            <Route
+              index
+              element={
+                <DashboardView
+                  trades={trades}
+                  startingBalance={startingBalance}
                 />
-                <Route 
-                  path="/tags" 
-                  element={
-                    <TagsManagementView />
-                  } 
+              }
+            />
+            <Route
+              path="comparison"
+              element={
+                <TradeBatchComparisonView
+                  trades={trades}
                 />
-                <Route 
-                  path="/" 
-                  element={
-                    <DashboardView
-                      trades={trades}
-                      startingBalance={startingBalance}
-                      onViewTrade={handleTradeView}
-                    />
-                  } 
-                />
-              </Routes>
-            )}
-          </DateFilterProvider>
-        )}
+              }
+            />
+            <Route path="tags" element={<TagsManagementView />} />
+          </Route>
+        </Routes>
       </div>
     </div>
   );

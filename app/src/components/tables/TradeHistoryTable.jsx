@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
 import TagBadge from '../ui/TagBadge';
 
-const TradeHistoryTable = ({ trades, onViewTrade }) => {
+const TradeHistoryTable = ({ trades }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
   const tradesPerPage = 10;
   const totalPages = Math.ceil(trades.length / tradesPerPage);
   
@@ -73,12 +75,13 @@ const TradeHistoryTable = ({ trades, onViewTrade }) => {
             {paginatedTrades.map((trade) => (
               <tr key={trade.id} className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                 <td className="py-4 px-6">
-                  <button 
-                    onClick={() => onViewTrade(trade)}
-                    className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors cursor-pointer"
+                  <Link
+                    to={`/detail/${trade.id}`}
+                    state={{ from: `${location.pathname}${location.search}` }}
+                    className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                   >
                     {trade.symbol}
-                  </button>
+                  </Link>
                 </td>
                 <td className="py-4 px-6">
                   <div className="text-sm text-gray-700 dark:text-gray-300 max-w-32 truncate" title={trade.option}>

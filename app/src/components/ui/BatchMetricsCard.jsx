@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => {
+const BatchMetricsCard = ({ title, subtitle, metrics, trades }) => {
   if (!metrics) {
     return (
       <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6">
@@ -41,8 +42,59 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
     return 'text-gray-600 dark:text-gray-400';
   };
 
+  const location = useLocation();
+  const fromPath = `${location.pathname}${location.search}`;
+
   const winners = trades.filter(trade => trade.result === 1);
   const losers = trades.filter(trade => trade.result === 0);
+
+  const renderSymbolLink = (trade, className) => {
+    const key = trade.id ?? `${trade.symbol}-${trade.entry_date}`;
+    const symbol = trade.symbol || '—';
+
+    if (!trade.id) {
+      return (
+        <span key={key} className={`text-sm font-medium ${className} cursor-default`}>
+          {symbol}
+        </span>
+      );
+    }
+
+    return (
+      <Link
+        key={key}
+        to={`/detail/${trade.id}`}
+        state={{ from: fromPath }}
+        className={`text-sm font-medium ${className} transition-colors`}
+      >
+        {symbol}
+      </Link>
+    );
+  };
+
+  const renderTradeSymbol = (trade, className) => {
+    if (!trade) {
+      return '—';
+    }
+
+    if (!trade.id) {
+      return `(${trade.symbol || '—'}) ${formatCurrency(trade.profit)}`;
+    }
+
+    return (
+      <>
+        (
+        <Link
+          to={`/detail/${trade.id}`}
+          state={{ from: fromPath }}
+          className={`${className} underline-offset-2 hover:underline`}
+        >
+          {trade.symbol || '—'}
+        </Link>
+        ) {formatCurrency(trade.profit)}
+      </>
+    );
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6">
@@ -84,29 +136,12 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
             <div className="flex justify-between items-start gap-4">
               <span className="text-sm text-gray-600 dark:text-gray-400 pt-1">Winners</span>
               <div className="flex flex-wrap justify-end gap-2">
-                {winners.map((winner) => {
-                  const isClickable = Boolean(onViewTrade);
-
-                  return (
-                    <button
-                      key={winner.id}
-                      type="button"
-                      onClick={() => {
-                        if (isClickable) {
-                          onViewTrade(winner);
-                        }
-                      }}
-                      className={`text-sm font-medium transition-colors ${
-                        isClickable
-                          ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
-                          : 'text-gray-500 dark:text-gray-400 cursor-default'
-                      }`}
-                      disabled={!isClickable}
-                    >
-                      {winner.symbol || '—'}
-                    </button>
-                  );
-                })}
+                {winners.map((winner) =>
+                  renderSymbolLink(
+                    winner,
+                    'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -125,29 +160,12 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
             <div className="flex justify-between items-start gap-4">
               <span className="text-sm text-gray-600 dark:text-gray-400 pt-1">Losers</span>
               <div className="flex flex-wrap justify-end gap-2">
-                {losers.map((loser) => {
-                  const isClickable = Boolean(onViewTrade);
-
-                  return (
-                    <button
-                      key={loser.id}
-                      type="button"
-                      onClick={() => {
-                        if (isClickable) {
-                          onViewTrade(loser);
-                        }
-                      }}
-                      className={`text-sm font-medium transition-colors ${
-                        isClickable
-                          ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
-                          : 'text-gray-500 dark:text-gray-400 cursor-default'
-                      }`}
-                      disabled={!isClickable}
-                    >
-                      {loser.symbol || '—'}
-                    </button>
-                  );
-                })}
+                {losers.map((loser) =>
+                  renderSymbolLink(
+                    loser,
+                    'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -174,7 +192,7 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
           <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
             <span className="text-sm text-gray-600 dark:text-gray-400">Best Trade</span>
             <span className="text-lg font-semibold text-emerald-400">
-              ({bestTrade.symbol || '—'}) {formatCurrency(bestTrade.profit)}
+              {renderTradeSymbol(bestTrade, 'text-emerald-400')}
             </span>
           </div>
         )}
@@ -184,7 +202,7 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades, onViewTrade }) => 
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600 dark:text-gray-400">Worst Trade</span>
             <span className="text-lg font-semibold text-red-400">
-              ({worstTrade.symbol || '—'}) {formatCurrency(worstTrade.profit)}
+              {renderTradeSymbol(worstTrade, 'text-red-400')}
             </span>
           </div>
         )}
