@@ -13,6 +13,7 @@ import SignInForm from './components/forms/SignInForm';
 import DashboardView from './components/views/DashboardView';
 import TradeBatchComparisonView from './components/views/TradeBatchComparisonView';
 import TagsManagementView from './components/views/TagsManagementView';
+import TradeHistoryView from './components/views/TradeHistoryView';
 import TradeDetailPage from './components/views/TradeDetailPage';
 import { DateFilterProvider } from './context/DateFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -353,6 +354,15 @@ function AppContent() {
               }
             />
             <Route path="tags" element={<TagsManagementView />} />
+            <Route
+              path="history"
+              element={
+                <TradeHistoryView
+                  trades={trades}
+                  onToggleTradeForm={handleToggleTradeForm}
+                />
+              }
+            />
           </Route>
         </Routes>
       </div>
