@@ -2,6 +2,9 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const BatchMetricsCard = ({ title, subtitle, metrics, trades }) => {
+  const location = useLocation();
+  const fromPath = `${location.pathname}${location.search}`;
+
   if (!metrics) {
     return (
       <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6">
@@ -41,9 +44,6 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades }) => {
     if (value < 0) return 'text-red-400';
     return 'text-gray-600 dark:text-gray-400';
   };
-
-  const location = useLocation();
-  const fromPath = `${location.pathname}${location.search}`;
 
   const winners = trades.filter(trade => trade.result === 1);
   const losers = trades.filter(trade => trade.result === 0);
