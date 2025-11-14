@@ -1,44 +1,47 @@
 import React, { useMemo } from 'react';
 import { calculateMetrics } from '../../utils/calculations';
-import { 
-  calculateTradeBatches, 
-  generateWinLossChartData, 
-  generateBatchComparisonData 
+import {
+  calculateTradeBatches,
+  generateWinLossChartData,
+  generateBatchComparisonData
 } from '../../utils/calculations';
 import WinLossChart from '../charts/WinLossChart';
 import BatchComparisonLineChart from '../charts/BatchComparisonLineChart';
 import BatchMetricsCard from '../ui/BatchMetricsCard';
 import AvgWLCard from '../ui/cards/AvgWLCard';
+import { filterTradesByTags, useTagFilter } from '../../context/TagFilterContext';
 
 const TradeBatchComparisonView = ({ trades }) => {
-  // Calculate batches
+  const { selectedTagIds, hasActiveFilters, clearTags } = useTagFilter();
+
+  const filteredTrades = useMemo(() => {
+    return filterTradesByTags(trades, selectedTagIds);
+  }, [trades, selectedTagIds]);
+
   const { currentBatch, previousBatch } = useMemo(() => {
-    return calculateTradeBatches(trades);
-  }, [trades]);
-  
-  // Calculate metrics for each batch
+    return calculateTradeBatches(filteredTrades);
+  }, [filteredTrades]);
+
   const currentMetrics = useMemo(() => {
     return calculateMetrics(currentBatch, 0);
   }, [currentBatch]);
-  
+
   const previousMetrics = useMemo(() => {
     return calculateMetrics(previousBatch, 0);
   }, [previousBatch]);
-  
-  // Generate chart data
+
   const currentWinLossData = useMemo(() => {
     return generateWinLossChartData(currentBatch);
   }, [currentBatch]);
-  
+
   const previousWinLossData = useMemo(() => {
     return generateWinLossChartData(previousBatch);
   }, [previousBatch]);
-  
+
   const comparisonLineData = useMemo(() => {
     return generateBatchComparisonData(currentBatch, previousBatch);
   }, [currentBatch, previousBatch]);
 
-  // Handle empty state
   if (!trades || trades.length === 0) {
     return (
       <div className="space-y-8">
@@ -52,20 +55,41 @@ const TradeBatchComparisonView = ({ trades }) => {
       </div>
     );
   }
-  
+
+  if (hasActiveFilters && filteredTrades.length === 0) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Trade Batch Comparison</h1>
+          <p className="text-gray-600 dark:text-gray-400">No trades match the selected tag filters.</p>
+        </div>
+        <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center space-y-3">
+          <p className="text-gray-600 dark:text-gray-400">Try adjusting your tag filters to see comparison data.</p>
+          <button
+            type="button"
+            onClick={clearTags}
+            className="inline-flex items-center justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          >
+            Clear tag filters
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Trade Batch Comparison</h1>
         <p className="text-gray-600 dark:text-gray-400">
-          {trades.length <= 10 
+          {filteredTrades.length <= 10
             ? `Showing baseline view with ${currentBatch.length} trades (comparison available once you reach 11+ trades)`
             : `Comparing your most recent ${currentBatch.length} trades vs previous ${previousBatch.length} trades`
           }
         </p>
       </div>
-      
+
       {/* Win Rate Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Previous Batch Win Rate */}
@@ -80,7 +104,7 @@ const TradeBatchComparisonView = ({ trades }) => {
             losingTrades={previousMetrics.losingTrades}
           />
         </div>
-        
+
         {/* Current Batch Win Rate */}
         <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6">
           <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">
@@ -93,8 +117,8 @@ const TradeBatchComparisonView = ({ trades }) => {
           />
         </div>
 
-          {/* Previous Avg W/L $ */}
-          <AvgWLCard
+        {/* Previous Avg W/L $ */}
+        <AvgWLCard
           title="Previous Avg W/L $"
           subtitle={`${previousBatch.length} trades`}
           metrics={previousMetrics}
@@ -113,13 +137,13 @@ const TradeBatchComparisonView = ({ trades }) => {
           avgLoss={currentMetrics.avgLoss}
         />
       </div>
-      
+
       {/* Cumulative P&L Comparison Line Chart */}
       {/* Always show chart - when 10 or fewer trades, both lines will overlap with same data */}
       <BatchComparisonLineChart data={comparisonLineData} />
-      
+
       {/* Performance Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Previous Batch Metrics */}
         {/* When 10 or fewer trades, previousBatch will have same data as currentBatch */}
         <BatchMetricsCard
@@ -136,8 +160,6 @@ const TradeBatchComparisonView = ({ trades }) => {
           metrics={currentMetrics}
           trades={currentBatch}
         />
-
-
       </div>
     </div>
   );
