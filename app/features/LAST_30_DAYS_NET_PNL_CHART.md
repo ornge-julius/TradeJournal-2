@@ -34,9 +34,9 @@ There is no existing daily P&L chart in the codebase. This is a new component th
    - Bars should clearly indicate profit vs loss
 
 3. **X-Axis Formatting**
-   - Display dates in format shown in screenshot (e.g., "2020-02-07", "2020-02-24")
+   - Display dates in format shown in screenshot (e.g., "02/07/2020", "02/24/2020")
    - Show multiple date labels spaced appropriately
-   - Format as YYYY-MM-DD or similar compact format
+   - Format as MM/DD/YYYY or similar compact format
    - Only show dates that have data or space labels to avoid crowding
 
 4. **Y-Axis Formatting**
@@ -54,7 +54,7 @@ There is no existing daily P&L chart in the codebase. This is a new component th
 
 6. **Tooltip Functionality**
    - Display on hover:
-     - Date (formatted, e.g., "February 7, 2020")
+     - Date (formatted, e.g., "02/07/2020")
      - Net P&L value (formatted as currency, e.g., "$50.00" or "$-75.50")
    - Styled to match app theme
 
@@ -84,7 +84,7 @@ There is no existing daily P&L chart in the codebase. This is a new component th
    - Component should receive: `{ data: array }`
    - Each data point should include:
      - `date`: Date string (ISO format or Date object)
-     - `dateLabel`: Display label for X-axis (e.g., "2020-02-07")
+     - `dateLabel`: Display label for X-axis (e.g., "02/07/2020")
      - `netPNL`: Number (sum of profits for that day)
      - `isPositive`: Boolean (for conditional styling)
 

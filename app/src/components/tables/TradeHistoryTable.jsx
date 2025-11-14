@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
+import { getResultText, isWin, getTradeTypeText, formatDate } from '../../utils/calculations';
 import TagBadge from '../ui/TagBadge';
 
 const TradeHistoryTable = ({ trades }) => {
@@ -72,7 +72,11 @@ const TradeHistoryTable = ({ trades }) => {
             </tr>
           </thead>
           <tbody>
-            {paginatedTrades.map((trade) => (
+            {paginatedTrades.map((trade) => {
+              const formattedEntryDate = formatDate(trade.entry_date);
+              const formattedExitDate = formatDate(trade.exit_date);
+
+              return (
               <tr key={trade.id} className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                 <td className="py-4 px-6">
                   <Link
@@ -98,8 +102,8 @@ const TradeHistoryTable = ({ trades }) => {
                 <td className="py-4 px-6 text-gray-700 dark:text-gray-300">${trade.entry_price.toFixed(2)}</td>
                 <td className="py-4 px-6 text-gray-700 dark:text-gray-300">${trade.exit_price.toFixed(2)}</td>
                 <td className="py-4 px-6 text-gray-700 dark:text-gray-300">{trade.quantity}</td>
-                <td className="py-4 px-6 text-gray-700 dark:text-gray-300 text-sm w-32">{trade.entry_date}</td>
-                <td className="py-4 px-6 text-gray-700 dark:text-gray-300 text-sm w-32">{trade.exit_date}</td>
+                <td className="py-4 px-6 text-gray-700 dark:text-gray-300 text-sm w-32">{formattedEntryDate}</td>
+                <td className="py-4 px-6 text-gray-700 dark:text-gray-300 text-sm w-32">{formattedExitDate}</td>
                 <td className="py-4 px-6">
                   <span className={`font-bold ${trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     ${trade.profit.toLocaleString()}
@@ -143,7 +147,8 @@ const TradeHistoryTable = ({ trades }) => {
                   </div>
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>
