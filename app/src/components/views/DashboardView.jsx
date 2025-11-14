@@ -73,7 +73,7 @@ const DashboardContent = ({ trades, startingBalance }) => {
         <Last30DaysNetPNLChart data={last30DaysNetPNLData} />
       </div>
 
-      <TradeHistoryTable trades={trades} />
+      <TradeHistoryTable trades={trades} title="Trade History" />
     </div>
   );
 };

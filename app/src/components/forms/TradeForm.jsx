@@ -246,22 +246,22 @@ const TradeForm = ({
           </div>
           
           <div className="md:col-span-3">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Additional Notes</label>
-            <textarea
-              placeholder="Any additional thoughts or observations..."
-              value={formData.notes}
-              onChange={(e) => setFormData({...formData, notes: e.target.value})}
-              className="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 resize-none"
-            />
-          </div>
-
-          <div className="md:col-span-3">
             <TagSelector
               tags={tags}
               selectedTagIds={selectedTagIds}
               onChange={setSelectedTagIds}
               disabled={tagsLoading}
               loading={tagsLoading}
+            />
+          </div>
+
+          <div className="md:col-span-3">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Additional Notes</label>
+            <textarea
+              placeholder="Any additional thoughts or observations..."
+              value={formData.notes}
+              onChange={(e) => setFormData({...formData, notes: e.target.value})}
+              className="w-full bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 resize-none"
             />
           </div>
 

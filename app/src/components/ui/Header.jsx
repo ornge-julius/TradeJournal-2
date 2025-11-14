@@ -11,7 +11,8 @@ import {
   TrendingUpDown,
   Tag,
   Sun,
-  Moon
+  Moon,
+  History
 } from 'lucide-react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import AccountSelector from './AccountSelector';
@@ -43,6 +44,8 @@ const Header = ({
     ? 'batchComparison'
     : location.pathname === '/tags'
     ? 'tags'
+    : location.pathname === '/history'
+    ? 'tradeHistory'
     : 'dashboard';
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
@@ -78,6 +81,7 @@ const Header = ({
     { label: 'Dashboard', icon: LayoutDashboard, path: '/', isActive: currentView === 'dashboard' },
     { label: 'Batch Comparison', icon: TrendingUpDown, path: '/comparison', isActive: currentView === 'batchComparison' },
     { label: 'Tags', icon: Tag, path: '/tags', isActive: currentView === 'tags' },
+    { label: 'Trade History', icon: History, path: '/history', isActive: currentView === 'tradeHistory' },
     // { label: 'Accounts', icon: Wallet, path: '#', isActive: false },
     // { label: 'Performance', icon: BarChart3, path: '#', isActive: false },
     // { label: 'Settings', icon: Settings, path: '#', isActive: false }
