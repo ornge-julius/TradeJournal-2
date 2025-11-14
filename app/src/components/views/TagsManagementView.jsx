@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Fab } from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { useTagManagement } from '../../hooks/useTagManagement';
 import { useAuth } from '../../hooks/useAuth';
 import TagForm from '../forms/TagForm';
@@ -61,17 +62,24 @@ const TagsManagementView = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tag Management</h1>
         {isAuthenticated && (
-          <button
+          <Fab
+            color="primary"
+            aria-label="add tag"
             onClick={() => setShowCreateForm(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 rounded-lg text-white font-medium hover:from-blue-500 hover:to-emerald-500 transition-all"
+            sx={{
+              background: 'linear-gradient(to right, #2563EB, #059669)',
+              '&:hover': {
+                background: 'linear-gradient(to right, #1D4ED8, #047857)',
+              },
+              zIndex: 10,
+            }}
           >
-            <Plus className="h-5 w-5" />
-            Create Tag
-          </button>
+            <AddIcon />
+          </Fab>
         )}
         {!isAuthenticated && (
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -104,14 +112,6 @@ const TagsManagementView = () => {
               ? "No tags yet. Create your first tag to get started!" 
               : "No tags available. Sign in to view your tags."}
           </p>
-          {isAuthenticated && (
-            <button
-              onClick={() => setShowCreateForm(true)}
-              className="bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-2 rounded-lg text-white font-medium hover:from-blue-500 hover:to-emerald-500 transition-all"
-            >
-              Create Tag
-            </button>
-          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
