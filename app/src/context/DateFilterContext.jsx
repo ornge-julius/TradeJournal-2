@@ -192,11 +192,11 @@ const createFilter = ({ preset, from, to }) => {
 };
 
 const getDefaultFilter = () => {
-  const range = getPresetRange('last30');
+  const range = getPresetRange('thisMonth');
   if (!range) {
     return DEFAULT_FILTER;
   }
-  return createFilter({ preset: 'last30', ...range });
+  return createFilter({ preset: 'thisMonth', ...range });
 };
 
 const readFilterFromUrl = () => {
