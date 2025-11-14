@@ -5,17 +5,14 @@ export const TRADE_ACTIONS = {
   DELETE_TRADE: 'DELETE_TRADE',
   SET_TRADES: 'SET_TRADES',
   SET_EDITING_TRADE: 'SET_EDITING_TRADE',
-  SET_VIEWING_TRADE: 'SET_VIEWING_TRADE',
   CLEAR_EDITING_TRADE: 'CLEAR_EDITING_TRADE',
-  CLEAR_VIEWING_TRADE: 'CLEAR_VIEWING_TRADE',
   SET_ACCOUNT_TRADES: 'SET_ACCOUNT_TRADES'
 };
 
 // Initial state
 export const initialTradeState = {
   trades: [],
-  editingTrade: null,
-  viewingTrade: null
+  editingTrade: null
 };
 
 // Trade reducer
@@ -58,25 +55,13 @@ export const tradeReducer = (state, action) => {
         ...state,
         editingTrade: action.payload
       };
-    
-    case TRADE_ACTIONS.SET_VIEWING_TRADE:
-      return {
-        ...state,
-        viewingTrade: action.payload
-      };
-    
+
     case TRADE_ACTIONS.CLEAR_EDITING_TRADE:
       return {
         ...state,
         editingTrade: null
       };
-    
-    case TRADE_ACTIONS.CLEAR_VIEWING_TRADE:
-      return {
-        ...state,
-        viewingTrade: null
-      };
-    
+
     default:
       return state;
   }

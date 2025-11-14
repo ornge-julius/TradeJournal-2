@@ -10,7 +10,7 @@ import BatchComparisonLineChart from '../charts/BatchComparisonLineChart';
 import BatchMetricsCard from '../ui/BatchMetricsCard';
 import AvgWLCard from '../ui/cards/AvgWLCard';
 
-const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
+const TradeBatchComparisonView = ({ trades }) => {
   // Calculate batches
   const { currentBatch, previousBatch } = useMemo(() => {
     return calculateTradeBatches(trades);
@@ -99,7 +99,6 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
           subtitle={`${previousBatch.length} trades`}
           metrics={previousMetrics}
           trades={previousBatch}
-          onViewTrade={onViewTrade}
           avgWin={previousMetrics.avgWin}
           avgLoss={previousMetrics.avgLoss}
         />
@@ -110,7 +109,6 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
           subtitle={`${currentBatch.length} trades`}
           metrics={currentMetrics}
           trades={currentBatch}
-          onViewTrade={onViewTrade}
           avgWin={currentMetrics.avgWin}
           avgLoss={currentMetrics.avgLoss}
         />
@@ -129,7 +127,6 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
           subtitle={`${previousBatch.length} trades`}
           metrics={previousMetrics}
           trades={previousBatch}
-          onViewTrade={onViewTrade}
         />
 
         {/* Current Batch Metrics */}
@@ -138,7 +135,6 @@ const TradeBatchComparisonView = ({ trades, startingBalance, onViewTrade }) => {
           subtitle={`${currentBatch.length} trades`}
           metrics={currentMetrics}
           trades={currentBatch}
-          onViewTrade={onViewTrade}
         />
 
 

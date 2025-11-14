@@ -14,7 +14,7 @@ import {
 } from '../../utils/calculations';
 import { filterTradesByExitDate, useDateFilter } from '../../context/DateFilterContext';
 
-const DashboardContent = ({ trades, startingBalance, onViewTrade }) => {
+const DashboardContent = ({ trades, startingBalance }) => {
   const { filter } = useDateFilter();
 
   const filteredTrades = useMemo(() => {
@@ -56,20 +56,16 @@ const DashboardContent = ({ trades, startingBalance, onViewTrade }) => {
         <Last30DaysNetPNLChart data={last30DaysNetPNLData} />
       </div>
 
-      <TradeHistoryTable
-        trades={trades}
-        onViewTrade={onViewTrade}
-      />
+      <TradeHistoryTable trades={trades} />
     </div>
   );
 };
 
-const DashboardView = ({ trades, startingBalance, onViewTrade }) => {
+const DashboardView = ({ trades, startingBalance }) => {
   return (
     <DashboardContent
       trades={trades}
       startingBalance={startingBalance}
-      onViewTrade={onViewTrade}
     />
   );
 };
