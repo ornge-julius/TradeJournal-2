@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Edit, ExternalLink, Target, Calendar } from 'lucide-react';
-import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin, getTradeTypeText } from '../../utils/calculations';
+import { calculateTradeDuration, calculateReturnPercentage, getResultText, isWin, getTradeTypeText, formatDate } from '../../utils/calculations';
 import TradeForm from '../forms/TradeForm';
 import TagBadge from './TagBadge';
 
@@ -18,6 +18,8 @@ const TradeDetailView = ({
 
   const duration = calculateTradeDuration(trade.entry_date, trade.exit_date);
   const returnPercentage = calculateReturnPercentage(trade.entry_price, trade.exit_price);
+  const formattedEntryDate = formatDate(trade.entry_date);
+  const formattedExitDate = formatDate(trade.exit_date);
 
   return (
     <div>
@@ -110,7 +112,7 @@ const TradeDetailView = ({
           </div>
           <p className="text-2xl font-bold text-yellow-400">{duration}d</p>
           <p className="text-xs text-gray-500 dark:text-gray-500">
-            {trade.entry_date} to {trade.exit_date}
+            {formattedEntryDate} to {formattedExitDate}
           </p>
         </div>
       </div>
@@ -135,11 +137,11 @@ const TradeDetailView = ({
             </div>
             <div className="flex justify-between py-3 border-b border-gray-200 dark:border-gray-700">
               <span className="text-gray-600 dark:text-gray-400">Entry Date</span>
-              <span className="text-gray-900 dark:text-white font-medium">{trade.entry_date}</span>
+              <span className="text-gray-900 dark:text-white font-medium">{formattedEntryDate}</span>
             </div>
             <div className="flex justify-between py-3 border-b border-gray-200 dark:border-gray-700">
               <span className="text-gray-600 dark:text-gray-400">Exit Date</span>
-              <span className="text-gray-900 dark:text-white font-medium">{trade.exit_date}</span>
+              <span className="text-gray-900 dark:text-white font-medium">{formattedExitDate}</span>
             </div>
             {trade.source && (
               <div className="flex justify-between py-3 border-b border-gray-200 dark:border-gray-700">

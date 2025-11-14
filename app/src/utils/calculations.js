@@ -32,15 +32,15 @@ export const calculateMetrics = (trades, startingBalance) => {
   };
 };
 
-// Format date for X-axis labels (DD/MM/YYYY)
+// Format date for X-axis labels (MM/DD/YYYY)
 export const formatDate = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return dateString; // Return original if invalid date
-  const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
   const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+  return `${month}/${day}/${year}`;
 };
 
 // Format date for tooltips
@@ -48,10 +48,10 @@ export const formatDateForTooltip = (dateString) => {
   if (!dateString) return 'Date: N/A';
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return `Date: ${dateString}`;
-  const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
   const year = date.getFullYear();
-  return `Date: ${day}/${month}/${year}`;
+  return `Date: ${month}/${day}/${year}`;
 };
 
 // Generate chart data for cumulative profit (sorted by date)
@@ -140,9 +140,11 @@ export const generateLast30DaysNetPNLData = (trades) => {
 
   for (let cursor = new Date(startDate); cursor <= mostRecentDate; cursor.setDate(cursor.getDate() + 1)) {
     const dateKey = cursor.toISOString().split('T')[0];
+    const formattedDate = formatDate(dateKey);
     dailyData[dateKey] = {
       date: dateKey,
-      dateLabel: dateKey,
+      dateLabel: formattedDate,
+      monthFull: formattedDate,
       netPNL: 0,
       isPositive: true
     };
@@ -166,10 +168,15 @@ export const generateLast30DaysNetPNLData = (trades) => {
   });
 
   return Object.values(dailyData)
-    .map((item) => ({
-      ...item,
-      isPositive: item.netPNL >= 0
-    }))
+    .map((item) => {
+      const formattedDate = formatDate(item.date);
+      return {
+        ...item,
+        dateLabel: formattedDate,
+        monthFull: formattedDate,
+        isPositive: item.netPNL >= 0
+      };
+    })
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 };
 

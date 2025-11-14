@@ -26,7 +26,7 @@ The existing `CumulativeProfitChart` component (`app/src/components/charts/Cumul
 
 1. **Date-Based X-Axis**
    - X-axis should display dates from trade exit dates
-   - Dates should be formatted appropriately (e.g., "26/09/2019", "02/12/2019")
+   - Dates should be formatted appropriately (e.g., "09/26/2019", "12/02/2019")
    - X-axis should show multiple date labels spaced appropriately
    - Use `exit_date` from trades as the date source
 
@@ -52,7 +52,7 @@ The existing `CumulativeProfitChart` component (`app/src/components/charts/Cumul
 5. **Tooltip Functionality**
    - Interactive tooltips on hover
    - Display:
-     - Date: Formatted date (e.g., "20/02/2020")
+     - Date: Formatted date (e.g., "02/20/2020")
      - Profit: Formatted currency (e.g., "$-765.97")
    - Tooltip should follow cursor or appear near data point
    - Styled to match app theme (dark background)
