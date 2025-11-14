@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getResultText, isWin, getTradeTypeText, formatDate } from '../../utils/calculations';
 import TagBadge from '../ui/TagBadge';
 
-const TradeHistoryTable = ({ trades }) => {
+const TradeHistoryTable = ({ trades, title }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
   const tradesPerPage = 10;
@@ -26,7 +26,7 @@ const TradeHistoryTable = ({ trades }) => {
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl overflow-hidden">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200">Trade History</h3>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200">{title}</h3>
         {totalPages > 1 && (
           <div className="flex items-center gap-3">
             <button
