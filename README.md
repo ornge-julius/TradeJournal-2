@@ -15,7 +15,7 @@ A  React application for tracking and analyzing options trading performance.
 - **React 18+** - Modern React with hooks
 - **JavaScript (JSX)** - No TypeScript, pure JavaScript
 - **Tailwind CSS** - Utility-first CSS framework
-- ** MUI React ** - Material React component library
+- **MUI React** - Material React component library
 - **Recharts** - React charting library
 - **Lucide React** - Modern icon library
 - **Supabase** - Hosted Postgres database and auth
