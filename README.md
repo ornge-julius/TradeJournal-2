@@ -1,14 +1,13 @@
 <img width="800" height="800" alt="FullLogo_Transparent" src="https://github.com/user-attachments/assets/9c636134-6144-411d-a2d2-ee71d99d4757" /> 
 
 # ProfitPath
-A professional React application for tracking and analyzing options trading performance. Built with modern React patterns, reducers for state management, and a clean component architecture.
+A  React application for tracking and analyzing options trading performance.
 
 ## Features
 
 - **Trade Management**: Add, edit, and view detailed trade information
 - **Performance Analytics**: Real-time calculation of win rate, P&L, and account balance
 - **Data Visualization**: Interactive charts for account balance, cumulative P&L, and win/loss ratios
-- **Professional UI**: Dark theme with modern design using Tailwind CSS
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 
 ## Technology Stack
@@ -16,6 +15,7 @@ A professional React application for tracking and analyzing options trading perf
 - **React 18+** - Modern React with hooks
 - **JavaScript (JSX)** - No TypeScript, pure JavaScript
 - **Tailwind CSS** - Utility-first CSS framework
+- ** MUI React ** - Material React component library
 - **Recharts** - React charting library
 - **Lucide React** - Modern icon library
 - **Supabase** - Hosted Postgres database and auth
