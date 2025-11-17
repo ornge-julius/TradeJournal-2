@@ -1,30 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Info } from 'lucide-react';
+import CountUp from 'react-countup';
 
 const NetProfitCard = ({ totalProfit = 0 }) => {
-  const formatCurrency = (value) => {
-    // Validate and sanitize input
-    if (typeof value !== 'number' || !Number.isFinite(value)) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }).format(0);
-    }
-
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value);
-  };
-
   const validProfit = typeof totalProfit === 'number' && Number.isFinite(totalProfit) ? totalProfit : 0;
   const isPositive = validProfit > 0;
   const isNegative = validProfit < 0;
   const isZero = validProfit === 0;
+  const [animationKey, setAnimationKey] = useState(0);
 
   // Determine color based on profit value
   const profitColor = isPositive 
@@ -32,6 +15,11 @@ const NetProfitCard = ({ totalProfit = 0 }) => {
     : isNegative 
     ? 'text-[#EF4444]' 
     : 'text-gray-900 dark:text-white';
+
+  // Trigger re-animation when totalProfit changes
+  useEffect(() => {
+    setAnimationKey(prev => prev + 1);
+  }, [validProfit]);
 
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all h-full flex flex-col justify-center">
@@ -41,7 +29,16 @@ const NetProfitCard = ({ totalProfit = 0 }) => {
       </div>
 
       <p className={`text-2xl font-bold ${profitColor}`}>
-        {formatCurrency(validProfit)}
+        <CountUp
+          key={animationKey}
+          start={0}
+          end={validProfit}
+          duration={1.5}
+          decimals={2}
+          decimal="."
+          prefix="$"
+          separator=","
+        />
       </p>
     </div>
   );
