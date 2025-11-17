@@ -49,14 +49,22 @@ const WinRateCard = ({
     return baseData;
   }, [lossRate, validWinRate]);
 
+  const displayTotalTrades = Number.isFinite(totalTrades) && totalTrades > 0 ? Math.round(totalTrades) : 0;
+
   return (
     <div className="bg-white dark:bg-gray-800/50 backdrop-blur shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all">
-      <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium">Win Rate</h3>
-        <Info className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium">Win Rate</h3>
+          <Info className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+        </div>
+        <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Trades</h3>
       </div>
 
-      <p className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{validWinRate.toFixed(2)}%</p>
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{validWinRate.toFixed(2)}%</p>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{displayTotalTrades.toLocaleString()}</p>
+      </div>
 
       <div className="h-28">
         <ResponsiveContainer width="100%" height="100%">
