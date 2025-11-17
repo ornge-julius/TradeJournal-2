@@ -116,10 +116,17 @@ const TagsManagementView = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tags.map(tag => (
-            <AnimatedContent key={tag.id} ease="bounce.out">
+          {tags.map((tag, index) => (
+            <AnimatedContent 
+              key={tag.id} 
+              ease="back.out"
+              scale={0.8}
+              duration={0.5}
+              delay={index * 0.1}
+              distance={0}
+              immediate={true}
+            >
               <TagCard
-                key={tag.id}
                 tag={tag}
                 onEdit={isAuthenticated ? () => setEditingTag(tag) : undefined}
                 onDelete={isAuthenticated ? () => setDeletingTag(tag) : undefined}

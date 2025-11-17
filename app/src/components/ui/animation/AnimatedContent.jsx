@@ -16,7 +16,8 @@ const AnimatedContent = ({
   scale = 1,
   threshold = 0.1,
   delay = 0,
-  onComplete
+  onComplete,
+  immediate = false
 }) => {
   const ref = useRef(null);
 
@@ -34,21 +35,29 @@ const AnimatedContent = ({
       opacity: animateOpacity ? initialOpacity : 1
     });
 
-    gsap.to(el, {
+    const animationConfig = {
       [axis]: 0,
       scale: 1,
       opacity: 1,
       duration,
       ease,
       delay,
-      onComplete,
-      scrollTrigger: {
+      onComplete
+    };
+
+    if (immediate) {
+      // Animate immediately without scroll trigger
+      gsap.to(el, animationConfig);
+    } else {
+      // Use scroll trigger
+      animationConfig.scrollTrigger = {
         trigger: el,
         start: `top ${startPct}%`,
         toggleActions: 'play none none none',
         once: true
-      }
-    });
+      };
+      gsap.to(el, animationConfig);
+    }
 
     return () => {
       ScrollTrigger.getAll().forEach(t => t.kill());
@@ -65,7 +74,8 @@ const AnimatedContent = ({
     scale,
     threshold,
     delay,
-    onComplete
+    onComplete,
+    immediate
   ]);
 
   return <div ref={ref}>{children}</div>;
