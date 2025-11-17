@@ -10,8 +10,8 @@ const TradeHistoryView = ({ trades, onToggleTradeForm }) => {
   const filteredTrades = useFilteredTrades(trades);
 
   return (
-    <div className="space-y-6 relative">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 relative h-full flex flex-col">
+      <div className="flex items-center justify-between flex-shrink-0">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Trade History</h1>
         {isAuthenticated && (
           <Fab
@@ -36,7 +36,9 @@ const TradeHistoryView = ({ trades, onToggleTradeForm }) => {
         )}
       </div>
 
-      <TradeHistoryTable trades={filteredTrades} />
+      <div className="flex-1 min-h-0">
+        <TradeHistoryTable trades={filteredTrades} />
+      </div>
     </div>
   );
 };
