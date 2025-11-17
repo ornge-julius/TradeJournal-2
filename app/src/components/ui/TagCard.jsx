@@ -5,7 +5,7 @@ const TagCard = ({ tag, onEdit, onDelete, canEdit = true }) => {
   const tagColor = tag.color || '#3B82F6';
 
   return (
-    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div
@@ -47,4 +47,3 @@ const TagCard = ({ tag, onEdit, onDelete, canEdit = true }) => {
 };
 
 export default TagCard;
-
