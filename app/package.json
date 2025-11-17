@@ -19,6 +19,7 @@
     "ajv-keywords": "^3.5.2",
     "lucide-react": "^0.552.0",
     "react": "^18.2.0",
+    "react-countup": "^6.5.3",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.9.5",
     "react-scripts": "5.0.1",
