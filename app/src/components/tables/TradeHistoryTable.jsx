@@ -7,7 +7,7 @@ import TagBadge from '../ui/TagBadge';
 const TradeHistoryTable = ({ trades, title }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
-  const tradesPerPage = 10;
+  const tradesPerPage = 20;
   const totalPages = Math.ceil(trades.length / tradesPerPage);
   
   // Calculate paginated trades
@@ -51,7 +51,7 @@ const TradeHistoryTable = ({ trades, title }) => {
           </div>
         )}
       </div>
-      <div className="overflow-x-auto overflow-y-auto max-h-[600px]">
+      <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-250px)]">
         <table className="w-full">
           <thead className="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
             <tr>
