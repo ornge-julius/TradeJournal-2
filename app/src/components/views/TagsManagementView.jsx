@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import TagForm from '../forms/TagForm';
 import TagCard from '../ui/TagCard';
 import ConfirmModal from '../ui/ConfirmModal';
+import AnimatedContent from '../ui/animation/AnimatedContent';
 
 const TagsManagementView = () => {
   const { isAuthenticated } = useAuth();
@@ -115,14 +116,23 @@ const TagsManagementView = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tags.map(tag => (
-            <TagCard
-              key={tag.id}
-              tag={tag}
-              onEdit={isAuthenticated ? () => setEditingTag(tag) : undefined}
-              onDelete={isAuthenticated ? () => setDeletingTag(tag) : undefined}
-              canEdit={isAuthenticated}
-            />
+          {tags.map((tag, index) => (
+            <AnimatedContent 
+              key={tag.id} 
+              ease="back.out"
+              scale={0.8}
+              duration={0.5}
+              delay={index * 0.1}
+              distance={0}
+              immediate={true}
+            >
+              <TagCard
+                tag={tag}
+                onEdit={isAuthenticated ? () => setEditingTag(tag) : undefined}
+                onDelete={isAuthenticated ? () => setDeletingTag(tag) : undefined}
+                canEdit={isAuthenticated}
+              />
+            </AnimatedContent>
           ))}
         </div>
       )}
@@ -144,4 +154,3 @@ const TagsManagementView = () => {
 };
 
 export default TagsManagementView;
-
