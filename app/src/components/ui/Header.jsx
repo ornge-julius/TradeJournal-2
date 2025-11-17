@@ -107,7 +107,7 @@ const Header = ({
             <button
               type="button"
               onClick={toggleMenu}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600/80 to-emerald-600/80 text-white shadow-lg transition-all hover:from-blue-600 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
+              className="flex h-10 w-10 items-center justify-center rounded-xl bg-white dark:bg-[#10B981] border border-[#10B981] dark:border-black text-black dark:text-black shadow-lg transition-all hover:bg-gray-50 dark:hover:bg-[#059669] focus:outline-none focus:ring-2 focus:ring-emerald-500/60"
               aria-label="Toggle navigation menu"
               aria-expanded={isMenuOpen}
             >
@@ -200,7 +200,7 @@ const Header = ({
                             type="button"
                             onClick={handleToggleTradeForm}
                             aria-pressed={Boolean(showTradeForm)}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:from-blue-500 hover:to-emerald-500"
+                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#10B981] border-0 dark:border dark:border-black text-white dark:text-black px-4 py-3 text-sm font-semibold shadow-lg transition-all duration-200 hover:bg-[#059669]"
                           >
                             <Plus className="h-5 w-5" />
                             {showTradeForm ? 'Hide Trade Form' : 'Add New Trade'}

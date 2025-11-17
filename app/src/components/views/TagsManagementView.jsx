@@ -3,6 +3,7 @@ import { Fab } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import { useTagManagement } from '../../hooks/useTagManagement';
 import { useAuth } from '../../hooks/useAuth';
+import { useTheme } from '../../context/ThemeContext';
 import TagForm from '../forms/TagForm';
 import TagCard from '../ui/TagCard';
 import ConfirmModal from '../ui/ConfirmModal';
@@ -10,6 +11,7 @@ import AnimatedContent from '../ui/animation/AnimatedContent';
 
 const TagsManagementView = () => {
   const { isAuthenticated } = useAuth();
+  const { isDark } = useTheme();
   const { tags, loading, error, createTag, updateTag, deleteTag } = useTagManagement();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingTag, setEditingTag] = useState(null);
@@ -68,15 +70,17 @@ const TagsManagementView = () => {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tag Management</h1>
         {isAuthenticated && (
           <Fab
-            color="primary"
             aria-label="add tag"
             onClick={() => setShowCreateForm(true)}
             sx={{
-              background: 'linear-gradient(to right, #2563EB, #059669)',
+              backgroundColor: '#10B981',
+              border: isDark ? '1px solid #000000' : 'none',
+              color: isDark ? '#000000' : '#FFFFFF',
               '&:hover': {
-                background: 'linear-gradient(to right, #1D4ED8, #047857)',
+                backgroundColor: '#059669',
               },
               zIndex: 10,
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             }}
           >
             <AddIcon />
