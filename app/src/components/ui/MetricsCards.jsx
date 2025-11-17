@@ -1,6 +1,5 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, DollarSign, Target, Calendar } from 'lucide-react';
-import TotalTradesCard from './cards/TotalTradesCard';
 import CurrentBalanceCard from './cards/CurrentBalanceCard';
 
 const MetricsCards = ({ metrics, balanceTrendData = [] }) => {
