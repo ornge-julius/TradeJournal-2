@@ -2,6 +2,7 @@ import React from 'react';
 import WinRateCard from './cards/WinRateCard';
 import CurrentBalanceCard from './cards/CurrentBalanceCard';
 import AvgWLCard from './cards/AvgWLCard';
+import NetProfitCard from './cards/NetProfitCard';
 
 const DashboardMetricsCards = ({ metrics, currentBalance, balanceTrendData }) => {
   if (!metrics) {
@@ -15,10 +16,11 @@ const DashboardMetricsCards = ({ metrics, currentBalance, balanceTrendData }) =>
     totalTrades = 0,
     avgWin = 0,
     avgLoss = 0,
+    totalProfit = 0,
   } = metrics;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 items-stretch">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
       <WinRateCard
         winRate={winRate}
         winningTrades={winningTrades}
@@ -35,6 +37,10 @@ const DashboardMetricsCards = ({ metrics, currentBalance, balanceTrendData }) =>
         title="Avg W/L $"
         avgWin={avgWin}
         avgLoss={avgLoss}
+      />
+
+      <NetProfitCard
+        totalProfit={totalProfit}
       />
     </div>
   );
