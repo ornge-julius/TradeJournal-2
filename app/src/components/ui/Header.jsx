@@ -129,53 +129,6 @@ const Header = ({
               <div className="flex h-full flex-col rounded-l-3xl border-l border-gray-200 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/95">
                 <div className="px-5 py-6 max-h-full overflow-y-auto space-y-6">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Navigation</p>
-                    <nav className="mt-4 space-y-1">
-                      {navItems.map((item) => {
-                        const Icon = item.icon;
-                        const isLink = item.path !== '#';
-                        const content = (
-                          <>
-                            <Icon className="h-5 w-5" />
-                            <span>{item.label}</span>
-                          </>
-                        );
-
-                        if (isLink) {
-                          return (
-                            <Link
-                              key={item.label}
-                              to={item.path}
-                              onClick={closeMenu}
-                              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                                item.isActive
-                                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
-                                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white'
-                              }`}
-                            >
-                              {content}
-                            </Link>
-                          );
-                        }
-
-                        return (
-                          <button
-                            key={item.label}
-                            type="button"
-                            className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                              item.isActive
-                                ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
-                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white'
-                            }`}
-                          >
-                            {content}
-                          </button>
-                        );
-                      })}
-                    </nav>
-                  </div>
-
-                  <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Accounts</p>
                     <div className="mt-4">
                       <AccountSelector
@@ -192,41 +145,6 @@ const Header = ({
                   </div>
 
                   <div className="space-y-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Trading</p>
-                      <div className="mt-4 space-y-3">
-                        {isAuthenticated ? (
-                          <button
-                            type="button"
-                            onClick={handleToggleTradeForm}
-                            aria-pressed={Boolean(showTradeForm)}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#10B981] border-0 dark:border dark:border-black text-white dark:text-black px-4 py-3 text-sm font-semibold shadow-lg transition-all duration-200 hover:bg-[#059669]"
-                          >
-                            <Plus className="h-5 w-5" />
-                            {showTradeForm ? 'Hide Trade Form' : 'Add New Trade'}
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={handleSignInClick}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
-                          >
-                            <LogIn className="h-4 w-4" />
-                            Sign in to add trades
-                          </button>
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={isAuthenticated ? handleToggleSettings : handleSignInClick}
-                          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 px-4 py-3 text-sm font-medium text-gray-900 dark:text-gray-200 transition-colors hover:bg-gray-200 dark:hover:bg-gray-700"
-                        >
-                          <Settings className="h-4 w-4" />
-                          {isAuthenticated ? 'Settings' : 'Sign in to manage settings'}
-                        </button>
-                      </div>
-                    </div>
-
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Appearance</p>
                       <button
