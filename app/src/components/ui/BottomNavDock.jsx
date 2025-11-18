@@ -94,7 +94,7 @@ const BottomNavDock = ({ onToggleTradeForm, showTradeForm }) => {
   // Responsive sizing for mobile devices
   const baseItemSize = isMobile ? 44 : 50;
   const magnification = isMobile ? 60 : 70;
-  const panelHeight = isMobile ? 56 : 64;
+  const panelHeight = isMobile ? 60 : 70;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center">
