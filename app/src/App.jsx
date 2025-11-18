@@ -332,15 +332,18 @@ function AppContent() {
         )}
         
         {/* Bottom Navigation Dock - only visible on main routes */}
-        <BottomNavDock />
+        <BottomNavDock 
+          onToggleTradeForm={handleToggleTradeForm}
+          showTradeForm={showTradeForm}
+        />
         </TagFilterProvider>
       </DateFilterProvider>
     );
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white p-6 pb-24">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
         <Routes>
           <Route
             path="/detail/:tradeId"
