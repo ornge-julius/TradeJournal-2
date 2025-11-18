@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Settings,
   Plus,
@@ -7,12 +7,8 @@ import {
   LogOut,
   Menu,
   X,
-  LayoutDashboard,
-  TrendingUpDown,
-  Tag,
   Sun,
-  Moon,
-  History
+  Moon
 } from 'lucide-react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import AccountSelector from './AccountSelector';
@@ -35,18 +31,8 @@ const Header = ({
   onSignIn,
   onSignOut
 }) => {
-  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { toggleTheme, isDark } = useTheme();
-
-  // Determine current view from location
-  const currentView = location.pathname === '/comparison'
-    ? 'batchComparison'
-    : location.pathname === '/tags'
-    ? 'tags'
-    : location.pathname === '/history'
-    ? 'tradeHistory'
-    : 'dashboard';
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
@@ -76,16 +62,6 @@ const Header = ({
     closeMenu();
     onToggleSettings();
   };
-
-  const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, path: '/', isActive: currentView === 'dashboard' },
-    { label: 'Batch Comparison', icon: TrendingUpDown, path: '/comparison', isActive: currentView === 'batchComparison' },
-    { label: 'Tags', icon: Tag, path: '/tags', isActive: currentView === 'tags' },
-    { label: 'Trade History', icon: History, path: '/history', isActive: currentView === 'tradeHistory' },
-    // { label: 'Accounts', icon: Wallet, path: '#', isActive: false },
-    // { label: 'Performance', icon: BarChart3, path: '#', isActive: false },
-    // { label: 'Settings', icon: Settings, path: '#', isActive: false }
-  ];
 
   return (
     <header className="sticky top-0 z-30 backdrop-blur-lg bg-white/95 dark:bg-gray-600/80 border-b border-gray-200 shadow-lg hover:shadow-xl dark:border-gray-800 mb-8">
@@ -128,53 +104,6 @@ const Header = ({
             >
               <div className="flex h-full flex-col rounded-l-3xl border-l border-gray-200 bg-white/95 shadow-2xl backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/95">
                 <div className="px-5 py-6 max-h-full overflow-y-auto space-y-6">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Navigation</p>
-                    <nav className="mt-4 space-y-1">
-                      {navItems.map((item) => {
-                        const Icon = item.icon;
-                        const isLink = item.path !== '#';
-                        const content = (
-                          <>
-                            <Icon className="h-5 w-5" />
-                            <span>{item.label}</span>
-                          </>
-                        );
-
-                        if (isLink) {
-                          return (
-                            <Link
-                              key={item.label}
-                              to={item.path}
-                              onClick={closeMenu}
-                              className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                                item.isActive
-                                  ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
-                                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white'
-                              }`}
-                            >
-                              {content}
-                            </Link>
-                          );
-                        }
-
-                        return (
-                          <button
-                            key={item.label}
-                            type="button"
-                            className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                              item.isActive
-                                ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg'
-                                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white'
-                            }`}
-                          >
-                            {content}
-                          </button>
-                        );
-                      })}
-                    </nav>
-                  </div>
-
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">Accounts</p>
                     <div className="mt-4">

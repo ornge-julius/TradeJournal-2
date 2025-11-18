@@ -6,6 +6,7 @@ import { useTradeManagement } from './hooks/useTradeManagement';
 import { useAppState } from './hooks/useAppState';
 import { useAuth } from './hooks/useAuth';
 import Header from './components/ui/Header';
+import BottomDockNav from './components/ui/BottomDockNav';
 import TradeForm from './components/forms/TradeForm';
 import SettingsForm from './components/forms/SettingsForm';
 import AccountEditForm from './components/forms/AccountEditForm';
@@ -249,86 +250,90 @@ function AppContent() {
     return (
       <DateFilterProvider>
         <TagFilterProvider>
-          <Header
-            onToggleSettings={handleToggleSettings}
-            onToggleTradeForm={handleToggleTradeForm}
-            showTradeForm={showTradeForm}
-            accounts={accounts}
-            selectedAccountId={selectedAccountId}
-            onSelectAccount={handleSelectAccount}
-            onAddAccount={handleAddAccount}
-            onEditAccount={handleEditAccount}
-            onDeleteAccount={handleDeleteAccount}
-            isAuthenticated={isAuthenticated}
-            user={user}
-            onSignIn={handleSignIn}
-            onSignOut={handleSignOut}
-          />
+          <div className="relative pb-28 md:pb-10">
+            <Header
+              onToggleSettings={handleToggleSettings}
+              onToggleTradeForm={handleToggleTradeForm}
+              showTradeForm={showTradeForm}
+              accounts={accounts}
+              selectedAccountId={selectedAccountId}
+              onSelectAccount={handleSelectAccount}
+              onAddAccount={handleAddAccount}
+              onEditAccount={handleEditAccount}
+              onDeleteAccount={handleDeleteAccount}
+              isAuthenticated={isAuthenticated}
+              user={user}
+              onSignIn={handleSignIn}
+              onSignOut={handleSignOut}
+            />
 
-          {/* Global Tag Filter - positioned in top right below header */}
-          {showTagFilter && (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-              <div className="flex justify-end relative">
-                <GlobalTagFilter />
+            {/* Global Tag Filter - positioned in top right below header */}
+            {showTagFilter && (
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+                <div className="flex justify-end relative">
+                  <GlobalTagFilter />
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-      {/* Settings Form */}
-      <SettingsForm
-        isOpen={showBalanceForm}
-        onClose={handleToggleSettings}
-        onSubmit={handleUpdateBalance}
-        currentBalance={startingBalance}
-      />
+            {/* Settings Form */}
+            <SettingsForm
+              isOpen={showBalanceForm}
+              onClose={handleToggleSettings}
+              onSubmit={handleUpdateBalance}
+              currentBalance={startingBalance}
+            />
 
-      {/* Trade Form */}
-      <TradeForm
-        isOpen={showTradeForm}
-        onClose={toggleTradeForm}
-        onSubmit={handleTradeSubmit}
-        editingTrade={editingTrade}
-        onCancel={handleCancelTradeForm}
-        onDelete={handleTradeDelete}
-      />
+            {/* Trade Form */}
+            <TradeForm
+              isOpen={showTradeForm}
+              onClose={toggleTradeForm}
+              onSubmit={handleTradeSubmit}
+              editingTrade={editingTrade}
+              onCancel={handleCancelTradeForm}
+              onDelete={handleTradeDelete}
+            />
 
-      {/* Account Edit Form */}
-      <AccountEditForm
-        isOpen={showAccountEditForm}
-        onClose={() => {
-          setShowAccountEditForm(false);
-          setEditingAccount(null);
-        }}
-        onSubmit={handleAccountEditSubmit}
-        account={editingAccount}
-      />
+            {/* Account Edit Form */}
+            <AccountEditForm
+              isOpen={showAccountEditForm}
+              onClose={() => {
+                setShowAccountEditForm(false);
+                setEditingAccount(null);
+              }}
+              onSubmit={handleAccountEditSubmit}
+              account={editingAccount}
+            />
 
-      {/* Sign In Form */}
-      <SignInForm
-        isOpen={showSignInForm}
-        onClose={handleCloseSignInForm}
-        onSignIn={handleSignInSubmit}
-      />
+            {/* Sign In Form */}
+            <SignInForm
+              isOpen={showSignInForm}
+              onClose={handleCloseSignInForm}
+              onSignIn={handleSignInSubmit}
+            />
 
-      {/* Loading State */}
-      {authLoading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">Loading authentication...</p>
-        </div>
-      ) : isAccountLoading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">Loading account data...</p>
-        </div>
-      ) : !selectedAccountId ? (
-        <div className="text-center py-12">
-          <p className="text-gray-300 text-lg mb-4">No account selected</p>
-          <p className="text-gray-400">Please select an account to view trades and metrics.</p>
-        </div>
-      ) : (
-          <Outlet />
-        )}
+            {/* Loading State */}
+            {authLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p className="text-gray-300">Loading authentication...</p>
+              </div>
+            ) : isAccountLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p className="text-gray-300">Loading account data...</p>
+              </div>
+            ) : !selectedAccountId ? (
+              <div className="text-center py-12">
+                <p className="text-gray-300 text-lg mb-4">No account selected</p>
+                <p className="text-gray-400">Please select an account to view trades and metrics.</p>
+              </div>
+            ) : (
+              <Outlet />
+            )}
+
+            <BottomDockNav />
+          </div>
         </TagFilterProvider>
       </DateFilterProvider>
     );
