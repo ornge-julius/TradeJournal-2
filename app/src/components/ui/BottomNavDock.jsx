@@ -40,18 +40,18 @@ const BottomNavDock = ({ onToggleTradeForm, showTradeForm }) => {
   // Navigation items configuration
   const navItems = [
     {
-      icon: <History className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
-      label: 'Trade History',
-      onClick: () => navigate('/history'),
-      className: isActive('/history')
-        ? 'bg-emerald-100 dark:bg-emerald-900/50'
-        : ''
-    },
-    {
       icon: <LayoutDashboard className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
       label: 'Dashboard',
       onClick: () => navigate('/'),
       className: isActive('/')
+      ? 'bg-emerald-100 dark:bg-emerald-900/50'
+      : ''
+    },
+    {
+      icon: <History className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
+      label: 'Trade History',
+      onClick: () => navigate('/history'),
+      className: isActive('/history')
         ? 'bg-emerald-100 dark:bg-emerald-900/50'
         : ''
     },
