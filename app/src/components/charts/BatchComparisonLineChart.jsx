@@ -56,10 +56,10 @@ const BatchComparisonLineChart = ({ data }) => {
   
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl pt-4 pb-0 px-4 sm:pt-6 sm:pb-0 sm:px-6">
+      <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl pt-4 pb-0 px-4 sm:pt-6 sm:pb-0 sm:px-6 w-full min-w-0 overflow-hidden">
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200">Cumulative P&L Comparison</h3>
-          <Info className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-200">Cumulative P&L Comparison</h3>
+          <Info className="w-4 h-4 text-gray-600 dark:text-gray-400 flex-shrink-0" />
         </div>
         <div className="flex items-center justify-center h-[400px] text-gray-600 dark:text-gray-400">
           No data available
@@ -69,12 +69,12 @@ const BatchComparisonLineChart = ({ data }) => {
   }
   
   return (
-    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl pt-4 pb-0 px-4 sm:pt-6 sm:pb-0 sm:px-6">
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl pt-4 pb-0 px-4 sm:pt-6 sm:pb-0 sm:px-6 w-full min-w-0 overflow-hidden">
       <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200">Cumulative P&L Comparison</h3>
-        <Info className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-200">Cumulative P&L Comparison</h3>
+        <Info className="w-4 h-4 text-gray-600 dark:text-gray-400 flex-shrink-0" />
       </div>
-      <div className="w-full">
+      <div className="w-full min-w-0 overflow-hidden">
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={data} margin={{ top: 16, right: 16, left: 0, bottom: 48 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#374151" : "#E5E7EB"} />

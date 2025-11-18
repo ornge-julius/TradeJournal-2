@@ -41,12 +41,12 @@ const TradeBatchComparisonView = ({ trades }) => {
   // Handle empty state
   if (!trades || trades.length === 0) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8 w-full max-w-full overflow-x-hidden">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Trade Batch Comparison</h1>
-          <p className="text-gray-600 dark:text-gray-400">No trades available for comparison</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Trade Batch Comparison</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 px-2">No trades available for comparison</p>
         </div>
-        <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
+        <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-6 sm:p-8 text-center">
           <p className="text-gray-600 dark:text-gray-400">Please add trades to view batch comparison</p>
         </div>
       </div>
@@ -54,11 +54,11 @@ const TradeBatchComparisonView = ({ trades }) => {
   }
   
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8 w-full max-w-full overflow-x-hidden">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Trade Batch Comparison</h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Trade Batch Comparison</h1>
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 px-2">
           {trades.length <= 10 
             ? `Showing baseline view with ${currentBatch.length} trades (comparison available once you reach 11+ trades)`
             : `Comparing your most recent ${currentBatch.length} trades vs previous ${previousBatch.length} trades`
@@ -67,30 +67,34 @@ const TradeBatchComparisonView = ({ trades }) => {
       </div>
       
       {/* Win Rate Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full">
         {/* Previous Batch Win Rate */}
-        <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6">
-          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">
+        <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6 w-full min-w-0 overflow-hidden">
+          <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">
             Previous Batch Win Rate: {previousMetrics.winRate.toFixed(1)}%
           </h3>
           {/* When 10 or fewer trades, previousBatch will have same data as currentBatch */}
-          <WinLossChart
-            data={previousWinLossData}
-            winningTrades={previousMetrics.winningTrades}
-            losingTrades={previousMetrics.losingTrades}
-          />
+          <div className="w-full min-w-0">
+            <WinLossChart
+              data={previousWinLossData}
+              winningTrades={previousMetrics.winningTrades}
+              losingTrades={previousMetrics.losingTrades}
+            />
+          </div>
         </div>
         
         {/* Current Batch Win Rate */}
-        <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6">
-          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">
+        <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6 w-full min-w-0 overflow-hidden">
+          <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">
             Current Batch Win Rate: {currentMetrics.winRate.toFixed(1)}%
           </h3>
-          <WinLossChart
-            data={currentWinLossData}
-            winningTrades={currentMetrics.winningTrades}
-            losingTrades={currentMetrics.losingTrades}
-          />
+          <div className="w-full min-w-0">
+            <WinLossChart
+              data={currentWinLossData}
+              winningTrades={currentMetrics.winningTrades}
+              losingTrades={currentMetrics.losingTrades}
+            />
+          </div>
         </div>
 
           {/* Previous Avg W/L $ */}
@@ -116,10 +120,12 @@ const TradeBatchComparisonView = ({ trades }) => {
       
       {/* Cumulative P&L Comparison Line Chart */}
       {/* Always show chart - when 10 or fewer trades, both lines will overlap with same data */}
-      <BatchComparisonLineChart data={comparisonLineData} />
+      <div className="w-full min-w-0 overflow-hidden">
+        <BatchComparisonLineChart data={comparisonLineData} />
+      </div>
       
       {/* Performance Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full">        
         {/* Previous Batch Metrics */}
         {/* When 10 or fewer trades, previousBatch will have same data as currentBatch */}
         <BatchMetricsCard

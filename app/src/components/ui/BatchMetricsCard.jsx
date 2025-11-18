@@ -7,7 +7,7 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades }) => {
 
   if (!metrics) {
     return (
-      <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6">
+      <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6 w-full min-w-0 overflow-hidden">
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-200">{title}</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{subtitle}</p>
         <div className="text-gray-600 dark:text-gray-400">No data available</div>
@@ -97,7 +97,7 @@ const BatchMetricsCard = ({ title, subtitle, metrics, trades }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6">
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-4 sm:p-6 w-full min-w-0 overflow-hidden">
       <div className="mb-4">
         <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-200 mb-1">{title}</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>

@@ -3,9 +3,10 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const WinLossChart = ({ data, winningTrades, losingTrades }) => {
   return (
-    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-6">
+    <div className="bg-white dark:bg-gray-800/50 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl p-6 w-full min-w-0 overflow-hidden">
       <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">Win/Loss Ratio</h3>
-      <ResponsiveContainer width="100%" height={300}>
+      <div className="w-full min-w-0">
+        <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
             data={data}
@@ -28,6 +29,7 @@ const WinLossChart = ({ data, winningTrades, losingTrades }) => {
           </Pie>
         </PieChart>
       </ResponsiveContainer>
+      </div>
       <div className="flex justify-center gap-6 mt-4">
         <div className="flex items-center gap-2">
           <span className="inline-flex h-3 w-3 rounded-full" style={{ backgroundColor: '#10B981' }} />
