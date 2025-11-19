@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
-  Settings,
-  Plus,
   LogIn,
   LogOut,
   Menu,
   X,
-  LayoutDashboard,
-  TrendingUpDown,
-  Tag,
   Sun,
   Moon,
-  History
 } from 'lucide-react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import AccountSelector from './AccountSelector';
@@ -21,9 +15,6 @@ import { useTheme } from '../../context/ThemeContext';
 import logoImage from '../../assets/FullLogo_Transparent.png';
 
 const Header = ({
-  onToggleSettings, 
-  onToggleTradeForm, 
-  showTradeForm,
   accounts,
   selectedAccountId,
   onSelectAccount,
@@ -35,18 +26,8 @@ const Header = ({
   onSignIn,
   onSignOut
 }) => {
-  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { toggleTheme, isDark } = useTheme();
-
-  // Determine current view from location
-  const currentView = location.pathname === '/comparison'
-    ? 'batchComparison'
-    : location.pathname === '/tags'
-    ? 'tags'
-    : location.pathname === '/history'
-    ? 'tradeHistory'
-    : 'dashboard';
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
@@ -66,26 +47,6 @@ const Header = ({
     closeMenu();
     onSignOut();
   };
-
-  const handleToggleTradeForm = () => {
-    closeMenu();
-    onToggleTradeForm();
-  };
-
-  const handleToggleSettings = () => {
-    closeMenu();
-    onToggleSettings();
-  };
-
-  const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, path: '/', isActive: currentView === 'dashboard' },
-    { label: 'Batch Comparison', icon: TrendingUpDown, path: '/comparison', isActive: currentView === 'batchComparison' },
-    { label: 'Tags', icon: Tag, path: '/tags', isActive: currentView === 'tags' },
-    { label: 'Trade History', icon: History, path: '/history', isActive: currentView === 'tradeHistory' },
-    // { label: 'Accounts', icon: Wallet, path: '#', isActive: false },
-    // { label: 'Performance', icon: BarChart3, path: '#', isActive: false },
-    // { label: 'Settings', icon: Settings, path: '#', isActive: false }
-  ];
 
   return (
     <header className="sticky top-0 z-30 backdrop-blur-lg bg-white/95 dark:bg-gray-600/80 border-b border-gray-200 shadow-lg hover:shadow-xl dark:border-gray-800 mb-8">
