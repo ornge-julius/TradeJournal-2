@@ -40,43 +40,43 @@ const BottomNavDock = ({ onToggleTradeForm, showTradeForm }) => {
   // Navigation items configuration
   const navItems = [
     {
-      icon: <LayoutDashboard className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
+      icon: <LayoutDashboard className={`w-6 h-6 ${isActive('/') ? 'text-black' : 'text-gray-700 dark:text-gray-300'}`} />,
       label: 'Dashboard',
       onClick: () => navigate('/'),
       className: isActive('/')
-      ? 'bg-emerald-100 dark:bg-emerald-900/50'
+      ? '!bg-[#10B981] dark:!bg-[#10B981]'
       : ''
     },
     {
-      icon: <History className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
+      icon: <History className={`w-6 h-6 ${isActive('/history') ? 'text-black' : 'text-gray-700 dark:text-gray-300'}`} />,
       label: 'Trade History',
       onClick: () => navigate('/history'),
       className: isActive('/history')
-        ? 'bg-emerald-100 dark:bg-emerald-900/50'
+        ? '!bg-[#10B981] dark:!bg-[#10B981]'
         : ''
     },
     {
-      icon: <Plus className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
+      icon: <Plus className={`w-6 h-6 ${showTradeForm ? 'text-black' : 'text-gray-700 dark:text-gray-300'}`} />,
       label: showTradeForm ? 'Hide Trade Form' : 'New Trade',
       onClick: onToggleTradeForm,
       className: showTradeForm
-        ? 'bg-emerald-100 dark:bg-emerald-900/50'
+        ? '!bg-[#10B981] dark:!bg-[#10B981]'
         : ''
     },
     {
-      icon: <Tag className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
+      icon: <Tag className={`w-6 h-6 ${isActive('/tags') ? 'text-black' : 'text-gray-700 dark:text-gray-300'}`} />,
       label: 'Tags',
       onClick: () => navigate('/tags'),
       className: isActive('/tags')
-        ? 'bg-emerald-100 dark:bg-emerald-900/50'
+        ? '!bg-[#10B981] dark:!bg-[#10B981]'
         : ''
     },
     {
-      icon: <TrendingUpDown className="w-6 h-6 text-gray-700 dark:text-gray-300" />,
+      icon: <TrendingUpDown className={`w-6 h-6 ${isActive('/comparison') ? 'text-black' : 'text-gray-700 dark:text-gray-300'}`} />,
       label: 'Batch Comparison',
       onClick: () => navigate('/comparison'),
       className: isActive('/comparison')
-        ? 'bg-emerald-100 dark:bg-emerald-900/50'
+        ? '!bg-[#10B981] dark:!bg-[#10B981]'
         : ''
     },
     {
