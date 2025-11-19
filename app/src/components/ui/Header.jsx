@@ -52,14 +52,14 @@ const Header = ({
 
   return (
     <header className="fixed top-0 left-0 right-0 z-30 backdrop-blur-lg bg-white/95 dark:bg-gray-600/80 shadow-lg hover:shadow-xl pb-3">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Link to="/">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+        <div className="flex h-16 items-center justify-between gap-4 w-full">
+          <div className="flex items-center gap-3 flex-shrink-0 self-center">
+            <Link to="/" className="flex items-center">
               <img
                 src={logoImage}
                 alt="ProfitPath Logo"
-                className="h-28 w-auto"
+                className="h-28 w-auto mt-2"
               />
             </Link>
           </div>
