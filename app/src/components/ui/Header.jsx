@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import AccountSelector from './AccountSelector';
-import GlobalDateFilter from './GlobalDateFilter';
 import { useTheme } from '../../context/ThemeContext';
 import logoImage from '../../assets/FullLogo_Transparent.png';
 
@@ -63,8 +62,6 @@ const Header = ({
           </div>
 
           <div className="relative flex items-center gap-2 sm:gap-3">
-            <GlobalDateFilter variant="navbar" />
-
             <button
               type="button"
               onClick={toggleMenu}

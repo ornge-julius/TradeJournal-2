@@ -19,6 +19,7 @@ import { DateFilterProvider } from './context/DateFilterContext';
 import { TagFilterProvider } from './context/TagFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
 import GlobalTagFilter from './components/ui/GlobalTagFilter';
+import GlobalDateFilter from './components/ui/GlobalDateFilter';
 import BottomNavDock from './components/ui/BottomNavDock';
 
 function AppContent() {
@@ -266,10 +267,11 @@ function AppContent() {
             onSignOut={handleSignOut}
           />
 
-          {/* Global Tag Filter - positioned in top right below header */}
+          {/* Global Filters - positioned below header */}
           {showTagFilter && (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-              <div className="flex justify-end relative">
+              <div className="flex justify-end gap-3 relative">
+                <GlobalDateFilter />
                 <GlobalTagFilter />
               </div>
             </div>
