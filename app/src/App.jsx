@@ -18,8 +18,6 @@ import TradeDetailPage from './components/views/TradeDetailPage';
 import { DateFilterProvider } from './context/DateFilterContext';
 import { TagFilterProvider } from './context/TagFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
-import GlobalTagFilter from './components/ui/GlobalTagFilter';
-import GlobalDateFilter from './components/ui/GlobalDateFilter';
 import BottomNavDock from './components/ui/BottomNavDock';
 
 function AppContent() {
@@ -265,18 +263,8 @@ function AppContent() {
             user={user}
             onSignIn={handleSignIn}
             onSignOut={handleSignOut}
+            showTagFilter={showTagFilter}
           />
-          {/* Global Filters - positioned below header */}
-          {showTagFilter && (
-            <div className="fixed top-16 left-0 right-0 z-20">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-                <div className="flex justify-end gap-3 relative">
-                  <GlobalDateFilter />
-                  <GlobalTagFilter />
-                </div>
-              </div>
-            </div>
-          )}
 
       {/* Settings Form */}
       <SettingsForm
@@ -331,7 +319,7 @@ function AppContent() {
           <p className="text-gray-400">Please select an account to view trades and metrics.</p>
         </div>
       ) : (
-          <div className={showTagFilter ? "pt-36" : "pt-16"}>
+          <div className="pt-24">
             <Outlet />
           </div>
         )}
@@ -352,7 +340,7 @@ function AppContent() {
         <Route
           path="/detail/:tradeId"
           element={
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24 pt-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24 pt-24">
               <TradeDetailPage
                 trades={trades}
                 editingTrade={editingTrade}

@@ -262,7 +262,11 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
 
   const isNavbarVariant = variant === 'navbar';
   const buttonAriaLabel = isNavbarVariant ? 'Open date range filter' : undefined;
-  const dropdownAlignment = isNavbarVariant ? 'right-0' : 'left-0 md:left-auto md:right-0';
+  // On mobile, use fixed positioning to prevent cutoff
+  // On larger screens, align to button's right edge
+  const dropdownPosition = isNavbarVariant 
+    ? 'fixed left-4 right-4 top-20 sm:absolute sm:left-auto sm:right-0 sm:top-full' 
+    : 'absolute left-0 md:left-auto md:right-0';
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -297,7 +301,7 @@ const GlobalDateFilter = ({ variant = 'default' }) => {
 
       {isOpen && (
         <div
-          className={`absolute ${dropdownAlignment} top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl z-50 p-4`}
+          className={`${dropdownPosition} mt-2 sm:mt-2 sm:w-80 sm:max-w-[320px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl z-50 p-3 sm:p-4`}
         >
           {/* Preset Dropdown */}
           <div className="relative mb-4" ref={presetDropdownRef}>
