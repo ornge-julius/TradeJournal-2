@@ -18,8 +18,6 @@ import TradeDetailPage from './components/views/TradeDetailPage';
 import { DateFilterProvider } from './context/DateFilterContext';
 import { TagFilterProvider } from './context/TagFilterContext';
 import { ThemeProvider } from './context/ThemeContext';
-import GlobalTagFilter from './components/ui/GlobalTagFilter';
-import GlobalDateFilter from './components/ui/GlobalDateFilter';
 import BottomNavDock from './components/ui/BottomNavDock';
 
 function AppContent() {
@@ -265,17 +263,8 @@ function AppContent() {
             user={user}
             onSignIn={handleSignIn}
             onSignOut={handleSignOut}
+            showTagFilter={showTagFilter}
           />
-
-          {/* Global Filters - positioned below header */}
-          {showTagFilter && (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-              <div className="flex justify-end gap-3 relative">
-                <GlobalDateFilter />
-                <GlobalTagFilter />
-              </div>
-            </div>
-          )}
 
       {/* Settings Form */}
       <SettingsForm
@@ -330,7 +319,9 @@ function AppContent() {
           <p className="text-gray-400">Please select an account to view trades and metrics.</p>
         </div>
       ) : (
-          <Outlet />
+          <div className="pt-24">
+            <Outlet />
+          </div>
         )}
         
         {/* Bottom Navigation Dock - only visible on main routes */}
@@ -345,11 +336,11 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
-        <Routes>
-          <Route
-            path="/detail/:tradeId"
-            element={
+      <Routes>
+        <Route
+          path="/detail/:tradeId"
+          element={
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24 pt-24">
               <TradeDetailPage
                 trades={trades}
                 editingTrade={editingTrade}
@@ -359,39 +350,49 @@ function AppContent() {
                 onDelete={handleTradeDelete}
                 isAuthenticated={isAuthenticated}
               />
-            }
-          />
-          <Route path="/" element={<MainLayout />}>
-            <Route
-              index
-              element={
+            </div>
+          }
+        />
+        <Route path="/" element={<MainLayout />}>
+          <Route
+            index
+            element={
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
                 <DashboardView
                   trades={trades}
                   startingBalance={startingBalance}
                 />
-              }
-            />
-            <Route
-              path="comparison"
-              element={
+              </div>
+            }
+          />
+          <Route
+            path="comparison"
+            element={
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
                 <TradeBatchComparisonView
                   trades={trades}
                 />
-              }
-            />
-            <Route path="tags" element={<TagsManagementView />} />
-            <Route
-              path="history"
-              element={
+              </div>
+            }
+          />
+          <Route path="tags" element={
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
+              <TagsManagementView />
+            </div>
+          } />
+          <Route
+            path="history"
+            element={
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
                 <TradeHistoryView
                   trades={trades}
                   onToggleTradeForm={handleToggleTradeForm}
                 />
-              }
-            />
-          </Route>
-        </Routes>
-      </div>
+              </div>
+            }
+          />
+        </Route>
+      </Routes>
     </div>
   );
 }
