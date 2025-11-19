@@ -78,17 +78,7 @@ const BottomNavDock = ({ onToggleTradeForm, showTradeForm }) => {
       className: isActive('/comparison')
         ? '!bg-[#10B981] dark:!bg-[#10B981]'
         : ''
-    },
-    {
-      icon: isDark ? (
-        <Sun className="w-6 h-6 text-gray-700 dark:text-gray-300" />
-      ) : (
-        <Moon className="w-6 h-6 text-gray-700 dark:text-gray-300" />
-      ),
-      label: isDark ? 'Light Mode' : 'Dark Mode',
-      onClick: toggleTheme,
-      className: ''
-    }
+    }  
   ];
 
   // Responsive sizing for mobile devices
