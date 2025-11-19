@@ -6,7 +6,6 @@ const NetProfitCard = ({ totalProfit = 0 }) => {
   const validProfit = typeof totalProfit === 'number' && Number.isFinite(totalProfit) ? totalProfit : 0;
   const isPositive = validProfit > 0;
   const isNegative = validProfit < 0;
-  const isZero = validProfit === 0;
   const [animationKey, setAnimationKey] = useState(0);
 
   // Determine color based on profit value
