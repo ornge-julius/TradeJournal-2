@@ -73,6 +73,65 @@ src/
 npm run build
 ```
 
+## Docker Setup
+
+The application can be easily run using Docker Compose, which simplifies setup and ensures consistent environments.
+
+### Prerequisites
+- Docker (v20.10 or higher)
+- Docker Compose (v2.0 or higher)
+
+### Quick Start with Docker
+
+1. **Create a `.env` file** in the project root with your Supabase credentials:
+   ```env
+   REACT_APP_SUPABASE_URL=https://your-project.supabase.co
+   REACT_APP_SUPABASE_ANON_KEY=your-anon-key-here
+   ```
+
+2. **Build and start the application**:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. **Access the application**:
+   Open [http://localhost:3000](http://localhost:3000) in your browser
+
+### Docker Commands
+
+- **Start the application** (in detached mode):
+  ```bash
+  docker-compose up -d
+  ```
+
+- **Stop the application**:
+  ```bash
+  docker-compose down
+  ```
+
+- **View logs**:
+  ```bash
+  docker-compose logs -f
+  ```
+
+- **Rebuild after code changes**:
+  ```bash
+  docker-compose up --build
+  ```
+
+- **Stop and remove containers, networks, and volumes**:
+  ```bash
+  docker-compose down -v
+  ```
+
+### Docker Architecture
+
+The Docker setup uses a multi-stage build:
+- **Build stage**: Compiles the React application with all dependencies
+- **Production stage**: Serves the built application using nginx
+
+The application is served on port 80 inside the container and mapped to port 3000 on your host machine.
+
 ### Supabase Configuration
 
 1. Create a project at [Supabase](https://supabase.com/) and note the Project URL and anon key.
