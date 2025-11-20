@@ -120,7 +120,7 @@ const TagsManagementView = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tags.map((tag, index) => (
+          {[...tags].sort((a, b) => (b.usage_count || 0) - (a.usage_count || 0)).map((tag, index) => (
             <AnimatedContent 
               key={tag.id} 
               ease="back.out"
