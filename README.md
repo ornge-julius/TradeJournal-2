@@ -69,68 +69,35 @@ src/
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ### Build for Production
-```bash
 npm run build
 ```
 
-## Docker Setup
+### Docker Setup
 
-The application can be easily run using Docker Compose, which simplifies setup and ensures consistent environments.
+You can run the application using Docker Compose, which simplifies the setup process.
 
-### Prerequisites
-- Docker (v20.10 or higher)
-- Docker Compose (v2.0 or higher)
+1.  **Prerequisites**:
+    - Docker and Docker Compose installed on your machine.
 
-### Quick Start with Docker
+2.  **Environment Variables**:
+    - Ensure you have a `.env` file in the **root directory** of the project (same level as `docker-compose.yml`).
+    - This file must contain your Supabase credentials:
+      ```env
+      REACT_APP_SUPABASE_URL=your-supabase-url
+      REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+      ```
 
-1. **Create a `.env` file** in the project root with your Supabase credentials:
-   ```env
-   REACT_APP_SUPABASE_URL=https://your-project.supabase.co
-   REACT_APP_SUPABASE_ANON_KEY=your-anon-key-here
-   ```
+3.  **Run with Docker**:
+    - Start the application in detached mode:
+      ```bash
+      docker compose up --build -d
+      ```
+    - The application will be available at [http://localhost](http://localhost).
 
-2. **Build and start the application**:
-   ```bash
-   docker-compose up --build
-   ```
-
-3. **Access the application**:
-   Open [http://localhost:3000](http://localhost:3000) in your browser
-
-### Docker Commands
-
-- **Start the application** (in detached mode):
-  ```bash
-  docker-compose up -d
-  ```
-
-- **Stop the application**:
-  ```bash
-  docker-compose down
-  ```
-
-- **View logs**:
-  ```bash
-  docker-compose logs -f
-  ```
-
-- **Rebuild after code changes**:
-  ```bash
-  docker-compose up --build
-  ```
-
-- **Stop and remove containers, networks, and volumes**:
-  ```bash
-  docker-compose down -v
-  ```
-
-### Docker Architecture
-
-The Docker setup uses a multi-stage build:
-- **Build stage**: Compiles the React application with all dependencies
-- **Production stage**: Serves the built application using nginx
-
-The application is served on port 80 inside the container and mapped to port 3000 on your host machine.
+4.  **Stop the Application**:
+    ```bash
+    docker compose down
+    ```
 
 ### Supabase Configuration
 

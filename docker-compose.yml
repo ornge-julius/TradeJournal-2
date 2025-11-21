@@ -1,21 +1,11 @@
 services:
-  app:
+  web:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./app
       args:
-        REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
-        REACT_APP_SUPABASE_ANON_KEY: ${REACT_APP_SUPABASE_ANON_KEY}
+        - REACT_APP_SUPABASE_URL=${REACT_APP_SUPABASE_URL}
+        - REACT_APP_SUPABASE_ANON_KEY=${REACT_APP_SUPABASE_ANON_KEY}
     ports:
-      - "3000:80"
-    environment:
-      - REACT_APP_SUPABASE_URL=${REACT_APP_SUPABASE_URL}
-      - REACT_APP_SUPABASE_ANON_KEY=${REACT_APP_SUPABASE_ANON_KEY}
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
+      - "80:80"
+    env_file:
+      - ./app/.env
