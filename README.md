@@ -69,9 +69,35 @@ src/
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ### Build for Production
-```bash
 npm run build
 ```
+
+### Docker Setup
+
+You can run the application using Docker Compose, which simplifies the setup process.
+
+1.  **Prerequisites**:
+    - Docker and Docker Compose installed on your machine.
+
+2.  **Environment Variables**:
+    - Ensure you have a `.env` file in the **root directory** of the project (same level as `docker-compose.yml`).
+    - This file must contain your Supabase credentials:
+      ```env
+      REACT_APP_SUPABASE_URL=your-supabase-url
+      REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+      ```
+
+3.  **Run with Docker**:
+    - Start the application in detached mode:
+      ```bash
+      docker compose up --build -d
+      ```
+    - The application will be available at [http://localhost](http://localhost).
+
+4.  **Stop the Application**:
+    ```bash
+    docker compose down
+    ```
 
 ### Supabase Configuration
 
